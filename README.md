@@ -1,4 +1,4 @@
-##Plug-in updates are slow and inactive. Clone them for quick iteration to fix problems.
+## Plug-in updates are slow and inactive. Clone them for quick iteration to fix problems.
 
 # IntelliJ Idea Plugin for ANTLR v4 ![Java CI](https://github.com/antlr/intellij-plugin-v4/workflows/Java%20CI/badge.svg?branch=master) [![Latest version](https://img.shields.io/jetbrains/plugin/v/7358.svg?label=latest%20version)](https://plugins.jetbrains.com/plugin/7358) ![Downloads](https://img.shields.io/jetbrains/plugin/d/7358.svg)
 
