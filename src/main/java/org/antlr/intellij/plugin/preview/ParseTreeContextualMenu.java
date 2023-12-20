@@ -1,5 +1,8 @@
 package org.antlr.intellij.plugin.preview;
 
+import apache.batik.dom.GenericDOMImplementation;
+import apache.batik.svggen.SVGGraphics2D;
+import apache.batik.svggen.SVGGraphics2DIOException;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -15,10 +18,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileWrapper;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
-import org.apache.batik.dom.GenericDOMImplementation;
-import org.apache.batik.svggen.SVGGraphics2D;
-import org.apache.batik.svggen.SVGGraphics2DIOException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 
@@ -51,7 +51,7 @@ class ParseTreeContextualMenu {
 
         item.addActionListener(event -> {
             String[] extensions = useTransparentBackground ? new String[]{"png", "svg"} : new String[]{"png", "jpg", "svg"};
-            FileSaverDescriptor descriptor = new FileSaverDescriptor("Export Image to", "Choose the destination file", extensions);
+            FileSaverDescriptor descriptor = new FileSaverDescriptor("Export Image To", "Choose the destination file", extensions);
             FileSaverDialog dialog = FileChooserFactory.getInstance().createSaveFileDialog(descriptor, (Project) null);
 
             String fileName = "parseTree" + (isMacNativSaveDialog ? ".png" : "");
@@ -69,8 +69,7 @@ class ParseTreeContextualMenu {
 
             if ("svg".equals(imageFormat)) {
                 exportToSvg(parseTreeViewer, file, useTransparentBackground);
-            }
-            else {
+            } else {
                 exportToImage(parseTreeViewer, file, useTransparentBackground, imageFormat);
             }
         });

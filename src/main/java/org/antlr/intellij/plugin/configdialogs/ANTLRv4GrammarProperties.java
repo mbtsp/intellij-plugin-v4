@@ -11,7 +11,7 @@ import org.antlr.intellij.plugin.parsing.RunANTLROnGrammarFile;
 
 import java.io.File;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Holds all the settings related to a given grammar file. These settings
