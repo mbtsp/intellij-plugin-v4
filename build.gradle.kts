@@ -62,6 +62,15 @@ tasks {
     wrapper {
         gradleVersion = properties("gradleVersion").get()
     }
+    generateGrammarSource {
+        include("**/ANTLRv4*.g4")
+        arguments="-package,org.antlr.intellij.plugin.parser,-lib,src/main/antlr/org/antlr/intellij/plugin/parser,-Xexact-output-dir".split(",");
+//        arguments += [
+//            "-package", "org.antlr.intellij.plugin.parser",
+//            "-lib", "src/main/antlr/org/antlr/intellij/plugin/parser",
+//            "-Xexact-output-dir"
+//        ]
+    }
 
     patchPluginXml {
         version = properties("pluginVersion")
