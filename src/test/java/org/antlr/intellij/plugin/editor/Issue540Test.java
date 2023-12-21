@@ -12,7 +12,7 @@ import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import org.antlr.intellij.plugin.ANTLRv4PluginController;
 import org.antlr.intellij.plugin.TestUtils;
-import apache.commons.io.FileUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import java.io.File;

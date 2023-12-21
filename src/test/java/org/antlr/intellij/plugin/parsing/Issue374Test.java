@@ -2,6 +2,8 @@ package org.antlr.intellij.plugin.parsing;
 
 import junit.framework.TestCase;
 import org.antlr.intellij.adaptor.parser.SyntaxErrorListener;
+import org.antlr.intellij.plugin.parser.ANTLRv4Lexer;
+import org.antlr.intellij.plugin.parser.ANTLRv4Parser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
