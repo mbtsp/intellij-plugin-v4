@@ -1,7 +1,8 @@
 package org.antlr.intellij.plugin.parsing;
 
-import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.openapi.project.Project;
+import org.antlr.intellij.plugin.util.ConsoleUtils;
 import org.antlr.v4.Tool;
 import org.antlr.v4.tool.ANTLRMessage;
 import org.antlr.v4.tool.ANTLRToolListener;
@@ -16,12 +17,12 @@ import java.util.List;
 public class RunANTLRListener implements ANTLRToolListener {
 	public final List<String> all = new ArrayList<>();
 	public Tool tool;
-	public ConsoleView console;
+	private Project project;
 	public boolean hasOutput = false;
-
-	public RunANTLRListener(Tool tool, ConsoleView console) {
+	public RunANTLRListener(Tool tool, Project project) {
 		this.tool = tool;
-		this.console = console;
+
+		this.project = project;
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class RunANTLRListener implements ANTLRToolListener {
 		if (tool.errMgr.formatWantsSingleLineMessage()) {
 			msg = msg.replace('\n', ' ');
 		}
-		console.print(msg+"\n", ConsoleViewContentType.NORMAL_OUTPUT);
+		ConsoleUtils.consolePrint(this.project,msg+"\n", ConsoleViewContentType.NORMAL_OUTPUT);
 		hasOutput = true;
 	}
 
@@ -49,7 +50,7 @@ public class RunANTLRListener implements ANTLRToolListener {
 		if (tool.errMgr.formatWantsSingleLineMessage()) {
 			outputMsg = outputMsg.replace('\n', ' ');
 		}
-		console.print(outputMsg+"\n", errType);
+		ConsoleUtils.consolePrint(this.project,outputMsg+"\n", errType);
 		hasOutput = true;
 	}
 }

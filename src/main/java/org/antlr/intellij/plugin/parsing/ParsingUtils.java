@@ -15,6 +15,8 @@ import org.antlr.intellij.plugin.configdialogs.ANTLRv4GrammarProperties;
 import org.antlr.intellij.plugin.parser.ANTLRv4Lexer;
 import org.antlr.intellij.plugin.parser.ANTLRv4Parser;
 import org.antlr.intellij.plugin.preview.PreviewState;
+import org.antlr.intellij.plugin.toolwindow.ConsoleToolWindow;
+import org.antlr.intellij.plugin.util.ConsoleUtils;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.v4.Tool;
 import org.antlr.v4.parse.ANTLRParser;
@@ -271,10 +273,9 @@ public class ParsingUtils {
 		Tool antlr = createANTLRToolForLoadingGrammars(getGrammarProperties(project, grammarFile));
 		LoadGrammarsToolListener listener = (LoadGrammarsToolListener)antlr.getListeners().get(0);
 
-		ConsoleView console = ANTLRv4PluginController.getInstance(project).getConsole();
 		Grammar g = loadGrammar(grammarFile, antlr);
 		if (g == null) {
-			reportBadGrammar(grammarFile, console);
+			reportBadGrammar(grammarFile, project);
 			return null;
 		}
 
@@ -293,7 +294,7 @@ public class ParsingUtils {
 		antlr.process(g, false);
 		if ( listener.grammarErrorMessages.size()!=0 ) {
 			String msg = Utils.join(listener.grammarErrorMessages.iterator(), "\n");
-			console.print(msg+"\n", ConsoleViewContentType.ERROR_OUTPUT);
+			ConsoleUtils.consolePrint(project,msg+"\n",ConsoleViewContentType.ERROR_OUTPUT);
 			return null; // upon error, bail
 		}
 
@@ -319,10 +320,12 @@ public class ParsingUtils {
 		return null;
 	}
 
-	private static void reportBadGrammar(VirtualFile grammarFile, ConsoleView console) {
+	private static void reportBadGrammar(VirtualFile grammarFile, Project project) {
 		String msg = "Empty or bad grammar in file "+grammarFile.getName();
-		console.print(msg+"\n", ConsoleViewContentType.ERROR_OUTPUT);
+		ConsoleUtils.consolePrint(project, msg,ConsoleViewContentType.ERROR_OUTPUT);
 	}
+
+
 
 	@Nullable
 	private static Grammar loadGrammar(VirtualFile grammarFile, Tool antlr) {
@@ -377,15 +380,13 @@ public class ParsingUtils {
 		}
 
 		if ( lexerGrammarFile != null && lexerGrammarFile.exists() ) {
-			ConsoleView console = ANTLRv4PluginController.getInstance(project).getConsole();
-
 			try {
 				lg = (LexerGrammar) loadGrammar(lexerGrammarFile, antlr);
 				if ( lg!=null ) {
 					antlr.process(lg, false);
 				}
 				else {
-					reportBadGrammar(lexerGrammarFile, console);
+					reportBadGrammar(lexerGrammarFile, project);
 				}
 			}
 			catch (ClassCastException cce) {
@@ -401,7 +402,7 @@ public class ParsingUtils {
 			if ( listener.grammarErrorMessages.size()!=0 ) {
 				lg = null;
 				String msg = Utils.join(listener.grammarErrorMessages.iterator(), "\n");
-				console.print(msg+"\n", ConsoleViewContentType.ERROR_OUTPUT);
+				ConsoleUtils.consolePrint(project,msg+"\n", ConsoleViewContentType.ERROR_OUTPUT);
 			}
 		}
 		return lg;

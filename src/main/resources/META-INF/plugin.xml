@@ -85,7 +85,7 @@ For really big files and slow grammars, there is an appreciable delay when displ
 
   <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
   <!-- can be overriden by the Gradle build if needed -->
-  <idea-version since-build="203"/> <!-- requires IntelliJ 2020.3+ due to java 11 issue really -->
+<!--  <idea-version since-build="222.3345.18"/> &lt;!&ndash; requires IntelliJ 2020.3+ due to java 11 issue really &ndash;&gt;-->
 
   <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
        on how to target different products -->
@@ -95,11 +95,11 @@ For really big files and slow grammars, there is an appreciable delay when displ
   <application-components>
   </application-components>
 
-  <project-components>
-    <component>
-        <implementation-class>org.antlr.intellij.plugin.ANTLRv4PluginController</implementation-class>
-    </component>
-  </project-components>
+<!--  <project-components>-->
+<!--    <component>-->
+<!--        <implementation-class>org.antlr.intellij.plugin.ANTLRv4PluginController</implementation-class>-->
+<!--    </component>-->
+<!--  </project-components>-->
 
   <actions>
       <action id="antlr.Generate" class="org.antlr.intellij.plugin.actions.GenerateParserAction"
@@ -145,6 +145,8 @@ For really big files and slow grammars, there is an appreciable delay when displ
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
+      <projectService serviceImplementation="org.antlr.intellij.plugin.ANTLRv4PluginController"/>
+      <postStartupActivity implementation="org.antlr.intellij.plugin.init.AntlrStartupActivity"/>
       <fileTypeFactory implementation="org.antlr.intellij.plugin.ANTLRv4FileTypeFactory"/>
       <lang.syntaxHighlighterFactory key="ANTLRv4" implementationClass="org.antlr.intellij.plugin.ANTLRv4SyntaxHighlighterFactory"/>
       <lang.commenter language="ANTLRv4" implementationClass="org.antlr.intellij.plugin.ANTLRv4Commenter" />
@@ -173,5 +175,7 @@ For really big files and slow grammars, there is an appreciable delay when displ
                            instance="org.antlr.intellij.plugin.configdialogs.ANTLRv4ProjectSettings"/>
       <projectService serviceImplementation="org.antlr.intellij.plugin.configdialogs.ANTLRv4GrammarPropertiesComponent"/>
       <lang.refactoringSupport language="ANTLRv4" implementationClass="org.antlr.intellij.plugin.refactor.ANTLRv4RefactoringSupport"/>
+      <toolWindow factoryClass="org.antlr.intellij.plugin.toolwindow.PreViewToolWindow" id="Antlr(new) Preview" anchor="bottom"/>
+      <toolWindow factoryClass="org.antlr.intellij.plugin.toolwindow.ConsoleToolWindow" id="Antlr(new) Console" anchor="bottom"/>
   </extensions>
 </idea-plugin>

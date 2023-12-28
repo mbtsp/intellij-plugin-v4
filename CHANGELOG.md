@@ -11,6 +11,6 @@
 
 ### Fixed
 - NoClassDefFoundError: org/apache/batik/svggen/SVGGraphics2DIOException
-
+- got 'java.lang.ExceptionInInitializerError' when i enabled the antlr plugin and restart IDEA
 ### Changed
 - 
