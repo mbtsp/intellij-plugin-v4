@@ -25,8 +25,8 @@ public class ANTLRv4ParserDefinition implements ParserDefinition {
 	public ANTLRv4ParserDefinition() {
 		PSIElementTypeFactory.defineLanguageIElementTypes(
 				ANTLRv4Language.INSTANCE,
-				ANTLRv4Lexer.tokenNames,
-				ANTLRv4Parser.ruleNames
+				ANTLRv4Lexer.VOCABULARY,
+				ANTLRv4Parser.ruleNames,true
 		);
 	}
 
