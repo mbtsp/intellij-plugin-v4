@@ -23,7 +23,7 @@ import apache.batik.css.engine.value.AbstractValueFactory;
 import apache.batik.css.engine.value.ShorthandManager;
 import apache.batik.css.engine.value.ValueManager;
 import apache.batik.util.CSSConstants;
-import org.w3c.css.sac.LexicalUnit;
+import w3c.css.sac.LexicalUnit;
 import org.w3c.dom.DOMException;
 
 /**

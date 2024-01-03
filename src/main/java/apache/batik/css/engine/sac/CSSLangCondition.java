@@ -22,12 +22,12 @@ import java.util.Set;
 
 import apache.batik.constants.XMLConstants;
 
-import org.w3c.css.sac.LangCondition;
+import w3c.css.sac.LangCondition;
 import org.w3c.dom.Element;
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.LangCondition} interface.
+ * {@link w3c.css.sac.LangCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -68,14 +68,14 @@ public class CSSLangCondition
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Condition#getConditionType()}.
+     * w3c.css.sac.Condition#getConditionType()}.
      */
     public short getConditionType() {
         return SAC_LANG_CONDITION;
     }
 
     /**
-     * <b>SAC</b>: Implements {@link org.w3c.css.sac.LangCondition#getLang()}.
+     * <b>SAC</b>: Implements {@link w3c.css.sac.LangCondition#getLang()}.
      */
     public String getLang() {
         return lang;

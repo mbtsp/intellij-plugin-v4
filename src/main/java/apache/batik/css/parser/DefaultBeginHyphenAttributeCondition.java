@@ -20,7 +20,7 @@ package apache.batik.css.parser;
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.AttributeCondition} interface.
+ * {@link w3c.css.sac.AttributeCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -40,7 +40,7 @@ public class DefaultBeginHyphenAttributeCondition
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Condition#getConditionType()}.
+     * w3c.css.sac.Condition#getConditionType()}.
      */    
     public short getConditionType() {
         return SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION;

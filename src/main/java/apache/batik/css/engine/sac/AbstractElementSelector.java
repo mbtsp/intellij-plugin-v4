@@ -20,7 +20,7 @@ package apache.batik.css.engine.sac;
 
 import java.util.Set;
 
-import org.w3c.css.sac.ElementSelector;
+import w3c.css.sac.ElementSelector;
 
 /**
  * This class provides an abstract implementation of the ElementSelector
@@ -66,7 +66,7 @@ public abstract class AbstractElementSelector
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ElementSelector#getNamespaceURI()}.
+     * w3c.css.sac.ElementSelector#getNamespaceURI()}.
      */
     public String getNamespaceURI() {
         return namespaceURI;
@@ -74,7 +74,7 @@ public abstract class AbstractElementSelector
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ElementSelector#getLocalName()}.
+     * w3c.css.sac.ElementSelector#getLocalName()}.
      */
     public String getLocalName() {
         return localName;

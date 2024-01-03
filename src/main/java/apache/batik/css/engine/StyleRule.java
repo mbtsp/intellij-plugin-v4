@@ -18,7 +18,7 @@
  */
 package apache.batik.css.engine;
 
-import org.w3c.css.sac.SelectorList;
+import w3c.css.sac.SelectorList;
 
 /**
  * This class represents a style rule.

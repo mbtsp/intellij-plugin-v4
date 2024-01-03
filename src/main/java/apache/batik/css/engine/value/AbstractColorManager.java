@@ -22,7 +22,7 @@ import apache.batik.css.engine.CSSEngine;
 import apache.batik.css.engine.CSSStylableElement;
 import apache.batik.css.engine.StyleMap;
 import apache.batik.util.CSSConstants;
-import org.w3c.css.sac.LexicalUnit;
+import w3c.css.sac.LexicalUnit;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 

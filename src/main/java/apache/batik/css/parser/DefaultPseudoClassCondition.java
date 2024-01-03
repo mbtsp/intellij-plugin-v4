@@ -20,7 +20,7 @@ package apache.batik.css.parser;
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.AttributeCondition} interface.
+ * {@link w3c.css.sac.AttributeCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -41,7 +41,7 @@ public class DefaultPseudoClassCondition extends AbstractAttributeCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Condition#getConditionType()}.
+     * w3c.css.sac.Condition#getConditionType()}.
      */    
     public short getConditionType() {
         return SAC_PSEUDO_CLASS_CONDITION;
@@ -49,7 +49,7 @@ public class DefaultPseudoClassCondition extends AbstractAttributeCondition {
     
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.AttributeCondition#getNamespaceURI()}.
+     * w3c.css.sac.AttributeCondition#getNamespaceURI()}.
      */    
     public String getNamespaceURI() {
         return namespaceURI;
@@ -57,7 +57,7 @@ public class DefaultPseudoClassCondition extends AbstractAttributeCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.AttributeCondition#getLocalName()}.
+     * w3c.css.sac.AttributeCondition#getLocalName()}.
      */
     public String getLocalName() {
         return null;
@@ -65,7 +65,7 @@ public class DefaultPseudoClassCondition extends AbstractAttributeCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.AttributeCondition#getSpecified()}.
+     * w3c.css.sac.AttributeCondition#getSpecified()}.
      */
     public boolean getSpecified() {
         return false;

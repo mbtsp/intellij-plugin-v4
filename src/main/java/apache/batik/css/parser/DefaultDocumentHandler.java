@@ -18,12 +18,12 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.DocumentHandler;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.LexicalUnit;
-import org.w3c.css.sac.SACMediaList;
-import org.w3c.css.sac.SelectorList;
+import w3c.css.sac.CSSException;
+import w3c.css.sac.DocumentHandler;
+import w3c.css.sac.InputSource;
+import w3c.css.sac.LexicalUnit;
+import w3c.css.sac.SACMediaList;
+import w3c.css.sac.SelectorList;
 
 /**
  * This class provides a default implementation of the SAC DocumentHandler.
@@ -45,7 +45,7 @@ public class DefaultDocumentHandler implements DocumentHandler {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#startDocument(InputSource)}.
+     * w3c.css.sac.DocumentHandler#startDocument(InputSource)}.
      */
     public void startDocument(InputSource source)
         throws CSSException {
@@ -53,28 +53,28 @@ public class DefaultDocumentHandler implements DocumentHandler {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#endDocument(InputSource)}.
+     * w3c.css.sac.DocumentHandler#endDocument(InputSource)}.
      */
     public void endDocument(InputSource source) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#comment(String)}.
+     * w3c.css.sac.DocumentHandler#comment(String)}.
      */
     public void comment(String text) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#ignorableAtRule(String)}.
+     * w3c.css.sac.DocumentHandler#ignorableAtRule(String)}.
      */
     public void ignorableAtRule(String atRule) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#namespaceDeclaration(String,String)}.
+     * w3c.css.sac.DocumentHandler#namespaceDeclaration(String,String)}.
      */
     public void namespaceDeclaration(String prefix, String uri)
         throws CSSException {
@@ -92,21 +92,21 @@ public class DefaultDocumentHandler implements DocumentHandler {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#startMedia(SACMediaList)}.
+     * w3c.css.sac.DocumentHandler#startMedia(SACMediaList)}.
      */
     public void startMedia(SACMediaList media) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#endMedia(SACMediaList)}.
+     * w3c.css.sac.DocumentHandler#endMedia(SACMediaList)}.
      */
     public void endMedia(SACMediaList media) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#startPage(String,String)}.
+     * w3c.css.sac.DocumentHandler#startPage(String,String)}.
      */
     public void startPage(String name, String pseudo_page)
         throws CSSException {
@@ -114,42 +114,42 @@ public class DefaultDocumentHandler implements DocumentHandler {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#endPage(String,String)}.
+     * w3c.css.sac.DocumentHandler#endPage(String,String)}.
      */
     public void endPage(String name, String pseudo_page) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#startFontFace()}.
+     * w3c.css.sac.DocumentHandler#startFontFace()}.
      */
     public void startFontFace() throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#endFontFace()}.
+     * w3c.css.sac.DocumentHandler#endFontFace()}.
      */
     public void endFontFace() throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#startSelector(SelectorList)}.
+     * w3c.css.sac.DocumentHandler#startSelector(SelectorList)}.
      */
     public void startSelector(SelectorList selectors) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#endSelector(SelectorList)}.
+     * w3c.css.sac.DocumentHandler#endSelector(SelectorList)}.
      */
     public void endSelector(SelectorList selectors) throws CSSException {
     }
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DocumentHandler#property(String,LexicalUnit,boolean)}.
+     * w3c.css.sac.DocumentHandler#property(String,LexicalUnit,boolean)}.
      */
     public void property(String name, LexicalUnit value, boolean important)
         throws CSSException {

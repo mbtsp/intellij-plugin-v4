@@ -18,13 +18,13 @@
  */
 package apache.batik.css.engine.sac;
 
-import org.w3c.css.sac.DescendantSelector;
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SimpleSelector;
+import w3c.css.sac.DescendantSelector;
+import w3c.css.sac.Selector;
+import w3c.css.sac.SimpleSelector;
 
 /**
  * This class provides an abstract implementation of the {@link
- * org.w3c.css.sac.DescendantSelector} interface.
+ * w3c.css.sac.DescendantSelector} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -74,7 +74,7 @@ public abstract class AbstractDescendantSelector
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DescendantSelector#getAncestorSelector()}.
+     * w3c.css.sac.DescendantSelector#getAncestorSelector()}.
      */
     public Selector getAncestorSelector() {
         return ancestorSelector;
@@ -82,7 +82,7 @@ public abstract class AbstractDescendantSelector
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.DescendantSelector#getSimpleSelector()}.
+     * w3c.css.sac.DescendantSelector#getSimpleSelector()}.
      */
     public SimpleSelector getSimpleSelector() {
         return simpleSelector;

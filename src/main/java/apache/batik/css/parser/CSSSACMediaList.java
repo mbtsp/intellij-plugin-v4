@@ -18,7 +18,7 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.SACMediaList;
+import w3c.css.sac.SACMediaList;
 
 /**
  * This class implements the {@link SACMediaList} interface.

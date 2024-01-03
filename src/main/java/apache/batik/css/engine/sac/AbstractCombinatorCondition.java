@@ -18,12 +18,12 @@
  */
 package apache.batik.css.engine.sac;
 
-import org.w3c.css.sac.CombinatorCondition;
-import org.w3c.css.sac.Condition;
+import w3c.css.sac.CombinatorCondition;
+import w3c.css.sac.Condition;
 
 /**
  * This class provides an abstract implementation of the {@link
- * org.w3c.css.sac.CombinatorCondition} interface.
+ * w3c.css.sac.CombinatorCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -73,7 +73,7 @@ public abstract class AbstractCombinatorCondition
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.CombinatorCondition#getFirstCondition()}.
+     * w3c.css.sac.CombinatorCondition#getFirstCondition()}.
      */    
     public Condition getFirstCondition() {
         return firstCondition;
@@ -81,7 +81,7 @@ public abstract class AbstractCombinatorCondition
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.CombinatorCondition#getSecondCondition()}.
+     * w3c.css.sac.CombinatorCondition#getSecondCondition()}.
      */    
     public Condition getSecondCondition() {
         return secondCondition;

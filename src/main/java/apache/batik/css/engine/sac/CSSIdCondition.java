@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.AttributeCondition} interface.
+ * {@link w3c.css.sac.AttributeCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -54,7 +54,7 @@ public class CSSIdCondition extends AbstractAttributeCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Condition#getConditionType()}.
+     * w3c.css.sac.Condition#getConditionType()}.
      */
     public short getConditionType() {
         return SAC_ID_CONDITION;
@@ -62,7 +62,7 @@ public class CSSIdCondition extends AbstractAttributeCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.AttributeCondition#getNamespaceURI()}.
+     * w3c.css.sac.AttributeCondition#getNamespaceURI()}.
      */
     public String getNamespaceURI() {
         return namespaceURI;
@@ -70,7 +70,7 @@ public class CSSIdCondition extends AbstractAttributeCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.AttributeCondition#getLocalName()}.
+     * w3c.css.sac.AttributeCondition#getLocalName()}.
      */
     public String getLocalName() {
         return localName;
@@ -78,7 +78,7 @@ public class CSSIdCondition extends AbstractAttributeCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.AttributeCondition#getSpecified()}.
+     * w3c.css.sac.AttributeCondition#getSpecified()}.
      */
     public boolean getSpecified() {
         return true;

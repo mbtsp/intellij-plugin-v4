@@ -18,11 +18,11 @@
  */
 package apache.batik.css.engine.sac;
 
-import org.w3c.css.sac.AttributeCondition;
+import w3c.css.sac.AttributeCondition;
 
 /**
  * This class provides an abstract implementation of the {@link
- * org.w3c.css.sac.AttributeCondition} interface.
+ * w3c.css.sac.AttributeCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -72,7 +72,7 @@ public abstract class AbstractAttributeCondition
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.AttributeCondition#getValue()}.
+     * w3c.css.sac.AttributeCondition#getValue()}.
      */
     public String getValue() {
         return value;

@@ -36,7 +36,7 @@ import apache.batik.util.Service;
 import apache.batik.util.XMLResourceDescriptor;
 import apache.batik.xml.XMLUtilities;
 
-import org.w3c.css.sac.Parser;
+import w3c.css.sac.Parser;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentType;

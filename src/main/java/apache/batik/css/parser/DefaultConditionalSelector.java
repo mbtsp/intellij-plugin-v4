@@ -18,13 +18,13 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.Condition;
-import org.w3c.css.sac.ConditionalSelector;
-import org.w3c.css.sac.SimpleSelector;
+import w3c.css.sac.Condition;
+import w3c.css.sac.ConditionalSelector;
+import w3c.css.sac.SimpleSelector;
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.ConditionalSelector} interface.
+ * {@link w3c.css.sac.ConditionalSelector} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -51,7 +51,7 @@ public class DefaultConditionalSelector implements ConditionalSelector {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Selector#getSelectorType()}.
+     * w3c.css.sac.Selector#getSelectorType()}.
      */
     public short getSelectorType() {
         return SAC_CONDITIONAL_SELECTOR;
@@ -59,7 +59,7 @@ public class DefaultConditionalSelector implements ConditionalSelector {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionalSelector#getSimpleSelector()}.
+     * w3c.css.sac.ConditionalSelector#getSimpleSelector()}.
      */
     public SimpleSelector getSimpleSelector() {
         return simpleSelector;
@@ -67,7 +67,7 @@ public class DefaultConditionalSelector implements ConditionalSelector {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionalSelector#getCondition()}.
+     * w3c.css.sac.ConditionalSelector#getCondition()}.
      */
     public Condition getCondition() {
         return condition;

@@ -18,20 +18,20 @@
  */
 package apache.batik.css.engine.sac;
 
-import org.w3c.css.sac.AttributeCondition;
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.CombinatorCondition;
-import org.w3c.css.sac.Condition;
-import org.w3c.css.sac.ConditionFactory;
-import org.w3c.css.sac.ContentCondition;
-import org.w3c.css.sac.LangCondition;
-import org.w3c.css.sac.NegativeCondition;
-import org.w3c.css.sac.PositionalCondition;
+import w3c.css.sac.AttributeCondition;
+import w3c.css.sac.CSSException;
+import w3c.css.sac.CombinatorCondition;
+import w3c.css.sac.Condition;
+import w3c.css.sac.ConditionFactory;
+import w3c.css.sac.ContentCondition;
+import w3c.css.sac.LangCondition;
+import w3c.css.sac.NegativeCondition;
+import w3c.css.sac.PositionalCondition;
 
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.ConditionFactory} interface.
+ * {@link w3c.css.sac.ConditionFactory} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -91,7 +91,7 @@ public class CSSConditionFactory implements ConditionFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionFactory#createNegativeCondition(Condition)}.
+     * w3c.css.sac.ConditionFactory#createNegativeCondition(Condition)}.
      */    
     public NegativeCondition createNegativeCondition(Condition condition)
         throws CSSException {
@@ -124,7 +124,7 @@ public class CSSConditionFactory implements ConditionFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionFactory#createIdCondition(String)}.
+     * w3c.css.sac.ConditionFactory#createIdCondition(String)}.
      */    
     public AttributeCondition createIdCondition(String value)
         throws CSSException {
@@ -133,7 +133,7 @@ public class CSSConditionFactory implements ConditionFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionFactory#createLangCondition(String)}.
+     * w3c.css.sac.ConditionFactory#createLangCondition(String)}.
      */    
     public LangCondition createLangCondition(String lang) throws CSSException {
         return new CSSLangCondition(lang);
@@ -168,7 +168,7 @@ public class CSSConditionFactory implements ConditionFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionFactory#createClassCondition(String,String)}.
+     * w3c.css.sac.ConditionFactory#createClassCondition(String,String)}.
      */    
     public AttributeCondition createClassCondition(String namespaceURI,
                                                    String value)
@@ -188,7 +188,7 @@ public class CSSConditionFactory implements ConditionFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionFactory#createOnlyChildCondition()}.
+     * w3c.css.sac.ConditionFactory#createOnlyChildCondition()}.
      */    
     public Condition createOnlyChildCondition() throws CSSException {
         throw new CSSException("Not implemented in CSS2");
@@ -196,7 +196,7 @@ public class CSSConditionFactory implements ConditionFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionFactory#createOnlyTypeCondition()}.
+     * w3c.css.sac.ConditionFactory#createOnlyTypeCondition()}.
      */    
     public Condition createOnlyTypeCondition() throws CSSException {
         throw new CSSException("Not implemented in CSS2");
@@ -204,7 +204,7 @@ public class CSSConditionFactory implements ConditionFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.ConditionFactory#createContentCondition(String)}.
+     * w3c.css.sac.ConditionFactory#createContentCondition(String)}.
      */    
     public ContentCondition createContentCondition(String data)
         throws CSSException {

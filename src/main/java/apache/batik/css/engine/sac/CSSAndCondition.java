@@ -20,12 +20,12 @@ package apache.batik.css.engine.sac;
 
 import java.util.Set;
 
-import org.w3c.css.sac.Condition;
+import w3c.css.sac.Condition;
 import org.w3c.dom.Element;
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.CombinatorCondition} interface.
+ * {@link w3c.css.sac.CombinatorCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -40,7 +40,7 @@ public class CSSAndCondition extends AbstractCombinatorCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Condition#getConditionType()}.
+     * w3c.css.sac.Condition#getConditionType()}.
      */
     public short getConditionType() {
         return SAC_AND_CONDITION;

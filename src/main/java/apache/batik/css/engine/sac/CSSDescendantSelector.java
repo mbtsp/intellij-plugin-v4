@@ -20,14 +20,14 @@ package apache.batik.css.engine.sac;
 
 import java.util.Set;
 
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SimpleSelector;
+import w3c.css.sac.Selector;
+import w3c.css.sac.SimpleSelector;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
  * This class provides an implementation for the
- * {@link org.w3c.css.sac.DescendantSelector} interface.
+ * {@link w3c.css.sac.DescendantSelector} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -43,7 +43,7 @@ public class CSSDescendantSelector extends AbstractDescendantSelector {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Selector#getSelectorType()}.
+     * w3c.css.sac.Selector#getSelectorType()}.
      */
     public short getSelectorType() {
         return SAC_DESCENDANT_SELECTOR;

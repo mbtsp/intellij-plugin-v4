@@ -21,11 +21,11 @@ package apache.batik.css.engine.sac;
 
 import java.util.Set;
 
-import org.w3c.css.sac.Selector;
+import w3c.css.sac.Selector;
 import org.w3c.dom.Element;
 
 /**
- * This interface extends the {@link org.w3c.css.sac.Selector}.
+ * This interface extends the {@link w3c.css.sac.Selector}.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$

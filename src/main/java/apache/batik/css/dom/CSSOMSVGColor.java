@@ -31,10 +31,10 @@ import org.w3c.dom.css.CSSValue;
 import org.w3c.dom.css.Counter;
 import org.w3c.dom.css.RGBColor;
 import org.w3c.dom.css.Rect;
-import org.w3c.dom.svg.SVGColor;
-import org.w3c.dom.svg.SVGICCColor;
-import org.w3c.dom.svg.SVGNumber;
-import org.w3c.dom.svg.SVGNumberList;
+import w3c.dom.svg.SVGColor;
+import w3c.dom.svg.SVGICCColor;
+import w3c.dom.svg.SVGNumber;
+import w3c.dom.svg.SVGNumberList;
 
 /**
  * This class implements the {@link SVGColor} interface.
@@ -123,7 +123,7 @@ public class CSSOMSVGColor
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGColor#getColorType()}.
+     * w3c.dom.svg.SVGColor#getColorType()}.
      */
     public short getColorType() {
         Value value = valueProvider.getValue();
@@ -153,7 +153,7 @@ public class CSSOMSVGColor
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGColor#getRGBColor()}.
+     * w3c.dom.svg.SVGColor#getRGBColor()}.
      */
     public RGBColor getRGBColor() {
         return this;
@@ -169,7 +169,7 @@ public class CSSOMSVGColor
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGColor#setRGBColor(String)}.
+     * w3c.dom.svg.SVGColor#setRGBColor(String)}.
      */
     public void setRGBColor(String color) {
         if (handler == null) {
@@ -182,7 +182,7 @@ public class CSSOMSVGColor
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGColor#getICCColor()}.
+     * w3c.dom.svg.SVGColor#getICCColor()}.
      */
     public SVGICCColor getICCColor() {
         return this;
@@ -198,7 +198,7 @@ public class CSSOMSVGColor
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGColor#setRGBColorICCColor(String,String)}.
+     * w3c.dom.svg.SVGColor#setRGBColorICCColor(String,String)}.
      */
     public void setRGBColorICCColor(String rgb, String icc) {
         if (handler == null) {
@@ -212,7 +212,7 @@ public class CSSOMSVGColor
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGColor#setColor(short,String,String)}.
+     * w3c.dom.svg.SVGColor#setColor(short,String,String)}.
      */
     public void setColor(short type, String rgb, String icc) {
         if (handler == null) {
@@ -263,7 +263,7 @@ public class CSSOMSVGColor
     // SVGICCColor //////////////////////////////////////////////////
 
     /**
-     * <b>DOM</b>: Implements {@link org.w3c.dom.svg.SVGICCColor#getColorProfile()}.
+     * <b>DOM</b>: Implements {@link w3c.dom.svg.SVGICCColor#getColorProfile()}.
      */
     public String getColorProfile() {
         if (getColorType() != SVG_COLORTYPE_RGBCOLOR_ICCCOLOR) {

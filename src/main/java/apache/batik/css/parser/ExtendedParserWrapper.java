@@ -23,20 +23,20 @@ import java.io.StringReader;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.ConditionFactory;
-import org.w3c.css.sac.DocumentHandler;
-import org.w3c.css.sac.ErrorHandler;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.LexicalUnit;
-import org.w3c.css.sac.Parser;
-import org.w3c.css.sac.SACMediaList;
-import org.w3c.css.sac.SelectorFactory;
-import org.w3c.css.sac.SelectorList;
+import w3c.css.sac.CSSException;
+import w3c.css.sac.ConditionFactory;
+import w3c.css.sac.DocumentHandler;
+import w3c.css.sac.ErrorHandler;
+import w3c.css.sac.InputSource;
+import w3c.css.sac.LexicalUnit;
+import w3c.css.sac.Parser;
+import w3c.css.sac.SACMediaList;
+import w3c.css.sac.SelectorFactory;
+import w3c.css.sac.SelectorList;
 
 /**
  * This class implements the {@link apache.batik.css.parser.ExtendedParser} 
- * interface by wrapping a standard {@link org.w3c.css.sac.Parser}.
+ * interface by wrapping a standard {@link w3c.css.sac.Parser}.
  *
  * @author <a href="mailto:deweese@apache.org">Thomas DeWeese</a>
  * @version $Id$
@@ -44,7 +44,7 @@ import org.w3c.css.sac.SelectorList;
 public class ExtendedParserWrapper implements ExtendedParser {
 
     /**
-     * This converts a standard @link org.w3c.css.sac.Parser into
+     * This converts a standard @link w3c.css.sac.Parser into
      * an Extended Parser.  If it is already an ExtendedParser
      * it will simply cast it and return, otherwise it will wrap it
      * and return the result.
@@ -66,14 +66,14 @@ public class ExtendedParserWrapper implements ExtendedParser {
     }
     
     /**
-     * <b>SAC</b>: Implements {@link org.w3c.css.sac.Parser#getParserVersion()}.
+     * <b>SAC</b>: Implements {@link w3c.css.sac.Parser#getParserVersion()}.
      */
     public String getParserVersion() {
         return parser.getParserVersion();
     }
     
     /**
-     * <b>SAC</b>: Implements {@link org.w3c.css.sac.Parser#setLocale(Locale)}.
+     * <b>SAC</b>: Implements {@link w3c.css.sac.Parser#setLocale(Locale)}.
      */
     public void setLocale(Locale locale) throws CSSException {
         parser.setLocale(locale);
@@ -81,7 +81,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Parser#setDocumentHandler(DocumentHandler)}.
+     * w3c.css.sac.Parser#setDocumentHandler(DocumentHandler)}.
      */
     public void setDocumentHandler(DocumentHandler handler) {
         parser.setDocumentHandler(handler);
@@ -89,7 +89,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Parser#setSelectorFactory(SelectorFactory)}.
+     * w3c.css.sac.Parser#setSelectorFactory(SelectorFactory)}.
      */
     public void setSelectorFactory(SelectorFactory selectorFactory) {
         parser.setSelectorFactory(selectorFactory);
@@ -97,7 +97,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Parser#setConditionFactory(ConditionFactory)}.
+     * w3c.css.sac.Parser#setConditionFactory(ConditionFactory)}.
      */
     public void setConditionFactory(ConditionFactory conditionFactory) {
         parser.setConditionFactory(conditionFactory);
@@ -105,7 +105,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
     
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Parser#setErrorHandler(ErrorHandler)}.
+     * w3c.css.sac.Parser#setErrorHandler(ErrorHandler)}.
      */
     public void setErrorHandler(ErrorHandler handler) {
         parser.setErrorHandler(handler);
@@ -113,7 +113,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
     
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Parser#parseStyleSheet(InputSource)}.
+     * w3c.css.sac.Parser#parseStyleSheet(InputSource)}.
      */
     public void parseStyleSheet(InputSource source) 
         throws CSSException, IOException {
@@ -147,7 +147,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Parser#parseStyleDeclaration(InputSource)}.
+     * w3c.css.sac.Parser#parseStyleDeclaration(InputSource)}.
      */
     public void parseStyleDeclaration(InputSource source) 
         throws CSSException, IOException {
@@ -172,7 +172,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
 
 
     /**
-     * <b>SAC</b>: Implements {@link org.w3c.css.sac.Parser#parseRule(InputSource)}.
+     * <b>SAC</b>: Implements {@link w3c.css.sac.Parser#parseRule(InputSource)}.
      */
     public void parseRule(InputSource source) 
         throws CSSException, IOException {
@@ -193,7 +193,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
     }
     
     /**
-     * <b>SAC</b>: Implements {@link org.w3c.css.sac.Parser#parseSelectors(InputSource)}.
+     * <b>SAC</b>: Implements {@link w3c.css.sac.Parser#parseSelectors(InputSource)}.
      */    
     public SelectorList parseSelectors(InputSource source)
         throws CSSException, IOException {
@@ -219,7 +219,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
 
     /**
      * <b>SAC</b>: Implements
-     * {@link org.w3c.css.sac.Parser#parsePropertyValue(InputSource)}.
+     * {@link w3c.css.sac.Parser#parsePropertyValue(InputSource)}.
      */    
     public LexicalUnit parsePropertyValue(InputSource source)
         throws CSSException, IOException {
@@ -245,7 +245,7 @@ public class ExtendedParserWrapper implements ExtendedParser {
     
     /**
      * <b>SAC</b>: Implements
-     * {@link org.w3c.css.sac.Parser#parsePriority(InputSource)}.
+     * {@link w3c.css.sac.Parser#parsePriority(InputSource)}.
      */    
     public boolean parsePriority(InputSource source)
         throws CSSException, IOException {

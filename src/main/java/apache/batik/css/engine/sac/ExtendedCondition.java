@@ -20,12 +20,12 @@ package apache.batik.css.engine.sac;
 
 import java.util.Set;
 
-import org.w3c.css.sac.Condition;
+import w3c.css.sac.Condition;
 import org.w3c.dom.Element;
 
 /**
  * This interface provides additional features to the
- * {@link org.w3c.css.sac.Condition} interface.
+ * {@link w3c.css.sac.Condition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$

@@ -21,7 +21,7 @@ package apache.batik.css.engine.sac;
 import org.w3c.dom.Element;
 
 /**
- * This class implements the {@link org.w3c.css.sac.ElementSelector} interface.
+ * This class implements the {@link w3c.css.sac.ElementSelector} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -37,7 +37,7 @@ public class CSSElementSelector extends AbstractElementSelector {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Selector#getSelectorType()}.
+     * w3c.css.sac.Selector#getSelectorType()}.
      */
     public short getSelectorType() {
         return SAC_ELEMENT_NODE_SELECTOR;

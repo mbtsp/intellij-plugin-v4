@@ -23,7 +23,7 @@ import apache.batik.css.engine.value.LengthManager;
 import apache.batik.css.engine.value.Value;
 import apache.batik.css.engine.value.ValueManager;
 import apache.batik.util.CSSConstants;
-import org.w3c.css.sac.LexicalUnit;
+import w3c.css.sac.LexicalUnit;
 import apache.batik.util.SVGTypes;
 
 import org.w3c.dom.DOMException;

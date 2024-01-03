@@ -18,7 +18,7 @@
  */
 package apache.batik.css.engine;
 
-import org.w3c.css.sac.SACMediaList;
+import w3c.css.sac.SACMediaList;
 
 /**
  * This class represents a @media CSS rule.

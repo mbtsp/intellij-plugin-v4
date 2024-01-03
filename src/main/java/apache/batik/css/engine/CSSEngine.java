@@ -39,12 +39,12 @@ import apache.batik.css.parser.ExtendedParser;
 import apache.batik.util.CSSConstants;
 import apache.batik.util.ParsedURL;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.DocumentHandler;
-import org.w3c.css.sac.InputSource;
-import org.w3c.css.sac.LexicalUnit;
-import org.w3c.css.sac.SACMediaList;
-import org.w3c.css.sac.SelectorList;
+import w3c.css.sac.CSSException;
+import w3c.css.sac.DocumentHandler;
+import w3c.css.sac.InputSource;
+import w3c.css.sac.LexicalUnit;
+import w3c.css.sac.SACMediaList;
+import w3c.css.sac.SelectorList;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -1524,7 +1524,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#ignorableAtRule(String)}.
+         * w3c.css.sac.DocumentHandler#ignorableAtRule(String)}.
          */
         public void ignorableAtRule(String atRule) throws CSSException {
         }
@@ -1553,7 +1553,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#startMedia(SACMediaList)}.
+         * w3c.css.sac.DocumentHandler#startMedia(SACMediaList)}.
          */
         public void startMedia(SACMediaList media) throws CSSException {
             MediaRule mr = new MediaRule();
@@ -1565,7 +1565,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#endMedia(SACMediaList)}.
+         * w3c.css.sac.DocumentHandler#endMedia(SACMediaList)}.
          */
         public void endMedia(SACMediaList media) throws CSSException {
             styleSheet = styleSheet.getParent();
@@ -1573,7 +1573,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#startPage(String,String)}.
+         * w3c.css.sac.DocumentHandler#startPage(String,String)}.
          */
         public void startPage(String name, String pseudo_page)
             throws CSSException {
@@ -1581,7 +1581,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#endPage(String,String)}.
+         * w3c.css.sac.DocumentHandler#endPage(String,String)}.
          */
         public void endPage(String name, String pseudo_page)
             throws CSSException {
@@ -1589,7 +1589,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#startFontFace()}.
+         * w3c.css.sac.DocumentHandler#startFontFace()}.
          */
         public void startFontFace() throws CSSException {
             styleDeclaration = new StyleDeclaration();
@@ -1597,7 +1597,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#endFontFace()}.
+         * w3c.css.sac.DocumentHandler#endFontFace()}.
          */
         public void endFontFace() throws CSSException {
             StyleMap sm = new StyleMap(getNumberOfProperties());
@@ -1621,7 +1621,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#startSelector(SelectorList)}.
+         * w3c.css.sac.DocumentHandler#startSelector(SelectorList)}.
          */
         public void startSelector(SelectorList selectors) throws CSSException {
             styleRule = new StyleRule();
@@ -1633,7 +1633,7 @@ public abstract class CSSEngine {
 
         /**
          * <b>SAC</b>: Implements {@link
-         * org.w3c.css.sac.DocumentHandler#endSelector(SelectorList)}.
+         * w3c.css.sac.DocumentHandler#endSelector(SelectorList)}.
          */
         public void endSelector(SelectorList selectors) throws CSSException {
             styleRule = null;

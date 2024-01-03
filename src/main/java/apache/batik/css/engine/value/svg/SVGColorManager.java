@@ -31,7 +31,7 @@ import apache.batik.css.engine.value.svg12.ICCNamedColor;
 import apache.batik.util.CSSConstants;
 import apache.batik.util.SVGTypes;
 
-import org.w3c.css.sac.LexicalUnit;
+import w3c.css.sac.LexicalUnit;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSValue;
 

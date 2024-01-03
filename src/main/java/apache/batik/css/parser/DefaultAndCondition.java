@@ -18,11 +18,11 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.Condition;
+import w3c.css.sac.Condition;
 
 /**
  * This class provides an implementation of the
- * {@link org.w3c.css.sac.CombinatorCondition} interface.
+ * {@link w3c.css.sac.CombinatorCondition} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -38,7 +38,7 @@ public class DefaultAndCondition extends AbstractCombinatorCondition {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Condition#getConditionType()}.
+     * w3c.css.sac.Condition#getConditionType()}.
      */
     public short getConditionType() {
         return SAC_AND_CONDITION;

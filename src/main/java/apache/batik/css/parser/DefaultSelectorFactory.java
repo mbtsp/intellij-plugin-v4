@@ -18,21 +18,21 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.CSSException;
-import org.w3c.css.sac.CharacterDataSelector;
-import org.w3c.css.sac.Condition;
-import org.w3c.css.sac.ConditionalSelector;
-import org.w3c.css.sac.DescendantSelector;
-import org.w3c.css.sac.ElementSelector;
-import org.w3c.css.sac.NegativeSelector;
-import org.w3c.css.sac.ProcessingInstructionSelector;
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SelectorFactory;
-import org.w3c.css.sac.SiblingSelector;
-import org.w3c.css.sac.SimpleSelector;
+import w3c.css.sac.CSSException;
+import w3c.css.sac.CharacterDataSelector;
+import w3c.css.sac.Condition;
+import w3c.css.sac.ConditionalSelector;
+import w3c.css.sac.DescendantSelector;
+import w3c.css.sac.ElementSelector;
+import w3c.css.sac.NegativeSelector;
+import w3c.css.sac.ProcessingInstructionSelector;
+import w3c.css.sac.Selector;
+import w3c.css.sac.SelectorFactory;
+import w3c.css.sac.SiblingSelector;
+import w3c.css.sac.SimpleSelector;
 
 /**
- * This class implements the {@link org.w3c.css.sac.SelectorFactory} interface.
+ * This class implements the {@link w3c.css.sac.SelectorFactory} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -65,7 +65,7 @@ public class DefaultSelectorFactory implements SelectorFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SelectorFactory#createAnyNodeSelector()}.
+     * w3c.css.sac.SelectorFactory#createAnyNodeSelector()}.
      */
     public SimpleSelector createAnyNodeSelector() throws CSSException {
         throw new CSSException("Not implemented in CSS2");
@@ -73,7 +73,7 @@ public class DefaultSelectorFactory implements SelectorFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SelectorFactory#createRootNodeSelector()}.
+     * w3c.css.sac.SelectorFactory#createRootNodeSelector()}.
      */
     public SimpleSelector createRootNodeSelector() throws CSSException {
         throw new CSSException("Not implemented in CSS2");
@@ -81,7 +81,7 @@ public class DefaultSelectorFactory implements SelectorFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SelectorFactory#createNegativeSelector(SimpleSelector)}.
+     * w3c.css.sac.SelectorFactory#createNegativeSelector(SimpleSelector)}.
      */
     public NegativeSelector createNegativeSelector(SimpleSelector selector)
         throws CSSException {
@@ -90,7 +90,7 @@ public class DefaultSelectorFactory implements SelectorFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SelectorFactory#createElementSelector(String,String)}.
+     * w3c.css.sac.SelectorFactory#createElementSelector(String,String)}.
      */
     public ElementSelector createElementSelector(String namespaceURI,
                                                  String tagName)
@@ -100,7 +100,7 @@ public class DefaultSelectorFactory implements SelectorFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SelectorFactory#createTextNodeSelector(String)}.
+     * w3c.css.sac.SelectorFactory#createTextNodeSelector(String)}.
      */
     public CharacterDataSelector createTextNodeSelector(String data)
         throws CSSException {
@@ -109,7 +109,7 @@ public class DefaultSelectorFactory implements SelectorFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SelectorFactory#createCDataSectionSelector(String)}.
+     * w3c.css.sac.SelectorFactory#createCDataSectionSelector(String)}.
      */
     public CharacterDataSelector createCDataSectionSelector(String data)
         throws CSSException {
@@ -128,7 +128,7 @@ public class DefaultSelectorFactory implements SelectorFactory {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SelectorFactory#createCommentSelector(String)}.
+     * w3c.css.sac.SelectorFactory#createCommentSelector(String)}.
      */
     public CharacterDataSelector createCommentSelector(String data)
         throws CSSException {

@@ -18,8 +18,8 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SelectorList;
+import w3c.css.sac.Selector;
+import w3c.css.sac.SelectorList;
 
 /**
  * This class implements the {@link SelectorList} interface.

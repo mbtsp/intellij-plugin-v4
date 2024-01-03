@@ -18,7 +18,7 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.LexicalUnit;
+import w3c.css.sac.LexicalUnit;
 
 /**
  * This class implements the {@link LexicalUnit} interface.

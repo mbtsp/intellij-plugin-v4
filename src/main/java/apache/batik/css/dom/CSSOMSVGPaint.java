@@ -26,7 +26,7 @@ import apache.batik.util.CSSConstants;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.css.CSSPrimitiveValue;
 import org.w3c.dom.css.CSSValue;
-import org.w3c.dom.svg.SVGPaint;
+import w3c.dom.svg.SVGPaint;
 
 /**
  * This class implements the {@link SVGPaint} interface.
@@ -55,7 +55,7 @@ public class CSSOMSVGPaint extends CSSOMSVGColor implements SVGPaint {
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGColor#getColorType()}.
+     * w3c.dom.svg.SVGColor#getColorType()}.
      */
     public short getColorType() {
         throw new DOMException(DOMException.INVALID_ACCESS_ERR, "");
@@ -63,7 +63,7 @@ public class CSSOMSVGPaint extends CSSOMSVGColor implements SVGPaint {
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGPaint#getPaintType()}.
+     * w3c.dom.svg.SVGPaint#getPaintType()}.
      */
     public short getPaintType() {
         Value value = valueProvider.getValue();
@@ -122,7 +122,7 @@ public class CSSOMSVGPaint extends CSSOMSVGColor implements SVGPaint {
     }
 
     /**
-     * <b>DOM</b>: Implements {@link org.w3c.dom.svg.SVGPaint#getUri()}.
+     * <b>DOM</b>: Implements {@link w3c.dom.svg.SVGPaint#getUri()}.
      */
     public String getUri() {
         switch (getPaintType()) {
@@ -139,7 +139,7 @@ public class CSSOMSVGPaint extends CSSOMSVGColor implements SVGPaint {
     }
 
     /**
-     * <b>DOM</b>: Implements {@link org.w3c.dom.svg.SVGPaint#setUri(String)}.
+     * <b>DOM</b>: Implements {@link w3c.dom.svg.SVGPaint#setUri(String)}.
      */
     public void setUri(String uri) {
         if (handler == null) {
@@ -152,7 +152,7 @@ public class CSSOMSVGPaint extends CSSOMSVGColor implements SVGPaint {
 
     /**
      * <b>DOM</b>: Implements {@link
-     * org.w3c.dom.svg.SVGPaint#setPaint(short,String,String,String)}.
+     * w3c.dom.svg.SVGPaint#setPaint(short,String,String,String)}.
      */
     public void setPaint(short paintType, String uri,
                          String rgbColor, String iccColor) {

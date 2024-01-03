@@ -43,7 +43,7 @@ public class XMLResourceDescriptor {
      * The CSS parser class name key.
      */
     public static final String CSS_PARSER_CLASS_NAME_KEY =
-        "org.w3c.css.sac.driver";
+        "w3c.css.sac.driver";
 
     /**
      * The resources file name
@@ -112,7 +112,7 @@ public class XMLResourceDescriptor {
      * <p>This method first checks if any CSS parser has been
      * specified using the <code>setCSSParserClassName</code> method. If
      * any, this method will return the value of the property
-     * 'org.w3c.css.sac.driver' specified in the
+     * 'w3c.css.sac.driver' specified in the
      * <code>resources/XMLResourceDescriptor.properties</code> resource
      * file.
      */

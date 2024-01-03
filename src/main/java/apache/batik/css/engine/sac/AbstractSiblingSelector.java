@@ -18,13 +18,13 @@
  */
 package apache.batik.css.engine.sac;
 
-import org.w3c.css.sac.Selector;
-import org.w3c.css.sac.SiblingSelector;
-import org.w3c.css.sac.SimpleSelector;
+import w3c.css.sac.Selector;
+import w3c.css.sac.SiblingSelector;
+import w3c.css.sac.SimpleSelector;
 
 /**
  * This class provides an abstract implementation of the {@link
- * org.w3c.css.sac.SiblingSelector} interface.
+ * w3c.css.sac.SiblingSelector} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -88,7 +88,7 @@ public abstract class AbstractSiblingSelector
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SiblingSelector#getSelector()}.
+     * w3c.css.sac.SiblingSelector#getSelector()}.
      */
     public Selector getSelector() {
         return selector;
@@ -96,7 +96,7 @@ public abstract class AbstractSiblingSelector
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.SiblingSelector#getSiblingSelector()}.
+     * w3c.css.sac.SiblingSelector#getSiblingSelector()}.
      */
     public SimpleSelector getSiblingSelector() {
         return simpleSelector;

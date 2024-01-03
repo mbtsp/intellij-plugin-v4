@@ -19,7 +19,7 @@
 package apache.batik.css.parser;
 
 /**
- * This class implements the {@link org.w3c.css.sac.ElementSelector} interface.
+ * This class implements the {@link w3c.css.sac.ElementSelector} interface.
  *
  * @author <a href="mailto:stephane@hillion.org">Stephane Hillion</a>
  * @version $Id$
@@ -34,7 +34,7 @@ public class DefaultPseudoElementSelector extends AbstractElementSelector {
 
     /**
      * <b>SAC</b>: Implements {@link
-     * org.w3c.css.sac.Selector#getSelectorType()}.
+     * w3c.css.sac.Selector#getSelectorType()}.
      */
     public short getSelectorType() {
         return SAC_PSEUDO_ELEMENT_SELECTOR;

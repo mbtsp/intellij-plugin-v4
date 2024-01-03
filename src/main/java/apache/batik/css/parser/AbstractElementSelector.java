@@ -18,7 +18,7 @@
  */
 package apache.batik.css.parser;
 
-import org.w3c.css.sac.ElementSelector;
+import w3c.css.sac.ElementSelector;
 
 /**
  * This class provides an abstract implementation of the
