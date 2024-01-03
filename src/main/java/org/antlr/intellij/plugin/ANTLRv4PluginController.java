@@ -16,6 +16,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
 import com.intellij.openapi.fileEditor.FileEditorManagerListener;
+import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -28,6 +29,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
 import com.intellij.openapi.vfs.VirtualFileManager;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.messages.MessageBusConnection;
 import org.antlr.intellij.plugin.parsing.ParsingUtils;
@@ -43,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -105,6 +109,13 @@ public class ANTLRv4PluginController {
         return pc;
     }
 
+    public void showPre(Runnable runnable){
+        ToolWindow toolWindow=  ToolWindowManager.getInstance(this.project).getToolWindow(PREVIEW_WINDOW_ID);
+        if(toolWindow!=null){
+            toolWindow.show(runnable);
+        }
+    }
+
 
     public void projectOpened() {
         IdeaPluginDescriptor plugin = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID));
@@ -123,11 +134,13 @@ public class ANTLRv4PluginController {
         //synchronized ( shutdownLock ) { // They should be called from EDT only so no lock
         projectIsClosed = true;
         uninstallListeners();
-        for (PreviewState it : grammarToPreviewState.values()) {
-            if (this.project != null && !this.project.isDisposed()) {
-                this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).releaseEditor(it);
-            }
+        if(grammarToPreviewState!=null){
+            for (PreviewState it : grammarToPreviewState.values()) {
+                if (this.project != null && !this.project.isDisposed()) {
+                    this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).releaseEditor(it);
+                }
 
+            }
         }
         // We can't dispose of the preview state map during unit tests
         if (ApplicationManager.getApplication().isUnitTestMode()) return;
@@ -463,9 +476,10 @@ public class ANTLRv4PluginController {
         ApplicationManager.getApplication().invokeLater(
 //                () -> ANTLRv4PluginController.getInstance(project).getConsoleWindow().show(null)
                 () -> {
-                    if (project != null && !project.isDisposed()) {
-                        project.getMessageBus().syncPublisher(ConsoleToolWindow.TOPIC).show(null);
-                    }
+                 ToolWindow toolWindow=   ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);
+                 if(toolWindow!=null){
+                     toolWindow.show();
+                 }
                 }
         );
     }
@@ -574,6 +588,13 @@ public class ANTLRv4PluginController {
     }
 
     public class MyFileEditorManagerAdapter implements FileEditorManagerListener {
+
+
+        @Override
+        public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull List<FileEditorWithProvider> editorsWithProviders) {
+            currentEditorFileChangedEvent(null,file,false);
+        }
+
         @Override
         public void selectionChanged(FileEditorManagerEvent event) {
             if (!projectIsClosed) {

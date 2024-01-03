@@ -175,7 +175,7 @@ For really big files and slow grammars, there is an appreciable delay when displ
                            instance="org.antlr.intellij.plugin.configdialogs.ANTLRv4ProjectSettings"/>
       <projectService serviceImplementation="org.antlr.intellij.plugin.configdialogs.ANTLRv4GrammarPropertiesComponent"/>
       <lang.refactoringSupport language="ANTLRv4" implementationClass="org.antlr.intellij.plugin.refactor.ANTLRv4RefactoringSupport"/>
-      <toolWindow factoryClass="org.antlr.intellij.plugin.toolwindow.PreViewToolWindow" id="Antlr(new) Preview" anchor="bottom"/>
+      <toolWindow factoryClass="org.antlr.intellij.plugin.toolwindow.PreViewToolWindow" id="Antlr(new) Preview" anchor="bottom" />
       <toolWindow factoryClass="org.antlr.intellij.plugin.toolwindow.ConsoleToolWindow" id="Antlr(new) Console" anchor="bottom"/>
   </extensions>
 </idea-plugin>

@@ -29,6 +29,12 @@ public class PreViewToolWindow implements ToolWindowFactory, DumbAware {
         Content content = ContentFactory.getInstance().createContent(previewPanel, "", false);
         content.setHelpId("antlr.new.pre.helper");
         toolWindow.getContentManager().addContent(content);
+    }
+
+    @Override
+    public void init(@NotNull ToolWindow toolWindow) {
+        toolWindow.setIcon(Icons.getToolWindow());
+        Project project = toolWindow.getProject();
         if (!project.isDisposed()) {
             ANTLRv4PluginController antlRv4PluginController = ANTLRv4PluginController.getInstance(project);
             if (antlRv4PluginController != null) {
@@ -37,97 +43,115 @@ public class PreViewToolWindow implements ToolWindowFactory, DumbAware {
             project.getMessageBus().connect().subscribe(TOPIC, new PreViewListener() {
                 @Override
                 public void releaseEditor(PreviewState previewState) {
-                    previewPanel.getInputPanel().releaseEditor(previewState);
+                    if(previewPanel!=null){
+                        previewPanel.getInputPanel().releaseEditor(previewState);
+                    }
                 }
 
                 @Override
                 public void setStartRuleName(VirtualFile grammarFile, String startRuleName) {
-                    previewPanel.getInputPanel().setStartRuleName(grammarFile, startRuleName);
+                    if(previewPanel!=null) {
+                        previewPanel.getInputPanel().setStartRuleName(grammarFile, startRuleName);
+                    }
                 }
 
                 @Override
                 public void updateParseTreeFromDoc(VirtualFile grammarFile) {
-                    previewPanel.updateParseTreeFromDoc(grammarFile);
+                    if(previewPanel!=null) {
+                        previewPanel.updateParseTreeFromDoc(grammarFile);
+                    }
                 }
 
                 @Override
                 public void grammarFileSaved(VirtualFile grammarFile) {
-                    previewPanel.grammarFileSaved(grammarFile);
+                    if(previewPanel!=null) {
+                        previewPanel.grammarFileSaved(grammarFile);
+                    }
                 }
 
                 @Override
                 public void grammarFileChanged(VirtualFile grammarFile) {
-                    previewPanel.grammarFileChanged(grammarFile);
+                    if(previewPanel!=null) {
+                        previewPanel.grammarFileChanged(grammarFile);
+                    }
                 }
 
                 @Override
                 public void mouseEnteredGrammarEditorEvent(VirtualFile file, EditorMouseEvent event) {
-                    ProfilerPanel profilerPanel = previewPanel.getProfilerPanel();
-                    if (profilerPanel != null) {
-                        profilerPanel.mouseEnteredGrammarEditorEvent(file, event);
+                    if(previewPanel!=null) {
+                        ProfilerPanel profilerPanel = previewPanel.getProfilerPanel();
+                        if (profilerPanel != null) {
+                            profilerPanel.mouseEnteredGrammarEditorEvent(file, event);
+                        }
                     }
                 }
 
                 @Override
                 public void closeGrammar(VirtualFile file) {
-                    previewPanel.closeGrammar(file);
+                    if(previewPanel!=null) {
+                        previewPanel.closeGrammar(file);
+                    }
                 }
 
                 @Override
                 public void setEnabled(boolean enabled) {
-                    previewPanel.setEnabled(enabled);
+                    if(previewPanel!=null) {
+                        previewPanel.setEnabled(enabled);
+                    }
                 }
 
                 @Override
                 public void toolWindowHide(@Nullable Runnable runnable) {
-                    toolWindow.hide(runnable);
+                    if(previewPanel!=null) {
+                        toolWindow.hide(runnable);
+                    }
                 }
 
                 @Override
                 public void onParsingCompleted(PreviewState previewState, long duration) {
-                    previewPanel.onParsingCompleted(previewState, duration);
+                    if(previewPanel!=null) {
+                        previewPanel.onParsingCompleted(previewState, duration);
+                    }
                 }
 
                 @Override
                 public void notifySlowParsing() {
-                    previewPanel.notifySlowParsing();
+                    if(previewPanel!=null) {
+                        previewPanel.notifySlowParsing();
+                    }
                 }
 
                 @Override
                 public void onParsingCancelled() {
-                    previewPanel.onParsingCancelled();
+                    if(previewPanel!=null) {
+                        previewPanel.onParsingCancelled();
+                    }
                 }
 
                 @Override
                 public void clearParseErrors() {
-                    previewPanel.getInputPanel().clearParseErrors();
+                    if(previewPanel!=null) {
+                        previewPanel.getInputPanel().clearParseErrors();
+                    }
                 }
 
                 @Override
                 public void startParsing() {
-                    previewPanel.startParsing();
+                    if(previewPanel!=null) {
+                        previewPanel.startParsing();
+                    }
                 }
 
                 @Override
                 public void autoRefreshPreview(VirtualFile virtualFile) {
-                    previewPanel.autoRefreshPreview(virtualFile);
+                    if(previewPanel!=null) {
+                        previewPanel.autoRefreshPreview(virtualFile);
+                    }
                 }
 
-                @Override
-                public void show(@Nullable Runnable runnable) {
-                    toolWindow.show(runnable);
-                }
+
             });
         }
-
     }
 
-    @Override
-    public void init(@NotNull ToolWindow toolWindow) {
-        toolWindow.setIcon(Icons.getToolWindow());
-    }
-
-    public PreviewPanel getPreviewPanel() {
-        return previewPanel;
-    }
 }

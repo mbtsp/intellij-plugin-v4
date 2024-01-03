@@ -92,9 +92,9 @@ public class TestRuleAction extends AnAction implements DumbAware {
         LOG.info("actionPerformed " + grammarFile);
 
         ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(e.getProject());
-        Project project = e.getProject();
-        if (project != null && !project.isDisposed()) {
-            project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).show(null);
+        if (controller!=null) {
+            controller.showPre(null);
+            controller.currentEditorFileChangedEvent(null,grammarFile,false);
         }
 
         ParserRuleRefNode r = MyActionUtils.getParserRuleSurroundingRef(e);

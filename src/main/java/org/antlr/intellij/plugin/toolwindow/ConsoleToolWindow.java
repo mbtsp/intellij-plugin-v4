@@ -3,7 +3,6 @@ package org.antlr.intellij.plugin.toolwindow;
 import com.intellij.execution.filters.TextConsoleBuilder;
 import com.intellij.execution.filters.TextConsoleBuilderFactory;
 import com.intellij.execution.ui.ConsoleView;
-import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -13,7 +12,6 @@ import com.intellij.util.messages.Topic;
 import org.antlr.intellij.plugin.Icons;
 import org.antlr.intellij.plugin.listeners.ConsoleListener;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ConsoleToolWindow implements ToolWindowFactory {
     private ConsoleView console;
@@ -29,24 +27,20 @@ public class ConsoleToolWindow implements ToolWindowFactory {
         content.setCloseable(false);
         content.setDisposer(console);
         toolWindow.getContentManager().addContent(content);
-        if (!project.isDisposed()) {
-            project.getMessageBus().connect().subscribe(TOPIC, new ConsoleListener() {
-                @Override
-                public void show(@Nullable Runnable runnable) {
-                    toolWindow.show(runnable);
-                }
 
-                @Override
-                public void print(@NotNull String msg, @NotNull ConsoleViewContentType contentType) {
-                    console.print(msg, contentType);
-                }
-            });
-        }
     }
 
     @Override
     public void init(@NotNull ToolWindow toolWindow) {
         toolWindow.setIcon(Icons.getToolWindow());
+        Project project = toolWindow.getProject();
+        if (!project.isDisposed()) {
+            project.getMessageBus().connect().subscribe(TOPIC, (ConsoleListener) (msg, contentType) -> {
+                if (console != null) {
+                    console.print(msg, contentType);
+                }
+            });
+        }
     }
 
     public ConsoleView getConsole() {
