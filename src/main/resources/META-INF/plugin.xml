@@ -2,7 +2,7 @@
   <id>org.antlr.intellij.plugin</id>
   <name>ANTLR v4(New)</name>
   <version>will be replaced by gradle</version>
-  <vendor email="parrt@antlr.org" url="https://github.com/antlr/intellij-plugin-v4">ANTLR Project</vendor>
+  <vendor email="zoulejiu@gmail.com" url="https://github.com/mbtsp/intellij-plugin-v4">ANTLR Project</vendor>
 
   <description><![CDATA[
   <p>
@@ -61,14 +61,14 @@
           and underlining just like a regular editor window. The difference
           is that this window's grammar is specified in your grammar file.
 
-<p>See <a href="https://github.com/antlr/intellij-plugin-v4/blob/master/README.md">README.md</a>
+<p>See <a href="https://github.com/mbtsp/intellij-plugin-v4/blob/master/README.md">README.md</a>
 for more details.
 
 <p>
 For really big files and slow grammars, there is an appreciable delay when displaying the parse tree or profiling information.
 
 <p>
-<a href="https://github.com/antlr/intellij-plugin-v4">Github source</a>
+<a href="https://github.com/mbtsp/intellij-plugin-v4">Github source</a>
       ]]></description>
 
   <change-notes><![CDATA[
@@ -83,23 +83,10 @@ For really big files and slow grammars, there is an appreciable delay when displ
       ]]>
   </change-notes>
 
-  <!-- please see https://plugins.jetbrains.com/docs/intellij/build-number-ranges.html for description -->
-  <!-- can be overriden by the Gradle build if needed -->
-<!--  <idea-version since-build="222.3345.18"/> &lt;!&ndash; requires IntelliJ 2020.3+ due to java 11 issue really &ndash;&gt;-->
-
-  <!-- please see http://confluence.jetbrains.net/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
-       on how to target different products -->
-  <!-- uncomment to enable plugin in all products -->
   <depends>com.intellij.modules.lang</depends>
 
   <application-components>
   </application-components>
-
-<!--  <project-components>-->
-<!--    <component>-->
-<!--        <implementation-class>org.antlr.intellij.plugin.ANTLRv4PluginController</implementation-class>-->
-<!--    </component>-->
-<!--  </project-components>-->
 
   <actions>
       <action id="antlr.Generate" class="org.antlr.intellij.plugin.actions.GenerateParserAction"
@@ -167,8 +154,8 @@ For really big files and slow grammars, there is an appreciable delay when displ
                 implementationClass="org.antlr.intellij.plugin.ANTLRv4FindUsagesProvider"/>
 
       <defaultLiveTemplates file="/liveTemplates/lexer/user.xml"/>
-	  <liveTemplateContext implementation="org.antlr.intellij.plugin.templates.ANTLRGenericContext"/>
-	  <liveTemplateContext implementation="org.antlr.intellij.plugin.templates.OutsideRuleContext"/>
+	  <liveTemplateContext implementation="org.antlr.intellij.plugin.templates.ANTLRGenericContext" contextId="ANTLR"/>
+	  <liveTemplateContext implementation="org.antlr.intellij.plugin.templates.OutsideRuleContext" contextId="ANTLR_OUTSIDE"/>
       <projectConfigurable groupId="language"
                            id="org.antlr.intellij.plugin.configdialogs.ANTLRv4ProjectSettings"
                            displayName="ANTLR V4 Default Project Settings"
