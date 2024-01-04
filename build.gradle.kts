@@ -54,10 +54,14 @@ dependencies {
     }
 //    implementation ("org.antlr:antlr4-intellij-adaptor:0.1")
     implementation ("org.antlr:antlr4-intellij-adaptor:0.2-SNAPSHOT")
+//    implementation ("org.apache.httpcomponents.client5:httpclient5:5.2.1")
+//    implementation ("org.apache.httpcomponents.core5:httpcore5:5.2.1")
     testImplementation(group="junit", name= "junit", version= "4.13.2")
     testImplementation (group="org.mockito", name= "mockito-core", version= "5.8.0")
 }
-
+tasks.compileKotlin {
+    dependsOn(tasks.generateGrammarSource)
+}
 
 tasks {
     wrapper {

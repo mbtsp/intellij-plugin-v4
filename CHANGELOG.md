@@ -4,10 +4,10 @@
 
 ## [Unreleased]
 
-## [2023.1.1]
+## [2024.1.1]
 
 
-## [2023.1.0]
+## [2024.1.0]
 
 ### Fixed
 - Cannot invoke "java.util.List.get(int)" because "this.tokenElementTypes" is null
