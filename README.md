@@ -1,6 +1,5 @@
 ## Plug-in updates are slow and inactive. Clone them for quick iteration to fix problems.
-<!-- Plugin description -->
-## The ANTLR v4 plugin update fixes inactivity, clone it so that the issue can be fixed quickly
+
 # IntelliJ Idea Plugin for ANTLR v4 ![Java CI](https://github.com/antlr/intellij-plugin-v4/workflows/Java%20CI/badge.svg?branch=master) [![Latest version](https://img.shields.io/jetbrains/plugin/v/7358.svg?label=latest%20version)](https://plugins.jetbrains.com/plugin/7358) ![Downloads](https://img.shields.io/jetbrains/plugin/d/7358.svg)
 
 An [IntelliJ](https://www.jetbrains.com/idea/) 2020.3+ plugin for ANTLR v4 ([plugin source at github](https://github.com/mbtsp/intellij-plugin-v4)).
@@ -67,10 +66,22 @@ because the interpreter is language agnostic.
 
 For the same reasons, if your parser and/or lexer classes extend a custom implementation of the 
 base parser/lexer classes, your custom code will *not* be run during live preview. 
+<!-- Plugin description -->
+### The original plugin was not updated very active, so use this plugin for quick bug fixes and feature additions
+1. syntax highlighting
+2. syntax error checking
+3. generates parser code; shortcut (ctrl-shift-G / meta-shift-G) but it's in Tools menu and popups.
+See [README.md](https://github.com/mbtsp/intellij-plugin-v4/blob/master/README.md) for more details
+### How to use
+ 1. Select the G4 parser file, select the syntax name, and right-click
+    Selected
+    1. 'Test Rule sqlscript'  Test the current statement
+    2. 'Generate ANTLR Recognizer' Generates parser code
+    3. 'Configure ANTLR.....' Configure
 <!-- Plugin description end -->
 ## History
 
-See [Releases](https://github.com/antlr/intellij-plugin-v4/releases)
+See [Releases](https://github.com/mbtsp/intellij-plugin-v4/releases)
 
 ## Screenshots
 
