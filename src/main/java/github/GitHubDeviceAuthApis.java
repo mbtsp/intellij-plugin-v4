@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class GitHubDeviceAuthApis {
     private final String DEVICE_CODE_URL = "https://github.com/login/device/code";
-    public static String token = "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";
+    public static String token = "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";
 
     Map<String, String> heads = new HashMap<>();
 
@@ -38,7 +38,7 @@ public class GitHubDeviceAuthApis {
         HttpClientResponse<IssueInfo> httpClientResponse = httpClient.get(url, params, IssueInfo.class);
         if (httpClientResponse.isStatus()) {
             IssueInfo issueInfo = httpClientResponse.getBody();
-            if (issueInfo != null && issueInfo.getTotalCount() != 0) {
+            if (issueInfo != null && issueInfo.getTotalCount() != null && issueInfo.getTotalCount() != 0) {
                 List<IssueInfo.ItemsDTO> itemsDTOS = issueInfo.getItems();
                 if (itemsDTOS != null && !itemsDTOS.isEmpty()) {
                     return itemsDTOS.get(0);

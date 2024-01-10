@@ -38,6 +38,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
@@ -78,6 +81,9 @@ public class RunANTLROnGrammarFile extends Task.Modal {
             ReadAction.run(() -> antlr(grammarFile));
         } else {
             ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(project);
+            if (controller == null) {
+                return;
+            }
             final PreviewState previewState = controller.getPreviewState(grammarFile);
             // is lexer file? gen .tokens file no matter what as tokens might have changed;
             // a parser that feeds off of that file will need to see the changes.
@@ -264,9 +270,26 @@ public class RunANTLROnGrammarFile extends Task.Modal {
     }
 
     private static VirtualFile getContentRoot(Project project, VirtualFile vfile) {
-        VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(vfile);
-        if (root != null) return root;
-        return vfile.getParent();
+        AtomicReference<VirtualFile> virtualFileAtomicReference = new AtomicReference<>(null);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        ApplicationManager.getApplication().runReadAction(() -> {
+            try {
+                VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(vfile);
+                if (root != null) {
+                    virtualFileAtomicReference.set(root);
+                } else {
+                    virtualFileAtomicReference.set(vfile.getParent());
+                }
+            } finally {
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await(5L, TimeUnit.MINUTES);
+        } catch (InterruptedException e) {
+            return null;
+        }
+        return virtualFileAtomicReference.get();
     }
 
     public String getOutputDirName() {

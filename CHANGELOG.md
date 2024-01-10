@@ -4,8 +4,16 @@
 
 ## [Unreleased]
 
+## [2024.1.3]
+
+
+
+
 ## [2024.1.2]
 
+### Fixed
+- Unable to file a bug
+-  RunANTLROnGrammarFile.getContentRoot   Read access is allowed from inside read-action
 
 ## [2024.1.1]
 

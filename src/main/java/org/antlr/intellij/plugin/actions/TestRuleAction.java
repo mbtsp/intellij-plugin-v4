@@ -8,14 +8,11 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.DumbAware;
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.antlr.intellij.plugin.ANTLRv4PluginController;
 import org.antlr.intellij.plugin.psi.ParserRuleRefNode;
-import org.antlr.intellij.plugin.toolwindow.ConsoleToolWindow;
-import org.antlr.intellij.plugin.toolwindow.PreViewToolWindow;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -92,9 +89,9 @@ public class TestRuleAction extends AnAction implements DumbAware {
         LOG.info("actionPerformed " + grammarFile);
 
         ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(e.getProject());
-        if (controller!=null) {
+        if (controller != null) {
             controller.showPre(null);
-            controller.currentEditorFileChangedEvent(null,grammarFile,false);
+            controller.currentEditorFileChangedEvent(null, grammarFile, false);
         }
 
         ParserRuleRefNode r = MyActionUtils.getParserRuleSurroundingRef(e);
@@ -107,7 +104,7 @@ public class TestRuleAction extends AnAction implements DumbAware {
         if (doc != null) {
             docMgr.saveDocument(doc);
         }
-        if(controller!=null){
+        if (controller != null) {
             controller.setStartRuleNameEvent(grammarFile, ruleName);
         }
     }
