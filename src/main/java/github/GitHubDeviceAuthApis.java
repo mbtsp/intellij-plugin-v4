@@ -7,14 +7,14 @@ import java.util.Map;
 
 public class GitHubDeviceAuthApis {
     private final String DEVICE_CODE_URL = "https://github.com/login/device/code";
-    public static String token = "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";
+    public static String token = "11AHTYGQY0EBe5ZXUiHLxq_XWqE76wibh0NnPByH1y9qxlF9ElwBDIrPHYgEEwX2TPLLJ5NZFCVtRsLolW";
 
     Map<String, String> heads = new HashMap<>();
 
     {
         heads.put("User-Agent", "issueAppRoot");
         heads.put("X-GitHub-Api-Version", "2022-11-28");
-        heads.put("Authorization", String.format("Bearer %s", token));
+        heads.put("Authorization", String.format("Bearer github_pat_%s", token));
     }
 
     GitHubDeviceCode getDeviceCode(String clientId) throws Exception {

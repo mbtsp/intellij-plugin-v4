@@ -1,9 +1,6 @@
 package org.antlr.intellij.plugin.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.LangDataKeys;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.Result;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
@@ -22,6 +19,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.antlr.v4.runtime.tree.Trees;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -29,6 +27,11 @@ public class InlineRuleAction extends AnAction {
 	@Override
 	public void update(AnActionEvent e) {
 		MyActionUtils.showOnlyIfSelectionIsRule(e, "Inline and Remove Rule %s");
+	}
+
+	@Override
+	public @NotNull ActionUpdateThread getActionUpdateThread() {
+		return ActionUpdateThread.BGT;
 	}
 
 	@Override

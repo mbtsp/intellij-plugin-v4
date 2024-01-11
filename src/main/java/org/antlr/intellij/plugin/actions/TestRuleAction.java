@@ -13,6 +13,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.antlr.intellij.plugin.ANTLRv4PluginController;
 import org.antlr.intellij.plugin.psi.ParserRuleRefNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.InputEvent;
@@ -20,6 +21,11 @@ import java.awt.event.MouseEvent;
 
 public class TestRuleAction extends AnAction implements DumbAware {
     public static final Logger LOG = Logger.getInstance("ANTLR TestRuleAction");
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.BGT;
+    }
 
     /**
      * Only show if selection is a grammar and in a rule
@@ -37,31 +43,32 @@ public class TestRuleAction extends AnAction implements DumbAware {
             return;
         }
 
-        ParserRuleRefNode r = null;
-        InputEvent inputEvent = e.getInputEvent();
-        if (inputEvent instanceof MouseEvent) { // this seems to be after update() called 2x and we have selected the action
-            r = MyActionUtils.getParserRuleSurroundingRef(e);
-        } else {
-            // If editor component, mouse event not happened yet to update caret so must ask for mouse position
-            Editor editor = e.getData(PlatformDataKeys.EDITOR);
-            if (editor != null) {
-                Point mousePosition = editor.getContentComponent().getMousePosition();
-                if (mousePosition != null) {
-                    LogicalPosition pos = editor.xyToLogicalPosition(mousePosition);
-                    int offset = editor.logicalPositionToOffset(pos);
-                    PsiFile file = e.getData(LangDataKeys.PSI_FILE);
-                    if (file != null) {
-                        PsiElement el = file.findElementAt(offset);
-                        if (el != null) {
-                            r = MyActionUtils.getParserRuleSurroundingRef(el);
-                        }
-                    }
-                }
-            }
-            if (r == null) {
-                r = MyActionUtils.getParserRuleSurroundingRef(e);
-            }
-        }
+        ParserRuleRefNode r = MyActionUtils.getParserRuleSurroundingRef(e);
+//        InputEvent inputEvent = e.getInputEvent();
+//        if (inputEvent instanceof MouseEvent) { // this seems to be after update() called 2x and we have selected the action
+//            r =
+//        }
+//        else {
+//            // If editor component, mouse event not happened yet to update caret so must ask for mouse position
+//            Editor editor = e.getData(PlatformDataKeys.EDITOR);
+//            if (editor != null) {
+//                Point mousePosition = editor.getContentComponent().getMousePosition();
+//                if (mousePosition != null) {
+//                    LogicalPosition pos = editor.xyToLogicalPosition(mousePosition);
+//                    int offset = editor.logicalPositionToOffset(pos);
+//                    PsiFile file = e.getData(LangDataKeys.PSI_FILE);
+//                    if (file != null) {
+//                        PsiElement el = file.findElementAt(offset);
+//                        if (el != null) {
+//                            r = MyActionUtils.getParserRuleSurroundingRef(el);
+//                        }
+//                    }
+//                }
+//            }
+//            if (r == null) {
+//                r = MyActionUtils.getParserRuleSurroundingRef(e);
+//            }
+//        }
         if (r == null) {
             presentation.setEnabled(false);
             return;

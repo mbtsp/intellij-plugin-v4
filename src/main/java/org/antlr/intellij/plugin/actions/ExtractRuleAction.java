@@ -38,6 +38,10 @@ import static com.intellij.openapi.command.WriteCommandAction.runWriteCommandAct
  * Extracts an expression to an new parser rule.
  */
 public class ExtractRuleAction extends AnAction {
+	@Override
+	public @NotNull ActionUpdateThread getActionUpdateThread() {
+		return ActionUpdateThread.BGT;
+	}
 
 	/**
 	 * Enables the action if the caret is in a lexer or parser rule.

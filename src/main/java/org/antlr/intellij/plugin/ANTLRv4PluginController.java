@@ -36,7 +36,6 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.antlr.intellij.plugin.parsing.ParsingUtils;
 import org.antlr.intellij.plugin.parsing.RunANTLROnGrammarFile;
 import org.antlr.intellij.plugin.preview.PreviewState;
-import org.antlr.intellij.plugin.toolwindow.ConsoleToolWindow;
 import org.antlr.intellij.plugin.toolwindow.PreViewToolWindow;
 import org.antlr.v4.parse.ANTLRParser;
 import org.antlr.v4.tool.Grammar;
@@ -48,6 +47,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This object is the controller for the ANTLR plug-in. It receives
@@ -109,9 +111,9 @@ public class ANTLRv4PluginController {
         return pc;
     }
 
-    public void showPre(Runnable runnable){
-        ToolWindow toolWindow=  ToolWindowManager.getInstance(this.project).getToolWindow(PREVIEW_WINDOW_ID);
-        if(toolWindow!=null){
+    public void showPre(Runnable runnable) {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(this.project).getToolWindow(PREVIEW_WINDOW_ID);
+        if (toolWindow != null) {
             toolWindow.show(runnable);
         }
     }
@@ -134,7 +136,7 @@ public class ANTLRv4PluginController {
         //synchronized ( shutdownLock ) { // They should be called from EDT only so no lock
         projectIsClosed = true;
         uninstallListeners();
-        if(grammarToPreviewState!=null){
+        if (grammarToPreviewState != null) {
             for (PreviewState it : grammarToPreviewState.values()) {
                 if (this.project != null && !this.project.isDisposed()) {
                     this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).releaseEditor(it);
@@ -217,7 +219,7 @@ public class ANTLRv4PluginController {
         if (this.project != null && !this.project.isDisposed()) {
             this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).setStartRuleName(grammarFile, startRuleName);
             this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).updateParseTreeFromDoc(grammarFile);
-        }else{
+        } else {
             LOG.error("setStartRuleNameEvent called before preview panel created");
         }
     }
@@ -237,7 +239,7 @@ public class ANTLRv4PluginController {
         updateGrammarObjectsFromFile(grammarFile, true); // force reload
         if (this.project != null && !this.project.isDisposed()) {
             this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).grammarFileSaved(grammarFile);
-        }else{
+        } else {
             LOG.error("grammarFileSavedEvent called before preview panel created");
         }
 
@@ -370,7 +372,21 @@ public class ANTLRv4PluginController {
     private String updateGrammarObjectsFromFile_(VirtualFile grammarFile) {
         String grammarFileName = grammarFile.getPath();
         PreviewState previewState = getPreviewState(grammarFile);
-        Grammar[] grammars = ParsingUtils.loadGrammars(grammarFile, project);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        AtomicReference<Grammar[]> atomicReference = new AtomicReference<>(null);
+        ApplicationManager.getApplication().runReadAction(() -> {
+            try {
+                Grammar[] grammars = ParsingUtils.loadGrammars(grammarFile, project);
+                atomicReference.set(grammars);
+            } finally {
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await(5L, TimeUnit.MINUTES);
+        } catch (InterruptedException ignored) {
+        }
+        Grammar[] grammars = atomicReference.get();
         if (grammars != null) {
             synchronized (previewState) { // build atomically
                 previewState.lg = (LexerGrammar) grammars[0];
@@ -476,10 +492,10 @@ public class ANTLRv4PluginController {
         ApplicationManager.getApplication().invokeLater(
 //                () -> ANTLRv4PluginController.getInstance(project).getConsoleWindow().show(null)
                 () -> {
-                 ToolWindow toolWindow=   ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);
-                 if(toolWindow!=null){
-                     toolWindow.show();
-                 }
+                    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);
+                    if (toolWindow != null) {
+                        toolWindow.show();
+                    }
                 }
         );
     }
@@ -592,7 +608,7 @@ public class ANTLRv4PluginController {
 
         @Override
         public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull List<FileEditorWithProvider> editorsWithProviders) {
-            currentEditorFileChangedEvent(null,file,false);
+            currentEditorFileChangedEvent(null, file, false);
         }
 
         @Override

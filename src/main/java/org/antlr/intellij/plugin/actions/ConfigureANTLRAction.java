@@ -1,5 +1,6 @@
 package org.antlr.intellij.plugin.actions;
 
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.diagnostic.Logger;
@@ -8,9 +9,15 @@ import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.antlr.intellij.plugin.configdialogs.ConfigANTLRPerGrammar;
 import org.antlr.v4.Tool;
+import org.jetbrains.annotations.NotNull;
 
 public class ConfigureANTLRAction extends AnAction implements DumbAware {
 	public static final Logger LOG = Logger.getInstance("ConfigureANTLRAction");
+
+	@Override
+	public @NotNull ActionUpdateThread getActionUpdateThread() {
+		return ActionUpdateThread.BGT;
+	}
 
 	@Override
 	public void update(AnActionEvent e) {

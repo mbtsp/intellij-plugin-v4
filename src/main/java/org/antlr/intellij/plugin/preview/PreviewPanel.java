@@ -130,6 +130,10 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
     private ActionToolbar createButtonBar() {
         final AnAction refreshAction = new ToggleAction("Refresh Preview Automatically",
                 "Refresh preview automatically upon grammar changes", AllIcons.Actions.Refresh) {
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.BGT;
+            }
 
             @Override
             public boolean isSelected(@NotNull AnActionEvent e) {
@@ -148,6 +152,11 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
             }
 
             @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.BGT;
+            }
+
+            @Override
             public void setSelected(@NotNull AnActionEvent e, boolean state) {
                 scrollFromSource = state;
             }
@@ -156,6 +165,11 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
             @Override
             public boolean isSelected(@NotNull AnActionEvent e) {
                 return highlightSource;
+            }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.BGT;
             }
 
             @Override
@@ -170,6 +184,11 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
             }
 
             @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.BGT;
+            }
+
+            @Override
             public void setSelected(@NotNull AnActionEvent e, boolean state) {
                 buildTree = state;
             }
@@ -178,6 +197,11 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
             @Override
             public boolean isSelected(@NotNull AnActionEvent e) {
                 return buildHierarchy;
+            }
+
+            @Override
+            public @NotNull ActionUpdateThread getActionUpdateThread() {
+                return ActionUpdateThread.BGT;
             }
 
             @Override
