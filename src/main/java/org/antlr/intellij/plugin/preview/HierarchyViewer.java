@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * A Preview sub-tab that displays a hierarchical tree of matched parser rules.
  */
-class HierarchyViewer extends JPanel implements TreeSelectionListener {
+public class HierarchyViewer extends JPanel implements TreeSelectionListener {
 
     private final JTree myTree = new com.intellij.ui.treeStructure.Tree();
     private final List<ParsingResultSelectionListener> selectionListeners = new ArrayList<>();

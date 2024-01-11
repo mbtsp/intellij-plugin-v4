@@ -56,7 +56,6 @@ public class MyPsiUtils {
      */
     public static Iterable<PsiElement> findChildrenOfType(final PsiElement parent, final TokenSet types) {
         PsiElement[] psiElements = PsiTreeUtil.collectElements(parent, input -> {
-            if (input == null) return false;
             ASTNode node = input.getNode();
             if (node == null) return false;
             return types.contains(node.getElementType());
@@ -95,6 +94,9 @@ public class MyPsiUtils {
                 ANTLRv4Language.INSTANCE,
                 type,
                 context);
+        if (el == null) {
+            return null;
+        }
         return PsiTreeUtil.getDeepestFirst(el); // forces parsing of file!!
         // start rule depends on root passed in
     }
@@ -150,11 +152,10 @@ public class MyPsiUtils {
                 elems.add(child);
             }
         }
-        return elems.toArray(new PsiElement[elems.size()]);
+        return elems.toArray(new PsiElement[0]);
     }
 
     public static PsiElement findChildOfType(PsiElement root, final IElementType tokenType) {
-        List<PsiElement> elems = new ArrayList<>();
         for (PsiElement child : root.getChildren()) {
             if (child.getNode().getElementType() == tokenType) {
                 return child;
@@ -170,7 +171,7 @@ public class MyPsiUtils {
                 elems.add(child);
             }
         }
-        return elems.toArray(new PsiElement[elems.size()]);
+        return elems.toArray(new PsiElement[0]);
     }
 
     // Look for stuff like: options { tokenVocab=ANTLRv4Lexer; superClass=Foo; }
@@ -186,26 +187,6 @@ public class MyPsiUtils {
             }
         }
         return vocabName;
-    }
-
-    public static PsiElement findElement(PsiElement startNode, int offset) {
-        PsiElement p = startNode;
-        if (p == null) return null;
-//		System.out.println(Thread.currentThread().getName()+": visit root "+p+
-//							   ", offset="+offset+
-//							   ", class="+p.getClass().getSimpleName()+
-//							   ", text="+p.getNode().getText()+
-//							   ", node range="+p.getTextRange());
-
-        PsiElement c = p.getFirstChild();
-        while (c != null) {
-            PsiElement result = findElement(c, offset);
-            if (result != null) {
-                return result;
-            }
-            c = c.getNextSibling();
-        }
-        return null;
     }
 
 }

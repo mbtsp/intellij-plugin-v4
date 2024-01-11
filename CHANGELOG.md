@@ -14,6 +14,7 @@
 ### Fixed
 - Unable to file a bug
 -  RunANTLROnGrammarFile.getContentRoot   Read access is allowed from inside read-action
+- The project is opened, the build script is executed for the first time, and there is no log output in the console window
 
 ## [2024.1.1]
 

@@ -54,13 +54,13 @@ public class ANTLRv4StructureViewElement implements StructureViewTreeElement {
 
     @NotNull
     @Override
-    public TreeElement[] getChildren() {
+    public TreeElement @NotNull [] getChildren() {
         List<TreeElement> treeElements = new ArrayList<>();
 
         if (element instanceof ANTLRv4FileRoot) {
             new PsiRecursiveElementVisitor() {
                 @Override
-                public void visitElement(PsiElement element) {
+                public void visitElement(@NotNull PsiElement element) {
                     if (element instanceof ModeSpecNode) {
                         treeElements.add(new ANTLRv4StructureViewElement(element));
                         return;

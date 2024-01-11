@@ -7,8 +7,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.editor.event.DocumentAdapter;
 import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.editor.ex.EditorMarkupModel;
 import com.intellij.openapi.editor.markup.*;
@@ -158,7 +158,7 @@ public class InputPanel {
         final EditorFactory factory = EditorFactory.getInstance();
         Document doc = factory.createDocument("");
         doc.addDocumentListener(
-                new DocumentAdapter() {
+                new DocumentListener() {
                     @Override
                     public void documentChanged(DocumentEvent e) {
                         previewState.manualInputText = e.getDocument().getCharsSequence();
@@ -217,9 +217,9 @@ public class InputPanel {
         LOG.info("createEditor: create new editor for " + grammarFile.getPath() + " " + previewPanel.project.getName());
         final EditorFactory factory = EditorFactory.getInstance();
         doc.addDocumentListener(
-                new DocumentAdapter() {
+                new DocumentListener() {
                     @Override
-                    public void documentChanged(DocumentEvent event) {
+                    public void documentChanged(@NotNull DocumentEvent event) {
                         previewPanel.updateParseTreeFromDoc(grammarFile);
                     }
                 }
@@ -403,7 +403,7 @@ public class InputPanel {
      * to the preview input window.
      */
     public void showParseErrors(final List<SyntaxError> errors) {
-        if (errors.size() == 0) {
+        if (errors.isEmpty()) {
             clearInputEditorHighlighters();
             return;
         }
@@ -607,7 +607,7 @@ public class InputPanel {
         // Turn off any tooltips if none under the cursor
         // find the highlighter associated with this offset
         List<RangeHighlighter> highlightersAtOffset = MyActionUtils.getRangeHighlightersAtOffset(editor, offset);
-        if (highlightersAtOffset.size() == 0) {
+        if (highlightersAtOffset.isEmpty()) {
             return;
         }
 
@@ -638,7 +638,7 @@ public class InputPanel {
             } else {
                 // error tool tips
                 SyntaxError errorUnderCursor = r.getUserData(SYNTAX_ERROR);
-                msg = getErrorDisplayString(errorUnderCursor);
+                msg = errorUnderCursor == null ? "" : getErrorDisplayString(errorUnderCursor);
                 if (msg.length() > MAX_HINT_WIDTH) {
                     msg = msg.substring(0, MAX_HINT_WIDTH) + "...";
                 }

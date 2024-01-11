@@ -29,7 +29,7 @@ public class TrackpadZoomingTreeView extends UberTreeViewer implements Magnifica
     static final double SCALE_MAX = 2.5;
     static final double SCALE_RANGE = SCALE_MAX - SCALE_MIN;
 
-    class ScaleModel extends DefaultBoundedRangeModel {
+   public class ScaleModel extends DefaultBoundedRangeModel {
         ScaleModel(int ticks) {
             super(ticks / 2, 0, 1, ticks);
         }

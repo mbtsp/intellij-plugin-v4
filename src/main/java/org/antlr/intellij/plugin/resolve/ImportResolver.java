@@ -70,7 +70,7 @@ public class ImportResolver {
         List<PsiFile> importedGrammars = new ArrayList<>();
 
         @Override
-        public void visitElement(PsiElement element) {
+        public void visitElement(@NotNull PsiElement element) {
             if (isImportStatement(element)) {
                 PsiFile importedGrammar = findRelativeFile(element.getText(), element.getContainingFile());
 

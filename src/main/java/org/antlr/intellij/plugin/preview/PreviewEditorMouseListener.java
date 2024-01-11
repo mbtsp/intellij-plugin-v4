@@ -10,6 +10,7 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import org.antlr.intellij.plugin.actions.MyActionUtils;
 import org.antlr.v4.runtime.atn.AmbiguityInfo;
 import org.antlr.v4.runtime.atn.LookaheadEventInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -27,7 +28,7 @@ class PreviewEditorMouseListener implements EditorMouseListener, EditorMouseMoti
     }
 
     @Override
-    public void mouseClicked(EditorMouseEvent e) {
+    public void mouseClicked(@NotNull EditorMouseEvent e) {
         final int offset = getEditorCharOffsetAndRemoveTokenHighlighters(e);
         if (offset < 0) return;
 
@@ -56,7 +57,7 @@ class PreviewEditorMouseListener implements EditorMouseListener, EditorMouseMoti
     public void rightClick(final PreviewState previewState, Editor editor, int offset) {
         if (previewState.parsingResult == null) return;
         final List<RangeHighlighter> highlightersAtOffset = MyActionUtils.getRangeHighlightersAtOffset(editor, offset);
-        if (highlightersAtOffset.size() == 0) {
+        if (highlightersAtOffset.isEmpty()) {
             return;
         }
 
@@ -76,7 +77,7 @@ class PreviewEditorMouseListener implements EditorMouseListener, EditorMouseMoti
     }
 
     @Override
-    public void mouseMoved(EditorMouseEvent e) {
+    public void mouseMoved(@NotNull EditorMouseEvent e) {
         int offset = getEditorCharOffsetAndRemoveTokenHighlighters(e);
         if (offset < 0) return;
 
@@ -117,18 +118,18 @@ class PreviewEditorMouseListener implements EditorMouseListener, EditorMouseMoti
     // ------------------------
 
     @Override
-    public void mousePressed(EditorMouseEvent e) {
+    public void mousePressed(@NotNull EditorMouseEvent e) {
     }
 
     @Override
-    public void mouseReleased(EditorMouseEvent e) {
+    public void mouseReleased(@NotNull EditorMouseEvent e) {
     }
 
     @Override
-    public void mouseEntered(EditorMouseEvent e) {
+    public void mouseEntered(@NotNull EditorMouseEvent e) {
     }
 
     @Override
-    public void mouseDragged(EditorMouseEvent e) {
+    public void mouseDragged(@NotNull EditorMouseEvent e) {
     }
 }

@@ -67,42 +67,26 @@ public class ExpertProfilerTableDataModel extends ProfilerTableDataModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        int decision = row;
-        DecisionInfo decisionInfo = parseInfo.getDecisionInfo()[decision];
-        switch (col) { // laborious but more efficient than reflection
-            case 0:
-                return String.format("%s (%d)", ruleNamesByDecision[decision], decision);
-            case 1:
-                return decisionInfo.invocations;
-            case 2:
-                return BigDecimal.valueOf(decisionInfo.timeInPrediction / (1000.0 * 1000.0)).setScale(3, RoundingMode.HALF_DOWN);
-            case 3:
-                return parseInfo.getDFASize(decision);
-            case 4:
-                return decisionInfo.LL_Fallback;
-            case 5:
-                return decisionInfo.LL_TotalLook + decisionInfo.SLL_TotalLook;
-            case 6:
-                return decisionInfo.SLL_MinLook;
-            case 7:
-                return decisionInfo.LL_MinLook;
-            case 8:
-                return decisionInfo.SLL_MaxLook;
-            case 9:
-                return decisionInfo.LL_MaxLook;
-            case 10:
-                return decisionInfo.SLL_DFATransitions;
-            case 11:
-                return decisionInfo.SLL_ATNTransitions;
-            case 12:
-                return decisionInfo.LL_ATNTransitions;
-            case 13:
-                return decisionInfo.contextSensitivities.size();
-            case 14:
-                return decisionInfo.ambiguities.size();
-            case 15:
-                return decisionInfo.predicateEvals.size();
-        }
-        return "n/a";
+        DecisionInfo decisionInfo = parseInfo.getDecisionInfo()[row];
+        return switch (col) { // laborious but more efficient than reflection
+            case 0 -> String.format("%s (%d)", ruleNamesByDecision[row], row);
+            case 1 -> decisionInfo.invocations;
+            case 2 ->
+                    BigDecimal.valueOf(decisionInfo.timeInPrediction / (1000.0 * 1000.0)).setScale(3, RoundingMode.HALF_DOWN);
+            case 3 -> parseInfo.getDFASize(row);
+            case 4 -> decisionInfo.LL_Fallback;
+            case 5 -> decisionInfo.LL_TotalLook + decisionInfo.SLL_TotalLook;
+            case 6 -> decisionInfo.SLL_MinLook;
+            case 7 -> decisionInfo.LL_MinLook;
+            case 8 -> decisionInfo.SLL_MaxLook;
+            case 9 -> decisionInfo.LL_MaxLook;
+            case 10 -> decisionInfo.SLL_DFATransitions;
+            case 11 -> decisionInfo.SLL_ATNTransitions;
+            case 12 -> decisionInfo.LL_ATNTransitions;
+            case 13 -> decisionInfo.contextSensitivities.size();
+            case 14 -> decisionInfo.ambiguities.size();
+            case 15 -> decisionInfo.predicateEvals.size();
+            default -> "n/a";
+        };
     }
 }

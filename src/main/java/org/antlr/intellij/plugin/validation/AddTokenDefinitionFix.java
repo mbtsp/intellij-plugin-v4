@@ -52,6 +52,7 @@ public class AddTokenDefinitionFix extends BaseIntentionAction {
     }
 
     private void appendTokenDefAtLastLine(@Nullable("is null when called from inspection") Editor editor, PsiFile file, Project project) {
+        if (editor == null) return;
         String tokenName = editor.getDocument().getText(textRange);
         String tokenDefLeftSide = tokenName + " : ";
         String tokenDefinitionExpression = buildTokenDefinitionExpressionText(tokenName);

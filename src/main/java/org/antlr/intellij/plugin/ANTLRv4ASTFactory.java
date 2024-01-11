@@ -14,6 +14,7 @@ import org.antlr.intellij.adaptor.parser.PsiElementFactory;
 import org.antlr.intellij.plugin.parser.ANTLRv4Lexer;
 import org.antlr.intellij.plugin.parser.ANTLRv4Parser;
 import org.antlr.intellij.plugin.psi.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class ANTLRv4ASTFactory extends ASTFactory {
      *  PSI) for the token. This impl is more or less the default.
      */
     @Override
-    public CompositeElement createComposite(IElementType type) {
+    public CompositeElement createComposite(@NotNull IElementType type) {
         if (type instanceof IFileElementType) {
             return new FileElement(type, null);
         }

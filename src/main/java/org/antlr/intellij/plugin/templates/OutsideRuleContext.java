@@ -14,7 +14,7 @@ public class OutsideRuleContext extends ANTLRLiveTemplateContext {
     }
 
     @Override
-    public boolean isInContext(@NotNull PsiFile file, PsiElement element, int offset) {
+    public boolean isInContext(@NotNull PsiFile file, @NotNull PsiElement element, int offset) {
         CommonTokenStream tokens = ParsingUtils.tokenizeANTLRGrammar(file.getText());
         Token tokenUnderCursor = ParsingUtils.getTokenUnderCursor(tokens, offset);
         if (tokenUnderCursor == null) {

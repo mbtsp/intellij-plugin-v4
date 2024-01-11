@@ -92,7 +92,7 @@ class ParseTreeContextualMenu {
         try {
             if (!ImageIO.write(bi, imageFormat, file)) {
                 Notification notification = new Notification(
-                        "ANTLR 4 export",
+                        "antlr.new.notify.group",
                         "Error while exporting parse tree to file " + file.getAbsolutePath(),
                         "unknown format '" + imageFormat + "'?",
                         NotificationType.WARNING

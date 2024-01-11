@@ -43,7 +43,4 @@ public class ConsoleToolWindow implements ToolWindowFactory {
         }
     }
 
-    public ConsoleView getConsole() {
-        return this.console;
-    }
 }

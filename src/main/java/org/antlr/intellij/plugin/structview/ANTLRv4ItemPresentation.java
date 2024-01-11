@@ -30,10 +30,12 @@ public class ANTLRv4ItemPresentation implements ItemPresentation {
     @Override
     public String getPresentableText() {
         if (element instanceof ANTLRv4FileRoot) {
-            GrammarSpecNode gnode = PsiTreeUtil.findChildOfType(element, GrammarSpecNode.class);
-            PsiElement id = MyPsiUtils.findChildOfType(gnode, ANTLRv4TokenTypes.RULE_ELEMENT_TYPES.get(ANTLRv4Parser.RULE_identifier));
-            if (id != null) {
-                return id.getText();
+            GrammarSpecNode node = PsiTreeUtil.findChildOfType(element, GrammarSpecNode.class);
+            if(node!=null){
+                PsiElement id = MyPsiUtils.findChildOfType(node, ANTLRv4TokenTypes.RULE_ELEMENT_TYPES.get(ANTLRv4Parser.RULE_identifier));
+                if (id != null) {
+                    return id.getText();
+                }
             }
             return "<n/a>";
         }

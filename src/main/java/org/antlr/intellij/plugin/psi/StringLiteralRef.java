@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.ArrayUtilRt;
 import org.antlr.intellij.plugin.resolve.TokenVocabResolver;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class StringLiteralRef extends PsiReferenceBase<StringLiteralElement> {
@@ -14,7 +15,7 @@ public class StringLiteralRef extends PsiReferenceBase<StringLiteralElement> {
     }
 
     @Override // For compatibility with 2017.x
-    public Object[] getVariants() {
+    public Object @NotNull [] getVariants() {
         return ArrayUtilRt.EMPTY_OBJECT_ARRAY;
     }
 

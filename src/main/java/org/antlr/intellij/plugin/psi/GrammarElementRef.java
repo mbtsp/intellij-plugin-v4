@@ -34,7 +34,7 @@ public class GrammarElementRef extends PsiReferenceBase<GrammarElementRefNode> {
      */
     @NotNull
     @Override
-    public Object[] getVariants() {
+    public Object @NotNull [] getVariants() {
         RulesNode rules = PsiTreeUtil.getContextOfType(myElement, RulesNode.class);
         // find all rule defs (token, parser)
         Collection<? extends RuleSpecNode> ruleSpecNodes =
@@ -83,7 +83,7 @@ public class GrammarElementRef extends PsiReferenceBase<GrammarElementRefNode> {
     }
 
     @Override
-    public PsiElement handleElementRename(String newElementName) throws IncorrectOperationException {
+    public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
         Project project = getElement().getProject();
         myElement.replace(MyPsiUtils.createLeafFromText(project,
                 myElement.getContext(),

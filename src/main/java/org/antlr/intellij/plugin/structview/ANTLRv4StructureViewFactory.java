@@ -36,7 +36,7 @@ public class ANTLRv4StructureViewFactory implements PsiStructureViewFactory {
 
     @Nullable
     @Override
-    public StructureViewBuilder getStructureViewBuilder(final PsiFile psiFile) {
+    public StructureViewBuilder getStructureViewBuilder(final @NotNull PsiFile psiFile) {
         return new TreeBasedStructureViewBuilder() {
             @NotNull
             @Override

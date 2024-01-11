@@ -81,7 +81,7 @@ public class PreViewToolWindow implements ToolWindowFactory, DumbAware {
                     if (previewPanel != null) {
                         ProfilerPanel profilerPanel = previewPanel.getProfilerPanel();
                         if (profilerPanel != null) {
-                            profilerPanel.mouseEnteredGrammarEditorEvent(file, event);
+                            profilerPanel.mouseEnteredGrammarEditorEvent(event);
                         }
                     }
                 }

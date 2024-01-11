@@ -488,7 +488,7 @@ public class ANTLRv4PluginController {
     }
 
 
-    public static void showConsoleWindow(final Project project) {
+    public static void showLaterConsoleWindow(final Project project) {
         ApplicationManager.getApplication().invokeLater(
 //                () -> ANTLRv4PluginController.getInstance(project).getConsoleWindow().show(null)
                 () -> {
@@ -500,6 +500,16 @@ public class ANTLRv4PluginController {
         );
     }
 
+    public static void showLaterConsoleWindow(final Project project,Runnable runnable) {
+        ApplicationManager.getApplication().invokeLater(
+                () -> {
+                    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);
+                    if (toolWindow != null) {
+                        toolWindow.show(runnable);
+                    }
+                }
+        );
+    }
 
     public @NotNull PreviewState getPreviewState(VirtualFile grammarFile) {
         // make sure only one thread tries to add a preview state object for a given file

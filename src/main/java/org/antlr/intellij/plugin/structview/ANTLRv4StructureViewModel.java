@@ -66,7 +66,7 @@ public class ANTLRv4StructureViewModel
 
 
     @NotNull
-    public Sorter[] getSorters() {
+    public Sorter @NotNull [] getSorters() {
         return new Sorter[]{PARSER_LEXER_RULE_SORTER, Sorter.ALPHA_SORTER};
     }
 
@@ -96,7 +96,7 @@ public class ANTLRv4StructureViewModel
      opened or when the "Autoscroll from source" option is used.
      */
     @NotNull
-    protected Class<?>[] getSuitableClasses() {
+    protected Class<?> @NotNull [] getSuitableClasses() {
         return new Class[]{ANTLRv4FileRoot.class,
                 LexerRuleSpecNode.class,
                 ParserRuleSpecNode.class};

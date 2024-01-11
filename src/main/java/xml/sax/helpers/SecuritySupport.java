@@ -78,16 +78,14 @@ final class SecuritySupport {
                                            final String name)
     {
         return (InputStream)
-            AccessController.doPrivileged(new PrivilegedAction() {
-                public Object run() {
-                    InputStream ris;
-                    if (cl == null) {
-                        ris = ClassLoader.getSystemResourceAsStream(name);
-                    } else {
-                        ris = cl.getResourceAsStream(name);
-                    }
-                    return ris;
+            AccessController.doPrivileged((PrivilegedAction) () -> {
+                InputStream ris;
+                if (cl == null) {
+                    ris = ClassLoader.getSystemResourceAsStream(name);
+                } else {
+                    ris = cl.getResourceAsStream(name);
                 }
+                return ris;
             });
     }
 }

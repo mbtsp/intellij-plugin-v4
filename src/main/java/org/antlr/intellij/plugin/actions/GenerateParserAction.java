@@ -16,6 +16,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
+import org.antlr.intellij.plugin.ANTLRv4PluginController;
 import org.antlr.intellij.plugin.configdialogs.ANTLRv4GrammarPropertiesStore;
 import org.antlr.intellij.plugin.parsing.RunANTLROnGrammarFile;
 import org.jetbrains.annotations.NotNull;
@@ -65,7 +66,6 @@ public class GenerateParserAction extends AnAction implements DumbAware {
             psiMgr.commitDocument(doc);
             docMgr.saveDocument(doc);
         }
-
         boolean forceGeneration = true; // from action, they really mean it
         RunANTLROnGrammarFile gen =
                 new RunANTLROnGrammarFile(grammarFile,

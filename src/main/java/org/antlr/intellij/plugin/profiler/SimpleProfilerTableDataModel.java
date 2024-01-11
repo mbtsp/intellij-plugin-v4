@@ -56,25 +56,18 @@ public class SimpleProfilerTableDataModel extends ProfilerTableDataModel {
 
     @Override
     public Object getValueAt(int row, int col) {
-        int decision = row;
-        DecisionInfo decisionInfo = parseInfo.getDecisionInfo()[decision];
-        switch (col) { // laborious but more efficient than reflection
-            case 0:
-                return String.format("%s (%d)", ruleNamesByDecision[decision], decision);
-            case 1:
-                return decisionInfo.invocations;
-            case 2:
-                return BigDecimal.valueOf(decisionInfo.timeInPrediction / (1000.0 * 1000.0)).setScale(3, RoundingMode.HALF_DOWN);
-            case 3:
-                return decisionInfo.LL_TotalLook + decisionInfo.SLL_TotalLook;
-            case 4:
-                return Math.max(decisionInfo.LL_MaxLook, decisionInfo.SLL_MaxLook);
-            case 5:
-                return decisionInfo.ambiguities.size();
-            case 6:
-                return decisionInfo.SLL_ATNTransitions +
-                        decisionInfo.LL_ATNTransitions;
-        }
-        return "n/a";
+        DecisionInfo decisionInfo = parseInfo.getDecisionInfo()[row];
+        return switch (col) { // laborious but more efficient than reflection
+            case 0 -> String.format("%s (%d)", ruleNamesByDecision[row], row);
+            case 1 -> decisionInfo.invocations;
+            case 2 ->
+                    BigDecimal.valueOf(decisionInfo.timeInPrediction / (1000.0 * 1000.0)).setScale(3, RoundingMode.HALF_DOWN);
+            case 3 -> decisionInfo.LL_TotalLook + decisionInfo.SLL_TotalLook;
+            case 4 -> Math.max(decisionInfo.LL_MaxLook, decisionInfo.SLL_MaxLook);
+            case 5 -> decisionInfo.ambiguities.size();
+            case 6 -> decisionInfo.SLL_ATNTransitions +
+                    decisionInfo.LL_ATNTransitions;
+            default -> "n/a";
+        };
     }
 }

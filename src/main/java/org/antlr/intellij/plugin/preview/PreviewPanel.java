@@ -7,8 +7,8 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.editor.event.CaretAdapter;
 import com.intellij.openapi.editor.event.CaretEvent;
+import com.intellij.openapi.editor.event.CaretListener;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
 import com.intellij.openapi.util.SystemInfo;
@@ -109,7 +109,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
         // Had to set min size / preferred size in InputPanel.form to get slider to allow left shift of divider
         Splitter splitPane = new Splitter();
         inputPanel = getEditorPanel();
-        inputPanel.addCaretListener(new CaretAdapter() {
+        inputPanel.addCaretListener(new CaretListener() {
             @Override
             public void caretPositionChanged(@NotNull CaretEvent event) {
                 Caret caret = event.getCaret();
@@ -161,6 +161,14 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
                 scrollFromSource = state;
             }
         };
+        DefaultActionGroup actionGroup = getActionGroup(refreshAction, scrollFromSourceBtn);
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(PREVIEW_WINDOW_ID, actionGroup, false);
+        toolbar.setTargetComponent(this.inputPanel.getComponent());
+        return toolbar;
+    }
+
+    @NotNull
+    private DefaultActionGroup getActionGroup(AnAction refreshAction, ToggleAction scrollFromSourceBtn) {
         ToggleAction scrollToSourceBtn = new ToggleAction("Highlight Source", null, Find) {
             @Override
             public boolean isSelected(@NotNull AnActionEvent e) {
@@ -210,7 +218,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
             }
         };
 
-        DefaultActionGroup actionGroup = new DefaultActionGroup(
+        return new DefaultActionGroup(
                 refreshAction,
                 cancelParserAction,
                 scrollFromSourceBtn,
@@ -218,9 +226,6 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
                 autoBuildTree,
                 autoBuildHier
         );
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(PREVIEW_WINDOW_ID, actionGroup, false);
-        toolbar.setTargetComponent(this.inputPanel.getComponent());
-        return toolbar;
     }
 
     private InputPanel getEditorPanel() {
@@ -310,10 +315,11 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
         String grammarFileName = grammarFile.getPath();
         LOG.info("grammarFileSaved " + grammarFileName + " " + project.getName());
         ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(project);
+        if (controller == null) {
+            return;
+        }
         PreviewState previewState = controller.getPreviewState(grammarFile);
-
         autoSetStartRule(previewState);
-
         ensureStartRuleExists(grammarFile);
         inputPanel.grammarFileSaved();
 
@@ -329,7 +335,11 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
     }
 
     private void ensureStartRuleExists(VirtualFile grammarFile) {
-        PreviewState previewState = ANTLRv4PluginController.getInstance(project).getPreviewState(grammarFile);
+        ANTLRv4PluginController antlRv4PluginController = ANTLRv4PluginController.getInstance(project);
+        if (antlRv4PluginController == null) {
+            return;
+        }
+        PreviewState previewState = antlRv4PluginController.getPreviewState(grammarFile);
         // if start rule no longer exists, reset display/state.
         if (previewState.g != null &&
                 previewState.g != ParsingUtils.BAD_PARSER_GRAMMAR &&
@@ -356,12 +366,13 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
         String grammarFileName = grammarFile.getPath();
         LOG.info("switchToGrammar " + grammarFileName + " " + project.getName());
         ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(project);
+        if (controller == null) {
+            return;
+        }
         PreviewState previewState = controller.getPreviewState(grammarFile);
-
         autoSetStartRule(previewState);
-
         inputPanel.switchToGrammar(previewState, grammarFile);
-        profilerPanel.switchToGrammar(previewState, grammarFile);
+        profilerPanel.switchToGrammar(previewState);
 
         if (previewState.startRuleName != null) {
             updateParseTreeFromDoc(grammarFile); // regens tree and profile data
@@ -377,7 +388,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
      * if none has been specified
      */
     protected void autoSetStartRule(PreviewState previewState) {
-        if (previewState.g == null || previewState.g.rules.size() == 0) {
+        if (previewState.g == null || previewState.g.rules.isEmpty()) {
             // If there is no grammar all of a sudden, we need to unset the previous rule name
             previewState.startRuleName = null;
         } else if (previewState.startRuleName == null) {
@@ -408,12 +419,13 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
     public void closeGrammar(VirtualFile grammarFile) {
         String grammarFileName = grammarFile.getPath();
         LOG.info("closeGrammar " + grammarFileName + " " + project.getName());
-
         inputPanel.resetStartRuleLabel();
         inputPanel.clearErrorConsole();
         clearParseTree(); // wipe tree
-
         ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(project);
+        if (controller == null) {
+            return;
+        }
         PreviewState previewState = controller.getPreviewState(grammarFile);
         inputPanel.releaseEditor(previewState);
     }
@@ -428,8 +440,6 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
     }
 
     private void updateTreeViewer(final PreviewState preview, final ParsingResult result) {
-//		long start = System.nanoTime();
-//		System.out.println("START updateTreeViewer "+Thread.currentThread().getName());
         if (result.parser instanceof PreviewParser) {
             AltLabelTextProvider provider = new AltLabelTextProvider(result.parser, preview.g);
             if (buildTree) {
@@ -450,9 +460,6 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
                 hierarchyViewer.setTree(result.tree);
             }
         }
-//		long parseTime_ns = System.nanoTime() - start;
-//		double parseTimeMS = parseTime_ns/(1000.0*1000.0);
-//		System.out.println("STOP updateTreeViewer "+Thread.currentThread().getName()+" "+parseTimeMS+"ms");
     }
 
 
@@ -491,7 +498,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
         // Wipes out the console and also any error annotations
         updateQueue.queue(new Update(this) {
             @Override
-            public boolean canEat(Update update) {
+            public boolean canEat(@NotNull Update update) {
                 return true; // kill any previous queued up parses; only last keystroke input text matters
             }
 

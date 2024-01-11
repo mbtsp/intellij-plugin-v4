@@ -17,7 +17,7 @@ import org.stringtemplate.v4.misc.Misc;
 import java.util.*;
 
 public class RefactorUtils {
-    public static final Map<String, String> literalToRuleNameMap = new HashMap<String, String>() {{
+    public static final Map<String, String> literalToRuleNameMap = new HashMap<>() {{
         put("'('", "LPAREN");
         put("')'", "RPAREN");
         put("'{'", "LBRACE");
@@ -100,9 +100,9 @@ public class RefactorUtils {
 
     public static boolean ruleHasMultipleOutermostAlts(Parser parser, ParseTree ruleTree) {
         Collection<ParseTree> ors = XPath.findAll(ruleTree, "/parserRuleSpec/ruleBlock/ruleAltList/OR", parser);
-        if (ors.size() >= 1) return true;
+        if (!ors.isEmpty()) return true;
         ors = XPath.findAll(ruleTree, "/lexerRule/lexerRuleBlock/lexerAltList/OR", parser);
-        return ors.size() >= 1;
+        return !ors.isEmpty();
     }
 
     public static Token getTokenForCharIndex(TokenStream tokens, int charIndex) {
@@ -162,7 +162,6 @@ public class RefactorUtils {
      */
     public static String getRuleText(CommonTokenStream tokens, ParserRuleContext ruleDefNode) {
         Token stop = ruleDefNode.getStop();
-        Token semi = stop;
         TerminalNode colonNode = ruleDefNode.getToken(ANTLRv4Parser.COLON, 0);
         Token colon = colonNode.getSymbol();
         Token beforeSemi = tokens.get(stop.getTokenIndex() - 1);
@@ -170,7 +169,7 @@ public class RefactorUtils {
 
         // trim whitespace/comments before / after rule text
         List<Token> ignoreBefore = tokens.getHiddenTokensToRight(colon.getTokenIndex());
-        List<Token> ignoreAfter = tokens.getHiddenTokensToLeft(semi.getTokenIndex());
+        List<Token> ignoreAfter = tokens.getHiddenTokensToLeft(stop.getTokenIndex());
         Token textStart = afterColon;
         Token textStop = beforeSemi;
         if (ignoreBefore != null) {
@@ -201,7 +200,7 @@ public class RefactorUtils {
                 nodes.add(terminal);
             }
         }
-        if (nodes.size() == 0) return null;
+        if (nodes.isEmpty()) return null;
         return nodes;
     }
 

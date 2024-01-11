@@ -178,7 +178,7 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         }
 
         if (listener.hasOutput) {
-            ANTLRv4PluginController.showConsoleWindow(project);
+            ANTLRv4PluginController.showLaterConsoleWindow(project);
         }
     }
 

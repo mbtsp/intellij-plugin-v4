@@ -84,10 +84,6 @@ For really big files and slow grammars, there is an appreciable delay when displ
     </change-notes>
 
     <depends>com.intellij.modules.lang</depends>
-
-    <application-components>
-    </application-components>
-
     <actions>
         <action id="antlr.Generate" class="org.antlr.intellij.plugin.actions.GenerateParserAction"
                 text="Generate ANTLR Recognizer">
@@ -122,13 +118,13 @@ For really big files and slow grammars, there is an appreciable delay when displ
         </action>
         <action id="antlr.ExtractRule"
                 class="org.antlr.intellij.plugin.actions.ExtractRuleAction"
-                text="Extract rule...">
+                text="Extract Rule...">
             <keyboard-shortcut keymap="$default" first-keystroke="control alt M"/>
             <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="antlr.InlineRule"/>
         </action>
         <action id="antlr.UniquifyRuleRefs"
                 class="org.antlr.intellij.plugin.actions.UniquifyRuleRefs"
-                text="Make refs to rule unique...">
+                text="Make Refs to Rule Unique...">
             <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="antlr.ExtractRule"/>
         </action>
     </actions>
@@ -136,9 +132,11 @@ For really big files and slow grammars, there is an appreciable delay when displ
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="org.antlr.intellij.plugin.ANTLRv4PluginController"/>
         <postStartupActivity implementation="org.antlr.intellij.plugin.init.AntlrStartupActivity"/>
-        <fileTypeFactory implementation="org.antlr.intellij.plugin.ANTLRv4FileTypeFactory"/>
-        <lang.syntaxHighlighterFactory key="ANTLRv4"
-                                       implementationClass="org.antlr.intellij.plugin.ANTLRv4SyntaxHighlighterFactory"/>
+        <fileType name="ANTLR v4 grammar file" language="ANTLRv4" extensions="g4" fieldName="INSTANCE"
+                  implementationClass="org.antlr.intellij.plugin.ANTLRv4FileType"/>
+        <lang.syntaxHighlighterFactory
+                implementationClass="org.antlr.intellij.plugin.ANTLRv4SyntaxHighlighterFactory"
+                language="ANTLRv4"/>
         <lang.commenter language="ANTLRv4" implementationClass="org.antlr.intellij.plugin.ANTLRv4Commenter"/>
         <indexPatternBuilder implementation="org.antlr.intellij.plugin.psi.ANTLRv4IndexPatternBuilder"/>
         <lang.braceMatcher language="ANTLRv4"

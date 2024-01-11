@@ -1,6 +1,7 @@
 package org.antlr.intellij.plugin.preview;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.antlr.intellij.plugin.ANTLRv4PluginController;
@@ -16,6 +17,11 @@ public class CancelParserAction extends AnAction {
 
     public CancelParserAction() {
         super("Cancel Parsing", "Cancel the current parsing", AllIcons.Actions.Suspend);
+    }
+
+    @Override
+    public @NotNull ActionUpdateThread getActionUpdateThread() {
+        return ActionUpdateThread.EDT;
     }
 
     @Override

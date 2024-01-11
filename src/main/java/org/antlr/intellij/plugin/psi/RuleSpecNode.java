@@ -42,10 +42,11 @@ public abstract class RuleSpecNode extends ASTWrapperPsiElement implements PsiNa
 		          extract the necessary node from it.
 		 */
         GrammarElementRefNode id = getNameIdentifier();
-        if (id != null) {
-            id.replace(MyPsiUtils.createLeafFromText(getProject(),
-                    getContext(),
-                    name, getRuleRefType()));
+        PsiElement psiElement = MyPsiUtils.createLeafFromText(getProject(),
+                getContext(),
+                name, getRuleRefType());
+        if (id != null && psiElement != null) {
+            id.replace(psiElement);
         }
         this.name = name;
         return this;
