@@ -11,7 +11,9 @@ public class GrammarIssue {
     private final List<Token> offendingTokens = new ArrayList<>();
     private final ANTLRMessage msg;
 
-    public GrammarIssue(ANTLRMessage msg) { this.msg = msg; }
+    public GrammarIssue(ANTLRMessage msg) {
+        this.msg = msg;
+    }
 
     public String getAnnotation() {
         return annotation;

@@ -5,7 +5,7 @@ package org.antlr.intellij.plugin.folding;
  */
 public abstract class ANTLRv4FoldingSettings {
     //TODO ServiceManager,UI,serialization,etc
-    private static final ANTLRv4FoldingSettings INSTANCE= new ANTLRv4FoldingSettings() {
+    private static final ANTLRv4FoldingSettings INSTANCE = new ANTLRv4FoldingSettings() {
         @Override
         public boolean isCollapseFileHeader() {
             return true;

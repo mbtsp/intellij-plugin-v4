@@ -15,42 +15,43 @@ import java.util.List;
  *  not for annotation of grammar.
  */
 public class RunANTLRListener implements ANTLRToolListener {
-	public final List<String> all = new ArrayList<>();
-	public Tool tool;
-	private Project project;
-	public boolean hasOutput = false;
-	public RunANTLRListener(Tool tool, Project project) {
-		this.tool = tool;
+    public final List<String> all = new ArrayList<>();
+    public Tool tool;
+    private final Project project;
+    public boolean hasOutput = false;
 
-		this.project = project;
-	}
+    public RunANTLRListener(Tool tool, Project project) {
+        this.tool = tool;
 
-	@Override
-	public void info(String msg) {
-		if (tool.errMgr.formatWantsSingleLineMessage()) {
-			msg = msg.replace('\n', ' ');
-		}
-		ConsoleUtils.consolePrint(this.project,msg+"\n", ConsoleViewContentType.NORMAL_OUTPUT);
-		hasOutput = true;
-	}
+        this.project = project;
+    }
 
-	@Override
-	public void error(ANTLRMessage msg) {
-		track(msg, ConsoleViewContentType.ERROR_OUTPUT);
-	}
+    @Override
+    public void info(String msg) {
+        if (tool.errMgr.formatWantsSingleLineMessage()) {
+            msg = msg.replace('\n', ' ');
+        }
+        ConsoleUtils.consolePrint(this.project, msg + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+        hasOutput = true;
+    }
 
-	@Override
-	public void warning(ANTLRMessage msg) {
-		track(msg, ConsoleViewContentType.NORMAL_OUTPUT);
-	}
+    @Override
+    public void error(ANTLRMessage msg) {
+        track(msg, ConsoleViewContentType.ERROR_OUTPUT);
+    }
 
-	private void track(ANTLRMessage msg, ConsoleViewContentType errType) {
-		ST msgST = tool.errMgr.getMessageTemplate(msg);
-		String outputMsg = msgST.render();
-		if (tool.errMgr.formatWantsSingleLineMessage()) {
-			outputMsg = outputMsg.replace('\n', ' ');
-		}
-		ConsoleUtils.consolePrint(this.project,outputMsg+"\n", errType);
-		hasOutput = true;
-	}
+    @Override
+    public void warning(ANTLRMessage msg) {
+        track(msg, ConsoleViewContentType.NORMAL_OUTPUT);
+    }
+
+    private void track(ANTLRMessage msg, ConsoleViewContentType errType) {
+        ST msgST = tool.errMgr.getMessageTemplate(msg);
+        String outputMsg = msgST.render();
+        if (tool.errMgr.formatWantsSingleLineMessage()) {
+            outputMsg = outputMsg.replace('\n', ' ');
+        }
+        ConsoleUtils.consolePrint(this.project, outputMsg + "\n", errType);
+        hasOutput = true;
+    }
 }

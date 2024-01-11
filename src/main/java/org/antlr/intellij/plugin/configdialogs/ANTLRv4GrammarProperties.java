@@ -140,7 +140,7 @@ public class ANTLRv4GrammarProperties implements Cloneable {
             outputDirName = contentRoot.getPath() + File.separator + outputDirName;
         }
         // add package if any
-        if ( isNotBlank(package_) ) {
+        if (isNotBlank(package_)) {
             outputDirName += File.separator + package_.replace('.', File.separatorChar);
         }
         return outputDirName;
@@ -149,7 +149,7 @@ public class ANTLRv4GrammarProperties implements Cloneable {
     public String resolveLibDir(Project project, String defaultValue) {
         String libDir = getLibDir();
 
-        if ( libDir==null || libDir.equals("") ) {
+        if (libDir == null || libDir.equals("")) {
             libDir = defaultValue;
         }
 

@@ -5,7 +5,7 @@ private val REGEX_SINGLE_LINE = Regex("\\r\\n|\\r|\\n")
 private val REGEX_COMPRESS_WHITESPACE = Regex("\\s{2,}")
 fun md5(msg: String): String {
     if (msg.isBlank()) {
-        return "-1";
+        return "-1"
     }
     if (msg.length > 100) {
         return msg.substring(0, 100).md5()

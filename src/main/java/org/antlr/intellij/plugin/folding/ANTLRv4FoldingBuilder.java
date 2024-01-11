@@ -80,11 +80,11 @@ public class ANTLRv4FoldingBuilder extends CustomFoldingBuilder {
         PsiElement tokensSpec = MyPsiUtils.findFirstChildOfType(root, TOKENSSPEC);
         if (tokensSpec != null) {
             PsiElement tokens = tokensSpec.getFirstChild();
-            if ( tokens.getNode().getElementType() == TOKENS ) {
+            if (tokens.getNode().getElementType() == TOKENS) {
                 PsiElement rbrace = tokensSpec.getLastChild();
-                if ( rbrace.getNode().getElementType()==RBRACE ) {
+                if (rbrace.getNode().getElementType() == RBRACE) {
                     descriptors.add(new FoldingDescriptor(tokensSpec,
-                                                          new TextRange(tokens.getTextRange().getEndOffset(), rbrace.getTextRange().getEndOffset())));
+                            new TextRange(tokens.getTextRange().getEndOffset(), rbrace.getTextRange().getEndOffset())));
                 }
             }
         }
@@ -94,11 +94,11 @@ public class ANTLRv4FoldingBuilder extends CustomFoldingBuilder {
         PsiElement optionsSpec = MyPsiUtils.findFirstChildOfType(root, OPTIONSSPEC);
         if (optionsSpec != null) {
             PsiElement options = optionsSpec.getFirstChild();
-            if ( options.getNode().getElementType() == OPTIONS ) {
+            if (options.getNode().getElementType() == OPTIONS) {
                 PsiElement rbrace = optionsSpec.getLastChild();
-                if ( rbrace.getNode().getElementType()==RBRACE ) {
+                if (rbrace.getNode().getElementType() == RBRACE) {
                     descriptors.add(new FoldingDescriptor(optionsSpec,
-                                                          new TextRange(options.getTextRange().getEndOffset(), rbrace.getTextRange().getEndOffset())));
+                            new TextRange(options.getTextRange().getEndOffset(), rbrace.getTextRange().getEndOffset())));
                 }
             }
         }
@@ -128,7 +128,7 @@ public class ANTLRv4FoldingBuilder extends CustomFoldingBuilder {
         for (AtAction atAction : PsiTreeUtil.findChildrenOfType(root, AtAction.class)) {
             PsiElement action = atAction.getLastChild();
             String actionText = action.getText();
-            if ( actionText != null && actionText.contains("\n")) {
+            if (actionText != null && actionText.contains("\n")) {
                 descriptors.add(new FoldingDescriptor(atAction, action.getTextRange()));
             }
         }
@@ -156,7 +156,7 @@ public class ANTLRv4FoldingBuilder extends CustomFoldingBuilder {
         for (ModeSpecNode specNode : PsiTreeUtil.findChildrenOfType(root, ModeSpecNode.class)) {
             PsiElement semi = MyPsiUtils.findFirstChildOfType(specNode, ANTLRv4TokenTypes.getTokenElementType(ANTLRv4Lexer.SEMI));
 
-            if ( semi != null ) {
+            if (semi != null) {
                 TextRange foldingRange = TextRange.create(semi.getTextOffset(), specNode.getNode().getStartOffset() + specNode.getTextLength());
                 descriptors.add(new FoldingDescriptor(specNode, foldingRange));
             }
@@ -178,8 +178,7 @@ public class ANTLRv4FoldingBuilder extends CustomFoldingBuilder {
             element = element.getNextSibling();
             if (element instanceof PsiWhiteSpace) {
                 element = element.getNextSibling();
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -283,19 +282,15 @@ public class ANTLRv4FoldingBuilder extends CustomFoldingBuilder {
         }
     }
     */
-
     private static String getPlaceholderText(PsiElement element) {
 
         if (element.getNode().getElementType() == LINE_COMMENT_TOKEN) {
             return "//...";
-        }
-        else if ( element instanceof ModeSpecNode ) {
+        } else if (element instanceof ModeSpecNode) {
             return ";...";
-        }
-        else if (element instanceof RuleSpecNode) {
+        } else if (element instanceof RuleSpecNode) {
             return ":...;";
-        }
-        else if (element instanceof AtAction) {
+        } else if (element instanceof AtAction) {
             return "{...}";
         }
         return "...";

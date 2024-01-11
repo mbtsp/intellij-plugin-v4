@@ -61,7 +61,7 @@ public class TrackpadZoomingTreeView extends UberTreeViewer implements Magnifica
         }
 
         double computeDoubleValue() {
-            return i2dScale(i2dTranslate((double) getValue()));
+            return i2dScale(i2dTranslate(getValue()));
         }
 
         @Override

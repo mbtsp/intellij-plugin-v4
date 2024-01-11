@@ -24,53 +24,53 @@ import org.antlr.v4.tool.LexerGrammar;
  *  for example.
  */
 public class PreviewState {
-	public Project project;
-	public VirtualFile grammarFile;
-	public Grammar g;
-	public LexerGrammar lg;
-	public String startRuleName;
-	public CharSequence manualInputText = ""; // save input when switching grammars
-	public VirtualFile inputFile; 	// save input file when switching grammars
+    public Project project;
+    public VirtualFile grammarFile;
+    public Grammar g;
+    public LexerGrammar lg;
+    public String startRuleName;
+    public CharSequence manualInputText = ""; // save input when switching grammars
+    public VirtualFile inputFile;    // save input file when switching grammars
 
-	public ParsingResult parsingResult;
+    public ParsingResult parsingResult;
 
-	/** The current input editor (inputEditor or fileEditor) for this grammar
-	 *  in InputPanel. This can be null when a PreviewState and InputPanel
-	 *  are created out of sync. Depends on order IDE opens files vs
-	 *  creates preview pane.
-	 */
-	private Editor inputEditor;
+    /** The current input editor (inputEditor or fileEditor) for this grammar
+     *  in InputPanel. This can be null when a PreviewState and InputPanel
+     *  are created out of sync. Depends on order IDE opens files vs
+     *  creates preview pane.
+     */
+    private Editor inputEditor;
 
-	public PreviewState(Project project, VirtualFile grammarFile) {
-		this.project = project;
-		this.grammarFile = grammarFile;
-	}
+    public PreviewState(Project project, VirtualFile grammarFile) {
+        this.project = project;
+        this.grammarFile = grammarFile;
+    }
 
-	public synchronized Editor getInputEditor() {
-		return inputEditor;
-	}
+    public synchronized Editor getInputEditor() {
+        return inputEditor;
+    }
 
-	public synchronized void setInputEditor(Editor inputEditor) {
-		releaseEditor();
-		this.inputEditor = inputEditor;
-	}
+    public synchronized void setInputEditor(Editor inputEditor) {
+        releaseEditor();
+        this.inputEditor = inputEditor;
+    }
 
-	public Grammar getMainGrammar() {
-		return g!=null ? g : lg;
-	}
+    public Grammar getMainGrammar() {
+        return g != null ? g : lg;
+    }
 
-	public synchronized void releaseEditor() {
+    public synchronized void releaseEditor() {
 
-		// Editor can't be release during unit tests, because it is used by multiple tests
-		if (ApplicationManager.getApplication().isUnitTestMode()) return;
+        // Editor can't be release during unit tests, because it is used by multiple tests
+        if (ApplicationManager.getApplication().isUnitTestMode()) return;
 
-		// It would appear that the project closed event occurs before these
-		// close grammars sometimes. Very strange. check for null editor.
-		if (inputEditor != null) {
-			final EditorFactory factory = EditorFactory.getInstance();
-			factory.releaseEditor(inputEditor);
-			inputEditor = null;
-		}
-	}
+        // It would appear that the project closed event occurs before these
+        // close grammars sometimes. Very strange. check for null editor.
+        if (inputEditor != null) {
+            final EditorFactory factory = EditorFactory.getInstance();
+            factory.releaseEditor(inputEditor);
+            inputEditor = null;
+        }
+    }
 
 }

@@ -7,14 +7,14 @@ import org.antlr.intellij.plugin.psi.RuleSpecNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ANTLRv4RefactoringSupport extends RefactoringSupportProvider{
-	
-	public boolean isAvailable(@NotNull PsiElement context){
-		return context.getLanguage().isKindOf(ANTLRv4Language.INSTANCE);
-	}
-	
-	// variable in-place rename only applies to elements limited to one file
-	public boolean isMemberInplaceRenameAvailable(@NotNull PsiElement element, @Nullable PsiElement context){
-		return element instanceof RuleSpecNode;
-	}
+public class ANTLRv4RefactoringSupport extends RefactoringSupportProvider {
+
+    public boolean isAvailable(@NotNull PsiElement context) {
+        return context.getLanguage().isKindOf(ANTLRv4Language.INSTANCE);
+    }
+
+    // variable in-place rename only applies to elements limited to one file
+    public boolean isMemberInplaceRenameAvailable(@NotNull PsiElement element, @Nullable PsiElement context) {
+        return element instanceof RuleSpecNode;
+    }
 }

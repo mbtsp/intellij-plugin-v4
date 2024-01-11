@@ -12,27 +12,27 @@ import org.jetbrains.annotations.Nullable;
 
 /** Root of lexer, parser rule defs */
 public abstract class RuleSpecNode extends ASTWrapperPsiElement implements PsiNameIdentifierOwner {
-	protected String name = null; // an override to input text ID
+    protected String name = null; // an override to input text ID
 
-	public RuleSpecNode(@NotNull final ASTNode node) {
-		super(node);
-	}
+    public RuleSpecNode(@NotNull final ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public String getName() {
-		if ( name!=null ) return name;
-		GrammarElementRefNode id = getNameIdentifier();
-		if ( id!=null ) {
-			return id.getText();
-		}
-		return "unknown-name";
-	}
+    @Override
+    public String getName() {
+        if (name != null) return name;
+        GrammarElementRefNode id = getNameIdentifier();
+        if (id != null) {
+            return id.getText();
+        }
+        return "unknown-name";
+    }
 
-	@Nullable
-	public abstract GrammarElementRefNode getNameIdentifier();
+    @Nullable
+    public abstract GrammarElementRefNode getNameIdentifier();
 
-	@Override
-	public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
+    @Override
+    public PsiElement setName(@NonNls @NotNull String name) throws IncorrectOperationException {
 		/*
 		From doc: "Creating a fully correct AST node from scratch is
 		          quite difficult. Thus, surprisingly, the easiest way to
@@ -41,28 +41,28 @@ public abstract class RuleSpecNode extends ASTWrapperPsiElement implements PsiNa
 		          node in its parse tree, build the parse tree and
 		          extract the necessary node from it.
 		 */
-		GrammarElementRefNode id = getNameIdentifier();
-		if ( id != null ) {
-			id.replace(MyPsiUtils.createLeafFromText(getProject(),
-													 getContext(),
-													 name, getRuleRefType()));
-		}
-		this.name = name;
-		return this;
-	}
+        GrammarElementRefNode id = getNameIdentifier();
+        if (id != null) {
+            id.replace(MyPsiUtils.createLeafFromText(getProject(),
+                    getContext(),
+                    name, getRuleRefType()));
+        }
+        this.name = name;
+        return this;
+    }
 
-	public abstract IElementType getRuleRefType();
+    public abstract IElementType getRuleRefType();
 
-	@Override
-	public void subtreeChanged() {
-		super.subtreeChanged();
-		name = null;
-	}
+    @Override
+    public void subtreeChanged() {
+        super.subtreeChanged();
+        name = null;
+    }
 
-	@Override
-	public int getTextOffset() {
-		GrammarElementRefNode id = getNameIdentifier();
-		if ( id!=null ) return id.getTextOffset();
-		return super.getTextOffset();
-	}
+    @Override
+    public int getTextOffset() {
+        GrammarElementRefNode id = getNameIdentifier();
+        if (id != null) return id.getTextOffset();
+        return super.getTextOffset();
+    }
 }

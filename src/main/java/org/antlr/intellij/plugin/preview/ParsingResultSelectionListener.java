@@ -8,5 +8,5 @@ import org.antlr.v4.runtime.tree.Tree;
  * corresponding area in the input editor.
  */
 public interface ParsingResultSelectionListener {
-	void onParserRuleSelected(Tree rule);
+    void onParserRuleSelected(Tree rule);
 }

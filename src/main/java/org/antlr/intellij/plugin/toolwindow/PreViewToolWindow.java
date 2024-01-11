@@ -43,42 +43,42 @@ public class PreViewToolWindow implements ToolWindowFactory, DumbAware {
             project.getMessageBus().connect().subscribe(TOPIC, new PreViewListener() {
                 @Override
                 public void releaseEditor(PreviewState previewState) {
-                    if(previewPanel!=null){
+                    if (previewPanel != null) {
                         previewPanel.getInputPanel().releaseEditor(previewState);
                     }
                 }
 
                 @Override
                 public void setStartRuleName(VirtualFile grammarFile, String startRuleName) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.getInputPanel().setStartRuleName(grammarFile, startRuleName);
                     }
                 }
 
                 @Override
                 public void updateParseTreeFromDoc(VirtualFile grammarFile) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.updateParseTreeFromDoc(grammarFile);
                     }
                 }
 
                 @Override
                 public void grammarFileSaved(VirtualFile grammarFile) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.grammarFileSaved(grammarFile);
                     }
                 }
 
                 @Override
                 public void grammarFileChanged(VirtualFile grammarFile) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.grammarFileChanged(grammarFile);
                     }
                 }
 
                 @Override
                 public void mouseEnteredGrammarEditorEvent(VirtualFile file, EditorMouseEvent event) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         ProfilerPanel profilerPanel = previewPanel.getProfilerPanel();
                         if (profilerPanel != null) {
                             profilerPanel.mouseEnteredGrammarEditorEvent(file, event);
@@ -88,63 +88,63 @@ public class PreViewToolWindow implements ToolWindowFactory, DumbAware {
 
                 @Override
                 public void closeGrammar(VirtualFile file) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.closeGrammar(file);
                     }
                 }
 
                 @Override
                 public void setEnabled(boolean enabled) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.setEnabled(enabled);
                     }
                 }
 
                 @Override
                 public void toolWindowHide(@Nullable Runnable runnable) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         toolWindow.hide(runnable);
                     }
                 }
 
                 @Override
                 public void onParsingCompleted(PreviewState previewState, long duration) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.onParsingCompleted(previewState, duration);
                     }
                 }
 
                 @Override
                 public void notifySlowParsing() {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.notifySlowParsing();
                     }
                 }
 
                 @Override
                 public void onParsingCancelled() {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.onParsingCancelled();
                     }
                 }
 
                 @Override
                 public void clearParseErrors() {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.getInputPanel().clearParseErrors();
                     }
                 }
 
                 @Override
                 public void startParsing() {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.startParsing();
                     }
                 }
 
                 @Override
                 public void autoRefreshPreview(VirtualFile virtualFile) {
-                    if(previewPanel!=null) {
+                    if (previewPanel != null) {
                         previewPanel.autoRefreshPreview(virtualFile);
                     }
                 }

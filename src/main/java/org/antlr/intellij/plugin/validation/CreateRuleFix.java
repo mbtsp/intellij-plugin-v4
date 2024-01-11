@@ -25,71 +25,71 @@ import static org.antlr.intellij.plugin.parser.ANTLRv4Lexer.SEMI;
  */
 public class CreateRuleFix extends BaseIntentionAction {
 
-	private final TextRange textRange;
-	private final String ruleName;
+    private final TextRange textRange;
+    private final String ruleName;
 
-	public CreateRuleFix(TextRange textRange, PsiFile file) {
-		this.textRange = textRange;
-		ruleName = textRange.substring(file.getText());
-	}
+    public CreateRuleFix(TextRange textRange, PsiFile file) {
+        this.textRange = textRange;
+        ruleName = textRange.substring(file.getText());
+    }
 
-	@Nls(capitalization = Nls.Capitalization.Sentence)
-	@NotNull
-	@Override
-	public String getFamilyName() {
-		return "ANTLR4";
-	}
+    @Nls(capitalization = Nls.Capitalization.Sentence)
+    @NotNull
+    @Override
+    public String getFamilyName() {
+        return "ANTLR4";
+    }
 
-	@Nls(capitalization = Nls.Capitalization.Sentence)
-	@NotNull
-	@Override
-	public String getText() {
-		return "Create rule '" + ruleName + "'";
-	}
+    @Nls(capitalization = Nls.Capitalization.Sentence)
+    @NotNull
+    @Override
+    public String getText() {
+        return "Create rule '" + ruleName + "'";
+    }
 
-	@Override
-	public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
-		return true;
-	}
+    @Override
+    public boolean isAvailable(@NotNull Project project, Editor editor, PsiFile file) {
+        return true;
+    }
 
-	@Override
-	public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
-		String ruleName = editor.getDocument().getText(textRange);
+    @Override
+    public void invoke(@NotNull Project project, Editor editor, PsiFile file) throws IncorrectOperationException {
+        String ruleName = editor.getDocument().getText(textRange);
 
-		prepareEditor(project, editor, file);
+        prepareEditor(project, editor, file);
 
-		Template template = TemplateManager.getInstance(project).createTemplate("", "");
-		template.addTextSegment(ruleName + ": ");
-		template.addVariable("CONTENT", new TextExpression("' '"), true);
-		template.addTextSegment(";");
+        Template template = TemplateManager.getInstance(project).createTemplate("", "");
+        template.addTextSegment(ruleName + ": ");
+        template.addVariable("CONTENT", new TextExpression("' '"), true);
+        template.addTextSegment(";");
 
-		TemplateManager.getInstance(project).startTemplate(editor, template);
-	}
+        TemplateManager.getInstance(project).startTemplate(editor, template);
+    }
 
-	private void prepareEditor(@NotNull Project project, Editor editor, PsiFile file) {
-		int insertionPoint = findInsertionPoint(editor, file);
-		editor.getDocument().insertString(insertionPoint, "\n\n");
+    private void prepareEditor(@NotNull Project project, Editor editor, PsiFile file) {
+        int insertionPoint = findInsertionPoint(editor, file);
+        editor.getDocument().insertString(insertionPoint, "\n\n");
 
-		PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
+        PsiDocumentManager.getInstance(project).commitDocument(editor.getDocument());
 
-		editor.getCaretModel().moveToOffset(insertionPoint + 2);
-	}
+        editor.getCaretModel().moveToOffset(insertionPoint + 2);
+    }
 
-	private int findInsertionPoint(Editor editor, PsiFile file) {
-		PsiElement atRange = file.findElementAt(textRange.getEndOffset());
-		if ( atRange!=null ) {
-			RuleSpecNode parentRule = PsiTreeUtil.getParentOfType(atRange, RuleSpecNode.class);
+    private int findInsertionPoint(Editor editor, PsiFile file) {
+        PsiElement atRange = file.findElementAt(textRange.getEndOffset());
+        if (atRange != null) {
+            RuleSpecNode parentRule = PsiTreeUtil.getParentOfType(atRange, RuleSpecNode.class);
 
-			if ( parentRule!=null ) {
-				PsiElement semi = MyPsiUtils.findFirstChildOfType(parentRule, getTokenElementType(SEMI));
+            if (parentRule != null) {
+                PsiElement semi = MyPsiUtils.findFirstChildOfType(parentRule, getTokenElementType(SEMI));
 
-				if ( semi!=null ) {
-					return semi.getTextOffset() + 1;
-				}
-				return parentRule.getTextRange().getEndOffset();
-			}
-		}
+                if (semi != null) {
+                    return semi.getTextOffset() + 1;
+                }
+                return parentRule.getTextRange().getEndOffset();
+            }
+        }
 
-		return editor.getDocument().getLineEndOffset(editor.getDocument().getLineCount() - 1);
-	}
+        return editor.getDocument().getLineEndOffset(editor.getDocument().getLineCount() - 1);
+    }
 }

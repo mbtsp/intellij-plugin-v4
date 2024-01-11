@@ -35,10 +35,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class ProfilerPanel {
-    public static final Color AMBIGUITY_COLOR = new Color(138, 0, 0);
-    public static final Color FULLCTX_COLOR = new Color(255, 128, 0);
-    public static final Color PREDEVAL_COLOR = new Color(110, 139, 61);
-    public static final Color DEEPESTLOOK_COLOR = new Color(0, 128, 128);
+    public static final Color AMBIGUITY_COLOR = new JBColor(new Color(138, 0, 0), new Color());
+    public static final Color FULLCTX_COLOR = new JBColor(new Color(255, 128, 0), new Color());
+    public static final Color PREDEVAL_COLOR = new JBColor(new Color(110, 139, 61), new Color());
+    public static final Color DEEPESTLOOK_COLOR = new JBColor(new Color(0, 128, 128), new Color());
 
     public static final Key<DecisionEventInfo> DECISION_EVENT_INFO_KEY = Key.create("DECISION_EVENT_INFO");
     public static final Key<DecisionInfo> DECISION_INFO_KEY = Key.create("DECISION_INFO_KEY");
@@ -320,7 +320,7 @@ public class ProfilerPanel {
             Rule rule = g.getRule(ruleIndex);
             int precedence = ((SemanticContext.PrecedencePredicate) semctx).precedence;
             // precedence = n - originalAlt + 1, So:
-			alt = rule.getOriginalNumberOfAlts() - precedence + 1;
+            alt = rule.getOriginalNumberOfAlts() - precedence + 1;
         }
         return semanticContextDisplayString + " => alt " + alt + " is " + result;
     }

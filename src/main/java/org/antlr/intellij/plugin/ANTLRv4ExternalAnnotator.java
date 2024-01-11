@@ -60,7 +60,7 @@ public class ANTLRv4ExternalAnnotator extends ExternalAnnotator<PsiFile, List<Gr
 
         final ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(file.getProject());
         if (controller != null && !ApplicationManager.getApplication().isUnitTestMode()) {
-            if(!file.getProject().isDisposed()){
+            if (!file.getProject().isDisposed()) {
                 file.getProject().getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).autoRefreshPreview(file.getVirtualFile());
             }
 
@@ -125,15 +125,15 @@ public class ANTLRv4ExternalAnnotator extends ExternalAnnotator<PsiFile, List<Gr
             case ERROR_ONE_OFF:
             case FATAL:
                 AnnotationBuilder annotationBuilder = holder.newAnnotation(HighlightSeverity.ERROR, issue.getAnnotation()).range(range);
-                if(intentionAction.isPresent()){
-					annotationBuilder=annotationBuilder.newFix(intentionAction.get()).range(range).registerFix();
-				}
+                if (intentionAction.isPresent()) {
+                    annotationBuilder = annotationBuilder.newFix(intentionAction.get()).range(range).registerFix();
+                }
                 annotationBuilder.create();
             case WARNING:
                 AnnotationBuilder warningBuilder = holder.newAnnotation(HighlightSeverity.WARNING, issue.getAnnotation()).range(range);
-				if(intentionAction.isPresent()){
-					warningBuilder=warningBuilder.newFix(intentionAction.get()).range(range).registerFix();
-				}
+                if (intentionAction.isPresent()) {
+                    warningBuilder = warningBuilder.newFix(intentionAction.get()).range(range).registerFix();
+                }
                 warningBuilder.create();
 
             case WARNING_ONE_OFF:
@@ -142,9 +142,9 @@ public class ANTLRv4ExternalAnnotator extends ExternalAnnotator<PsiFile, List<Gr
 			AnnotationBuilder builder = holder.newAnnotation(HighlightSeverity.WEAK_WARNING, issue.getAnnotation()).range(range);
 			 */
                 AnnotationBuilder infoBuilder = holder.newAnnotation(HighlightSeverity.INFORMATION, issue.getAnnotation()).range(range);
-				if(intentionAction.isPresent()){
-					infoBuilder=infoBuilder.newFix(intentionAction.get()).range(range).registerFix();
-				}
+                if (intentionAction.isPresent()) {
+                    infoBuilder = infoBuilder.newFix(intentionAction.get()).range(range).registerFix();
+                }
                 infoBuilder.create();
             default:
                 break;

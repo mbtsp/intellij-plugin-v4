@@ -14,30 +14,33 @@ import java.util.List;
 public class LoadGrammarsToolListener extends DefaultToolListener {
     public List<String> grammarErrorMessages = new ArrayList<>();
     public List<String> grammarWarningMessages = new ArrayList<>();
-	public LoadGrammarsToolListener(Tool tool) { super(tool); }
 
-	@Override
-	public void error(ANTLRMessage msg) {
-		ST msgST = tool.errMgr.getMessageTemplate(msg);
+    public LoadGrammarsToolListener(Tool tool) {
+        super(tool);
+    }
+
+    @Override
+    public void error(ANTLRMessage msg) {
+        ST msgST = tool.errMgr.getMessageTemplate(msg);
         String s = msgST.render();
-		if (tool.errMgr.formatWantsSingleLineMessage()) {
-			s = s.replace('\n', ' ');
-		}
+        if (tool.errMgr.formatWantsSingleLineMessage()) {
+            s = s.replace('\n', ' ');
+        }
         grammarErrorMessages.add(s);
-	}
+    }
 
-	@Override
-	public void warning(ANTLRMessage msg) {
-		ST msgST = tool.errMgr.getMessageTemplate(msg);
+    @Override
+    public void warning(ANTLRMessage msg) {
+        ST msgST = tool.errMgr.getMessageTemplate(msg);
         String s = msgST.render();
         if (tool.errMgr.formatWantsSingleLineMessage()) {
             s = s.replace('\n', ' ');
         }
         grammarWarningMessages.add(s);
-	}
+    }
 
-	public void clear() {
-		grammarErrorMessages.clear();
-		grammarWarningMessages.clear();
-	}
+    public void clear() {
+        grammarErrorMessages.clear();
+        grammarWarningMessages.clear();
+    }
 }

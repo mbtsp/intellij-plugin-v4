@@ -12,17 +12,17 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ChannelSpecNode extends RuleSpecNode {
 
-	public ChannelSpecNode(@NotNull ASTNode node) {
-		super(node);
-	}
+    public ChannelSpecNode(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public GrammarElementRefNode getNameIdentifier() {
-		return PsiTreeUtil.getChildOfType(this, LexerRuleRefNode.class);
-	}
+    @Override
+    public GrammarElementRefNode getNameIdentifier() {
+        return PsiTreeUtil.getChildOfType(this, LexerRuleRefNode.class);
+    }
 
-	@Override
-	public IElementType getRuleRefType() {
-		return ANTLRv4TokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.TOKEN_REF);
-	}
+    @Override
+    public IElementType getRuleRefType() {
+        return ANTLRv4TokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.TOKEN_REF);
+    }
 }

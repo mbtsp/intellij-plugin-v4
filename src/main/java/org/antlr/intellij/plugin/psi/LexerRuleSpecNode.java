@@ -11,35 +11,36 @@ import org.antlr.intellij.plugin.parser.ANTLRv4Lexer;
 import org.jetbrains.annotations.NotNull;
 
 public class LexerRuleSpecNode extends RuleSpecNode {
-	public static final Logger LOG = Logger.getInstance("org.antlr.intellij.plugin.psi.LexerRuleSpecNode");
-	public LexerRuleSpecNode(@NotNull ASTNode node) {
-		super(node);
-	}
+    public static final Logger LOG = Logger.getInstance("org.antlr.intellij.plugin.psi.LexerRuleSpecNode");
 
-	@Override
-	public IElementType getRuleRefType() {
-		return ANTLRv4TokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.TOKEN_REF);
-	}
+    public LexerRuleSpecNode(@NotNull ASTNode node) {
+        super(node);
+    }
 
-	@Override
-	public GrammarElementRefNode getNameIdentifier() {
-		GrammarElementRefNode tr = PsiTreeUtil.getChildOfType(this, LexerRuleRefNode.class);
-		if ( tr==null ) {
-			LOG.error("can't find LexerRuleRefNode child of "+this.getText(), (Throwable)null);
-		}
-		return tr;
-	}
+    @Override
+    public IElementType getRuleRefType() {
+        return ANTLRv4TokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.TOKEN_REF);
+    }
 
-	public boolean isFragment() {
-		return getNode().findChildByType(ANTLRv4TokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.FRAGMENT)) != null;
-	}
+    @Override
+    public GrammarElementRefNode getNameIdentifier() {
+        GrammarElementRefNode tr = PsiTreeUtil.getChildOfType(this, LexerRuleRefNode.class);
+        if (tr == null) {
+            LOG.error("can't find LexerRuleRefNode child of " + this.getText(), (Throwable) null);
+        }
+        return tr;
+    }
 
-	public static class Factory implements PsiElementFactory {
-		public static Factory INSTANCE = new Factory();
+    public boolean isFragment() {
+        return getNode().findChildByType(ANTLRv4TokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.FRAGMENT)) != null;
+    }
 
-		@Override
-		public PsiElement createElement(ASTNode node) {
-			return new LexerRuleSpecNode(node);
-		}
-	}
+    public static class Factory implements PsiElementFactory {
+        public static Factory INSTANCE = new Factory();
+
+        @Override
+        public PsiElement createElement(ASTNode node) {
+            return new LexerRuleSpecNode(node);
+        }
+    }
 }
