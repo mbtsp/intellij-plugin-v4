@@ -34,6 +34,10 @@ fun notifyWarning(project: Project, title: String, content: String) {
     notify(project, title, NotificationType.WARNING, content, null)
 }
 
+fun notifyConflictsWarning(project: Project, content: String, actions: Collection<AnAction>?) {
+    notifyWarning(project, "Plugin conflicts", content, actions)
+}
+
 fun notifyWarning(project: Project, title: String, content: String, actions: Collection<AnAction>?) {
     notify(project, title, NotificationType.WARNING, content, actions)
 }
