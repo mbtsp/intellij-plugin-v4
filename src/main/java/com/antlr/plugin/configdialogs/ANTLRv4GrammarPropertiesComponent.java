@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Stores code generation preferences in <code>.idea/misc.xml</code>.
  */
-@State(name = "ANTLRGenerationPreferences")
+@State(name = "ANTLRNewGenerationPreferences")
 public class ANTLRv4GrammarPropertiesComponent implements PersistentStateComponent<ANTLRv4GrammarPropertiesStore> {
 
     private ANTLRv4GrammarPropertiesStore mySettings = new ANTLRv4GrammarPropertiesStore();
