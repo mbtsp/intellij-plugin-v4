@@ -1,5 +1,10 @@
 package com.antlr.plugin;
 
+import com.antlr.ApplicationInfo;
+import com.antlr.plugin.parsing.ParsingUtils;
+import com.antlr.plugin.parsing.RunANTLROnGrammarFile;
+import com.antlr.plugin.preview.PreviewState;
+import com.antlr.plugin.toolwindow.PreViewToolWindow;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.openapi.application.ApplicationManager;
@@ -33,10 +38,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.util.messages.MessageBusConnection;
-import com.antlr.plugin.parsing.ParsingUtils;
-import com.antlr.plugin.parsing.RunANTLROnGrammarFile;
-import com.antlr.plugin.preview.PreviewState;
-import com.antlr.plugin.toolwindow.PreViewToolWindow;
 import org.antlr.v4.parse.ANTLRParser;
 import org.antlr.v4.tool.Grammar;
 import org.antlr.v4.tool.LexerGrammar;
@@ -65,7 +66,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * the grammars and editors are consistently associated with the same window.
  */
 public class ANTLRv4PluginController {
-    public static final String PLUGIN_ID = "org.antlr.intellij.plugin";
+    public static final String PLUGIN_ID = ApplicationInfo.PLUGIN_ID;
 
     public static final Key<GrammarEditorMouseAdapter> EDITOR_MOUSE_LISTENER_KEY = Key.create("EDITOR_MOUSE_LISTENER_KEY");
     public static final Logger LOG = Logger.getInstance("ANTLRv4PluginController");
@@ -500,7 +501,7 @@ public class ANTLRv4PluginController {
         );
     }
 
-    public static void showLaterConsoleWindow(final Project project,Runnable runnable) {
+    public static void showLaterConsoleWindow(final Project project, Runnable runnable) {
         ApplicationManager.getApplication().invokeLater(
                 () -> {
                     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);

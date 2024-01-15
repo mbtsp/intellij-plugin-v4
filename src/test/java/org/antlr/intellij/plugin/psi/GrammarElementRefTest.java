@@ -1,5 +1,6 @@
-package com.antlr.plugin.psi;
+package org.antlr.intellij.plugin.psi;
 
+import com.antlr.plugin.psi.*;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiReference;
@@ -191,9 +192,9 @@ public class GrammarElementRefTest extends LightPlatformCodeInsightFixtureTestCa
 	@Override
 	protected void tearDown() throws Exception {
 		// This can avoid exceptions
-		ANTLRv4PluginController.getInstance(getProject()).getConsole().setOutputPaused(true);
+//		ANTLRv4PluginController.getInstance(getProject()).getConsole().setOutputPaused(true);
 
-		TestUtils.tearDownIgnoringObjectNotDisposedException(() -> super.tearDown());
+//		TestUtils.tearDownIgnoringObjectNotDisposedException(() -> super.tearDown());
 	}
 
 	private <T extends PsiElement> void assertResolvedMatches(Class<T> expectedClass, @Nullable Consumer<T> matcher) {

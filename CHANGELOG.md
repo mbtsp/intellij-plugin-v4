@@ -10,9 +10,8 @@
 
 ### Fixed
 - Failed to get the plug-in version number
-
-
-
+- [Fix some bugs](https://github.com/mbtsp/intellij-plugin-v4/milestone/1?closed=1)
+- 
 
 
 
