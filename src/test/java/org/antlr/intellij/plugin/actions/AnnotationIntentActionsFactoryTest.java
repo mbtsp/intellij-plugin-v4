@@ -1,8 +1,8 @@
-package org.antlr.intellij.plugin.actions;
+package com.antlr.plugin.actions;
 
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.openapi.util.TextRange;
-import org.antlr.intellij.plugin.psi.LexerRuleRefNode;
+import com.antlr.plugin.psi.LexerRuleRefNode;
 import org.antlr.v4.tool.ErrorType;
 import org.junit.Test;
 

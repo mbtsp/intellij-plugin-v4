@@ -1,9 +1,9 @@
-package org.antlr.intellij.plugin.validation;
+package com.antlr.plugin.validation;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
-import org.antlr.intellij.plugin.TestUtils;
+import com.antlr.plugin.TestUtils;
 
 public class CreateRuleFixTest extends LightPlatformCodeInsightTestCase {
 

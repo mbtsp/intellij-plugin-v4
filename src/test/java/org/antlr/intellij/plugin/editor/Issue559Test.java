@@ -1,10 +1,10 @@
-package org.antlr.intellij.plugin.editor;
+package com.antlr.plugin.editor;
 
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.antlr.intellij.plugin.TestUtils;
+import com.antlr.plugin.TestUtils;
 import org.junit.Test;
 
 public class Issue559Test extends BasePlatformTestCase {

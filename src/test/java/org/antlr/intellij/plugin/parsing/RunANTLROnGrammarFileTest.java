@@ -1,9 +1,10 @@
-package org.antlr.intellij.plugin.parsing;
+package com.antlr.plugin.parsing;
 
+import com.antlr.plugin.TestUtils;
+import com.antlr.plugin.parsing.RunANTLROnGrammarFile;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightPlatformCodeInsightTestCase;
 import com.intellij.testFramework.VfsTestUtil;
-import org.antlr.intellij.plugin.TestUtils;
 
 import java.util.List;
 

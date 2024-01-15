@@ -4,7 +4,14 @@
 
 ## [Unreleased]
 
+## [2024.1.4]
+
 ## [2024.1.3]
+
+### Fixed
+- Failed to get the plug-in version number
+
+
 
 
 

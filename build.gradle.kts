@@ -69,7 +69,7 @@ tasks {
     }
     generateGrammarSource {
         include("**/ANTLRv4*.g4")
-        arguments="-package,org.antlr.intellij.plugin.parser,-lib,src/main/antlr/org/antlr/intellij/plugin/parser,-Xexact-output-dir".split(",")
+        arguments="-package,com.antlr.plugin.parser,-lib,src/main/antlr/com/antlr/plugin/parser,-Xexact-output-dir".split(",")
     }
 
     patchPluginXml {

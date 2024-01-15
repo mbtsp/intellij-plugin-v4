@@ -1,4 +1,4 @@
-package org.antlr.intellij.plugin.editor;
+package com.antlr.plugin.editor;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
@@ -10,8 +10,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
-import org.antlr.intellij.plugin.ANTLRv4PluginController;
-import org.antlr.intellij.plugin.TestUtils;
+import com.antlr.plugin.ANTLRv4PluginController;
+import com.antlr.plugin.TestUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 

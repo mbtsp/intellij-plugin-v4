@@ -1,4 +1,4 @@
-package org.antlr.intellij.plugin.configdialogs;
+package com.antlr.plugin.configdialogs;
 
 import org.junit.Assert;
 import org.junit.Before;
