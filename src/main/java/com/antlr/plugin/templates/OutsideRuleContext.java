@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class OutsideRuleContext extends ANTLRLiveTemplateContext {
     public OutsideRuleContext() {
-        super("ANTLR_OUTSIDE(New)", "Outside rule", ANTLRGenericContext.class);
+        super("ANTLR_OUTSIDE-Tool", "Outside rule", ANTLRGenericContext.class);
     }
 
     @Override

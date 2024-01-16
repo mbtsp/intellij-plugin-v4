@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.my.antlr.tool</id>
-    <name>ANTLR v4(New)</name>
+    <name>ANTLR v4-Tool</name>
     <version>will be replaced by gradle</version>
     <vendor email="zoulejiu@gmail.com" url="https://github.com/mbtsp/intellij-plugin-v4">ANTLR Project</vendor>
 
@@ -132,43 +132,43 @@ For really big files and slow grammars, there is an appreciable delay when displ
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.antlr.plugin.ANTLRv4PluginController"/>
         <postStartupActivity implementation="com.antlr.plugin.init.AntlrStartupActivity"/>
-        <fileType id="antlr.new.fileType" name="ANTLR v4 grammar file" language="ANTLRv4(New)" extensions="g4" fieldName="INSTANCE"
+        <fileType id="antlr.new.fileType" name="ANTLR v4 grammar file" language="ANTLRv4-Tool" extensions="g4" fieldName="INSTANCE"
                   implementationClass="com.antlr.plugin.ANTLRv4FileType"/>
         <lang.syntaxHighlighterFactory
                 implementationClass="com.antlr.plugin.ANTLRv4SyntaxHighlighterFactory"
-                language="ANTLRv4(New)" id="antlr.new.antlrHighlighterFactory"/>
-        <lang.commenter id="antlr.new.lang.commenter" language="ANTLRv4(New)" implementationClass="com.antlr.plugin.ANTLRv4Commenter"/>
+                language="ANTLRv4-Tool" id="antlr.new.antlrHighlighterFactory"/>
+        <lang.commenter id="antlr.new.lang.commenter" language="ANTLRv4-Tool" implementationClass="com.antlr.plugin.ANTLRv4Commenter"/>
         <indexPatternBuilder id="antlr.new.index.pattern.builder" implementation="com.antlr.plugin.psi.ANTLRv4IndexPatternBuilder"/>
-        <lang.braceMatcher id="antlr.new.lang,brace.matcher" language="ANTLRv4(New)"
+        <lang.braceMatcher id="antlr.new.lang,brace.matcher" language="ANTLRv4-Tool"
                            implementationClass="com.antlr.plugin.editor.ANTLRv4BraceMatcher"/>
         <colorSettingsPage id="antlr.new.color.setting.page" implementation="com.antlr.plugin.configdialogs.ANTLRv4ColorsPage"/>
         <additionalTextAttributes scheme="Default" file="colorSchemes/ANTLRv4Default.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/ANTLRv4Darcula.xml"/>
-        <lang.parserDefinition id="antlr.new.lang.parser.definition" language="ANTLRv4(New)"
+        <lang.parserDefinition id="antlr.new.lang.parser.definition" language="ANTLRv4-Tool"
                                implementationClass="com.antlr.plugin.ANTLRv4ParserDefinition"/>
-        <lang.ast.factory id="antlr.new.lang.ast.factory" language="ANTLRv4(New)" implementationClass="com.antlr.plugin.ANTLRv4ASTFactory"/>
-        <lang.psiStructureViewFactory id="antlr.new.lang.psi.structure.view.factory" language="ANTLRv4(New)"
+        <lang.ast.factory id="antlr.new.lang.ast.factory" language="ANTLRv4-Tool" implementationClass="com.antlr.plugin.ANTLRv4ASTFactory"/>
+        <lang.psiStructureViewFactory id="antlr.new.lang.psi.structure.view.factory" language="ANTLRv4-Tool"
                                       implementationClass="com.antlr.plugin.structview.ANTLRv4StructureViewFactory"/>
-        <lang.foldingBuilder id="antlr.new.lang.folding.builder" language="ANTLRv4(New)"
+        <lang.foldingBuilder id="antlr.new.lang.folding.builder" language="ANTLRv4-Tool"
                              implementationClass="com.antlr.plugin.folding.ANTLRv4FoldingBuilder"/>
         <iconProvider id="antlr.new.icon.provider"  implementation="com.antlr.plugin.ANTLRv4IconProvider"/>
 
-        <externalAnnotator  id="antlr.new.external.annotator" language="ANTLRv4(New)" implementationClass="com.antlr.plugin.ANTLRv4ExternalAnnotator"/>
-        <lang.findUsagesProvider id="antlr.new.lang.find.useges.provider" language="ANTLRv4(New)"
+        <externalAnnotator  id="antlr.new.external.annotator" language="ANTLRv4-Tool" implementationClass="com.antlr.plugin.ANTLRv4ExternalAnnotator"/>
+        <lang.findUsagesProvider id="antlr.new.lang.find.useges.provider" language="ANTLRv4-Tool"
                                  implementationClass="com.antlr.plugin.ANTLRv4FindUsagesProvider"/>
 
         <defaultLiveTemplates file="/liveTemplates/lexer/user.xml"/>
         <liveTemplateContext id="antlr.new.live.template.antlr.gerner.context" implementation="com.antlr.plugin.templates.ANTLRGenericContext"
-                             contextId="ANTLR(New)"/>
+                             contextId="ANTLR-Tool"/>
         <liveTemplateContext id="antlr.new.live.template.outside.rule.context" implementation="com.antlr.plugin.templates.OutsideRuleContext"
-                             contextId="ANTLR_OUTSIDE(New)"/>
+                             contextId="ANTLR_OUTSIDE-Tool"/>
         <projectConfigurable groupId="language"
                              id="antlr.new.intellij.plugin.configdialogs.ANTLRv4ProjectSettings"
                              displayName="ANTLR V4 Default Project Settings"
                              instance="com.antlr.plugin.configdialogs.ANTLRv4ProjectSettings"/>
         <projectService id="antlr.new.antlr.grammar.propertioes.component"
                 serviceImplementation="com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesComponent"/>
-        <lang.refactoringSupport  id="antlr.new.refactoring.support" language="ANTLRv4(New)"
+        <lang.refactoringSupport  id="antlr.new.refactoring.support" language="ANTLRv4-Tool"
                                  implementationClass="com.antlr.plugin.refactor.ANTLRv4RefactoringSupport"/>
         <toolWindow factoryClass="com.antlr.plugin.toolwindow.PreViewToolWindow" id="Antlr(new) Preview"
                     anchor="bottom"/>

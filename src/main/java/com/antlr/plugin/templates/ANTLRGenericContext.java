@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ANTLRGenericContext extends ANTLRLiveTemplateContext {
     public ANTLRGenericContext() {
-        super("ANTLR(New)", "ANTLR(New)", EverywhereContextType.class);
+        super("ANTLR-Tool", "ANTLR-Tool", EverywhereContextType.class);
     }
 
     @Override

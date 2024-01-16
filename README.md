@@ -67,7 +67,6 @@ because the interpreter is language agnostic.
 For the same reasons, if your parser and/or lexer classes extend a custom implementation of the 
 base parser/lexer classes, your custom code will *not* be run during live preview. 
 <!-- Plugin description -->
-### The original plugin was not updated very active, so use this plugin for quick bug fixes and feature additions
 1. syntax highlighting
 2. syntax error checking
 3. generates parser code; shortcut (ctrl-shift-G / meta-shift-G) but it's in Tools menu and popups.
