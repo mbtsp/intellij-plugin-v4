@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 
 
 fun notify(
-    project: Project,
+    project: Project?,
     title: String,
     type: NotificationType,
     content: String,
@@ -22,22 +22,22 @@ fun notify(
     notification.notify(project)
 }
 
-fun notifySuccess(project: Project, title: String, content: String, actions: Collection<AnAction>?) {
+fun notifySuccess(project: Project?, title: String, content: String, actions: Collection<AnAction>?) {
     notify(project, title, NotificationType.INFORMATION, content, actions)
 }
 
-fun notifySuccess(project: Project, title: String, content: String) {
+fun notifySuccess(project: Project?, title: String, content: String) {
     notify(project, title, NotificationType.INFORMATION, content, null)
 }
 
-fun notifyWarning(project: Project, title: String, content: String) {
+fun notifyWarning(project: Project?, title: String, content: String) {
     notify(project, title, NotificationType.WARNING, content, null)
 }
 
-fun notifyConflictsWarning(project: Project, content: String, actions: Collection<AnAction>?) {
+fun notifyConflictsWarning(project: Project?, content: String, actions: Collection<AnAction>?) {
     notifyWarning(project, "Plugin conflicts", content, actions)
 }
 
-fun notifyWarning(project: Project, title: String, content: String, actions: Collection<AnAction>?) {
+fun notifyWarning(project: Project?, title: String, content: String, actions: Collection<AnAction>?) {
     notify(project, title, NotificationType.WARNING, content, actions)
 }
