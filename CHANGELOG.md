@@ -3,6 +3,14 @@
 # ANTLR v4(New) Changelog
 
 ## [Unreleased]
+## [2024.1.5]
+
+## [2024.1.4]
+
+### Fixed
+- [Fix some bugs](https://github.com/mbtsp/intellij-plugin-v4/milestone/2?closed=1)
+-
+
 
 ## [2024.1.4]
 

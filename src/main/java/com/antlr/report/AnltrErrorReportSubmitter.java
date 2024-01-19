@@ -27,7 +27,6 @@ import com.ssh.report.StringKt;
 import github.GitHubDeviceAuthApis;
 import github.Issue;
 import github.IssueInfo;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -50,6 +49,9 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
         IdeaPluginDescriptor ideaPluginDescriptor = IdeErrorsDialog.getPlugin(ideaLoggingEvent);
 
         Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(parentComponent));
+        if (project == null || project.isDisposed() || project.isDefault()) {
+            return true;
+        }
         new Task.Backgroundable(project, "Submitting...") {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
@@ -68,7 +70,7 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
 
     private void buildErrorMsg(Project project, IdeaLoggingEvent event, Consumer<? super SubmittedReportInfo> consumer) {
         StringBuilder stringBuilder = new StringBuilder();
-        String id = StringKt.md5(event.getThrowableText());
+        String id = StringKt.title(event.getThrowableText());
         stringBuilder.append(":warning:_`[Auto Generated Report]-=").append(id).append("=-`_").append("\n");
         stringBuilder.append("## Environments").append('\n');
         stringBuilder.append("> **Plugin version: ").append(ApplicationInfo.VERSION).append("**").append("\n\n");
