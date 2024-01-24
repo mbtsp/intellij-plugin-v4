@@ -1,13 +1,5 @@
 package com.antlr.plugin.parsing;
 
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VfsUtil;
-import com.intellij.openapi.vfs.VirtualFile;
-import org.antlr.intellij.adaptor.parser.SyntaxErrorListener;
 import com.antlr.plugin.ANTLRv4PluginController;
 import com.antlr.plugin.PluginIgnoreMissingTokensFileErrorManager;
 import com.antlr.plugin.configdialogs.ANTLRv4GrammarProperties;
@@ -15,6 +7,15 @@ import com.antlr.plugin.parser.ANTLRv4Lexer;
 import com.antlr.plugin.parser.ANTLRv4Parser;
 import com.antlr.plugin.preview.PreviewState;
 import com.antlr.plugin.util.ConsoleUtils;
+import com.intellij.execution.ui.ConsoleViewContentType;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.VfsUtil;
+import com.intellij.openapi.vfs.VirtualFile;
+import org.antlr.intellij.adaptor.parser.SyntaxErrorListener;
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.v4.Tool;
 import org.antlr.v4.parse.ANTLRParser;
@@ -35,8 +36,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore.getGrammarProperties;
 
@@ -265,7 +267,9 @@ public class ParsingUtils {
         return antlr;
     }
 
-    /** Get lexer and parser grammars */
+    /**
+     * Get lexer and parser grammars
+     */
     public static Grammar[] loadGrammars(VirtualFile grammarFile, Project project) {
         ANTLRv4PluginController.LOG.info("loadGrammars " + grammarFile.getPath() + " " + project.getName());
         Tool antlr = createANTLRToolForLoadingGrammars(getGrammarProperties(project, grammarFile));
@@ -298,20 +302,23 @@ public class ParsingUtils {
         // Examine's Grammar AST constructed by v3 for a v4 grammar.
         // Use ANTLR v3's ANTLRParser not ANTLRv4Parser from this plugin
         switch (g.getType()) {
-            case ANTLRParser.PARSER:
+            case ANTLRParser.PARSER -> {
                 ANTLRv4PluginController.LOG.info("loadGrammars parser " + g.name);
                 return new Grammar[]{lg, g};
-            case ANTLRParser.LEXER:
+            }
+            case ANTLRParser.LEXER -> {
                 ANTLRv4PluginController.LOG.info("loadGrammars lexer " + g.name);
                 lg = (LexerGrammar) g;
                 return new Grammar[]{lg, null};
-            case ANTLRParser.COMBINED:
+            }
+            case ANTLRParser.COMBINED -> {
                 lg = g.getImplicitLexer();
                 if (lg == null) {
                     lg = BAD_LEXER_GRAMMAR;
                 }
                 ANTLRv4PluginController.LOG.info("loadGrammars combined: " + lg.name + ", " + g.name);
                 return new Grammar[]{lg, g};
+            }
         }
         ANTLRv4PluginController.LOG.info("loadGrammars invalid grammar type " + g.getTypeString() + " for " + g.name);
         return null;
@@ -340,24 +347,34 @@ public class ParsingUtils {
     }
 
     public static GrammarRootAST parseGrammar(Tool antlr, VirtualFile grammarFile) {
+        AtomicReference<GrammarRootAST> atomicReference = new AtomicReference<>(null);
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+        ApplicationManager.getApplication().runReadAction(() -> {
+            try {
+                Document document = FileDocumentManager.getInstance().getDocument(grammarFile);
+                String grammarText = document != null ? document.getText() : new String(grammarFile.contentsToByteArray());
+                ANTLRStringStream in = new ANTLRStringStream(grammarText);
+                in.name = grammarFile.getPath();
+                atomicReference.set(antlr.parse(grammarFile.getPath(), in));
+            } catch (Exception e) {
+                antlr.errMgr.toolError(ErrorType.CANNOT_OPEN_FILE, e, grammarFile);
+            } finally {
+                countDownLatch.countDown();
+            }
+        });
         try {
-            Document document = FileDocumentManager.getInstance().getDocument(grammarFile);
-            String grammarText = document != null ? document.getText() : new String(grammarFile.contentsToByteArray());
-
-            ANTLRStringStream in = new ANTLRStringStream(grammarText);
-            in.name = grammarFile.getPath();
-            return antlr.parse(grammarFile.getPath(), in);
-        } catch (IOException ioe) {
-            antlr.errMgr.toolError(ErrorType.CANNOT_OPEN_FILE, ioe, grammarFile);
+            countDownLatch.await();
+        } catch (InterruptedException ignored) {
         }
-        return null;
+        return atomicReference.get();
     }
 
-    /** Try to load a LexerGrammar given a parser grammar g. Derive lexer name
-     *  as:
-     *  	V given tokenVocab=V in grammar or
-     *   	XLexer given XParser.g4 filename or
-     *     	XLexer given grammar name X
+    /**
+     * Try to load a LexerGrammar given a parser grammar g. Derive lexer name
+     * as:
+     * V given tokenVocab=V in grammar or
+     * XLexer given XParser.g4 filename or
+     * XLexer given grammar name X
      */
     public static LexerGrammar loadLexerGrammarFor(Grammar g, Project project) {
         Tool antlr = createANTLRToolForLoadingGrammars(getGrammarProperties(project, g.fileName));
@@ -443,7 +460,9 @@ public class ParsingUtils {
         }
     }
 
-    /** Get ancestors where the first element of the list is the parent of t */
+    /**
+     * Get ancestors where the first element of the list is the parent of t
+     */
     public static List<? extends Tree> getAncestors(Tree t) {
         if (t.getParent() == null) return Collections.emptyList();
         List<Tree> ancestors = new ArrayList<>();
