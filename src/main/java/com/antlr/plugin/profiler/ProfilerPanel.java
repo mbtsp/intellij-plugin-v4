@@ -1,5 +1,9 @@
 package com.antlr.plugin.profiler;
 
+import com.antlr.plugin.ANTLRv4PluginController;
+import com.antlr.plugin.preview.InputPanel;
+import com.antlr.plugin.preview.PreviewPanel;
+import com.antlr.plugin.preview.PreviewState;
 import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.ScrollType;
@@ -13,10 +17,6 @@ import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBCheckBox;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.table.JBTable;
-import com.antlr.plugin.ANTLRv4PluginController;
-import com.antlr.plugin.preview.InputPanel;
-import com.antlr.plugin.preview.PreviewPanel;
-import com.antlr.plugin.preview.PreviewState;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -447,7 +447,7 @@ public class ProfilerPanel {
         expertCheckBox = new JBCheckBox();
         expertCheckBox.setSelected(false);
         expertCheckBox.addActionListener(e -> {
-            if (previewState.parsingResult == null) {
+            if (previewState == null || previewState.parsingResult == null) {
                 // nothing has been parsed yet (no text in the editor)
                 return;
             }
