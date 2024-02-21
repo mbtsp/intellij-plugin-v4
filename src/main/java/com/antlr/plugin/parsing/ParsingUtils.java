@@ -293,7 +293,7 @@ public class ParsingUtils {
         }
 
         antlr.process(g, false);
-        if (listener.grammarErrorMessages.size() != 0) {
+        if (!listener.grammarErrorMessages.isEmpty()) {
             String msg = Utils.join(listener.grammarErrorMessages.iterator(), "\n");
             ConsoleUtils.consolePrint(project, msg + "\n", ConsoleViewContentType.ERROR_OUTPUT);
             return null; // upon error, bail
@@ -349,10 +349,22 @@ public class ParsingUtils {
     public static GrammarRootAST parseGrammar(Tool antlr, VirtualFile grammarFile) {
         AtomicReference<GrammarRootAST> atomicReference = new AtomicReference<>(null);
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        ApplicationManager.getApplication().runReadAction(() -> {
-            try {
+        AtomicReference<Document> documentAtomicReference = new AtomicReference<>();
+        ApplicationManager.getApplication().runReadAction(()->{
+            try{
                 Document document = FileDocumentManager.getInstance().getDocument(grammarFile);
-                String grammarText = document != null ? document.getText() : new String(grammarFile.contentsToByteArray());
+                documentAtomicReference.set(document);
+            }catch (Exception e){
+                documentAtomicReference.set(null);
+            }
+        });
+        if(documentAtomicReference.get()==null){
+            return atomicReference.get();
+        }
+
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            try {
+                String grammarText = documentAtomicReference.get() != null ? documentAtomicReference.get().getText() : new String(grammarFile.contentsToByteArray());
                 ANTLRStringStream in = new ANTLRStringStream(grammarText);
                 in.name = grammarFile.getPath();
                 atomicReference.set(antlr.parse(grammarFile.getPath(), in));

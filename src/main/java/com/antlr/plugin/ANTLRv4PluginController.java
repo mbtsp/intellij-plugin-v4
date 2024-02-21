@@ -17,10 +17,7 @@ import com.intellij.openapi.editor.event.EditorFactoryListener;
 import com.intellij.openapi.editor.event.EditorMouseAdapter;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
@@ -175,6 +172,12 @@ public class ANTLRv4PluginController {
                 FileEditorManagerListener.FILE_EDITOR_MANAGER,
                 myFileEditorManagerAdapter
         );
+        msgBus.subscribe(FileOpenedSyncListener.TOPIC, new FileOpenedSyncListener() {
+            @Override
+            public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull List<FileEditorWithProvider> editorsWithProviders) {
+                currentEditorFileChangedEvent(null, file, false);
+            }
+        });
 
         EditorFactory factory = EditorFactory.getInstance();
         factory.addEditorFactoryListener(
@@ -375,7 +378,7 @@ public class ANTLRv4PluginController {
         PreviewState previewState = getPreviewState(grammarFile);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         AtomicReference<Grammar[]> atomicReference = new AtomicReference<>(null);
-        ApplicationManager.getApplication().runReadAction(() -> {
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
             try {
                 Grammar[] grammars = ParsingUtils.loadGrammars(grammarFile, project);
                 atomicReference.set(grammars);
@@ -606,10 +609,10 @@ public class ANTLRv4PluginController {
     private class MyVirtualFileAdapter extends VirtualFileAdapter {
         @Override
         public void contentsChanged(VirtualFileEvent event) {
-            final VirtualFile vfile = event.getFile();
-            if (!vfile.getName().endsWith(".g4")) return;
+            final VirtualFile file = event.getFile();
+            if (!file.getName().endsWith(".g4")) return;
             if (!projectIsClosed && !ApplicationManager.getApplication().isUnitTestMode()) {
-                grammarFileSavedEvent(vfile);
+                grammarFileSavedEvent(file);
             }
         }
     }
@@ -617,13 +620,10 @@ public class ANTLRv4PluginController {
     public class MyFileEditorManagerAdapter implements FileEditorManagerListener {
 
 
-        @Override
-        public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull List<FileEditorWithProvider> editorsWithProviders) {
-            currentEditorFileChangedEvent(null, file, false);
-        }
+
 
         @Override
-        public void selectionChanged(FileEditorManagerEvent event) {
+        public void selectionChanged(@NotNull FileEditorManagerEvent event) {
             if (!projectIsClosed) {
                 boolean modified = false;
 
@@ -643,10 +643,14 @@ public class ANTLRv4PluginController {
                 if (modified) {
                     PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
                     FileDocumentManager docMgr = FileDocumentManager.getInstance();
-                    Document doc = docMgr.getDocument(event.getOldFile());
-                    if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc)) {
-                        psiMgr.commitDocument(doc);
-                        docMgr.saveDocument(doc);
+                    if(event.getOldFile()!=null) {
+                        Document doc = docMgr.getDocument(event.getOldFile());
+                        if (doc != null) {
+                            if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc)) {
+                                psiMgr.commitDocument(doc);
+                                docMgr.saveDocument(doc);
+                            }
+                        }
                     }
                 }
                 currentEditorFileChangedEvent(event.getOldFile(), event.getNewFile(), modified);
@@ -654,8 +658,8 @@ public class ANTLRv4PluginController {
         }
 
         @Override
-        public void fileClosed(FileEditorManager source, VirtualFile file) {
-            if (!projectIsClosed && (source != null && source.getSelectedEditor() != null && source.getSelectedEditor().getFile().equals(file))) {
+        public void fileClosed(@NotNull FileEditorManager source, @NotNull VirtualFile file) {
+            if (!projectIsClosed && source.getSelectedEditor() != null && source.getSelectedEditor().getFile().equals(file)) {
                 editorFileClosedEvent(file);
             }
         }
