@@ -14,8 +14,8 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.EditorFactoryEvent;
 import com.intellij.openapi.editor.event.EditorFactoryListener;
-import com.intellij.openapi.editor.event.EditorMouseAdapter;
 import com.intellij.openapi.editor.event.EditorMouseEvent;
+import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
@@ -27,9 +27,10 @@ import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileAdapter;
 import com.intellij.openapi.vfs.VirtualFileEvent;
+import com.intellij.openapi.vfs.VirtualFileListener;
 import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
@@ -38,9 +39,9 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.antlr.v4.parse.ANTLRParser;
 import org.antlr.v4.tool.Grammar;
 import org.antlr.v4.tool.LexerGrammar;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -175,7 +176,7 @@ public class ANTLRv4PluginController {
         msgBus.subscribe(FileOpenedSyncListener.TOPIC, new FileOpenedSyncListener() {
             @Override
             public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull List<FileEditorWithProvider> editorsWithProviders) {
-                currentEditorFileChangedEvent(null, file, false);
+                currentEditorFileChangedEvent(project, null, file, false);
             }
         });
 
@@ -228,7 +229,7 @@ public class ANTLRv4PluginController {
         }
     }
 
-    public void grammarFileSavedEvent(VirtualFile grammarFile) {
+    public void grammarFileSavedEvent(Project project, VirtualFile grammarFile) {
 
         Long modCount = grammarFile.getModificationCount();
         String grammarFilePath = grammarFile.getPath();
@@ -240,7 +241,7 @@ public class ANTLRv4PluginController {
         grammarFileMods.put(grammarFilePath, modCount);
 
         LOG.info("grammarFileSavedEvent " + grammarFilePath + " " + project.getName());
-        updateGrammarObjectsFromFile(grammarFile, true); // force reload
+        updateGrammarObjectsFromFile(project, grammarFile, true); // force reload
         if (this.project != null && !this.project.isDisposed()) {
             this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).grammarFileSaved(grammarFile);
         } else {
@@ -249,7 +250,7 @@ public class ANTLRv4PluginController {
 
     }
 
-    public void currentEditorFileChangedEvent(VirtualFile oldFile, VirtualFile newFile, boolean modified) {
+    public void currentEditorFileChangedEvent(Project project, VirtualFile oldFile, VirtualFile newFile, boolean modified) {
         LOG.info("currentEditorFileChangedEvent " + (oldFile != null ? oldFile.getPath() : "none") +
                 " -> " + (newFile != null ? newFile.getPath() : "none") + " " + project.getName());
         if (newFile == null) { // all files must be closed I guess
@@ -275,12 +276,12 @@ public class ANTLRv4PluginController {
         // When switching from a lexer grammar, update its objects in case the grammar was modified.
         // The updated objects might be needed later by another dependant grammar.
         if (oldFile != null && "g4".equals(oldFile.getExtension()) && modified) {
-            updateGrammarObjectsFromFile(oldFile, true);
+            updateGrammarObjectsFromFile(project, oldFile, true);
         }
 
         PreviewState previewState = getPreviewState(newFile);
         if (previewState.g == null && previewState.lg == null) { // only load grammars if none is there
-            updateGrammarObjectsFromFile(newFile, false);
+            updateGrammarObjectsFromFile(project, newFile, false);
         }
         if (this.project != null && !this.project.isDisposed()) {
             this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).grammarFileChanged(newFile);
@@ -353,8 +354,8 @@ public class ANTLRv4PluginController {
      * this grammar or we will have seen a grammar file changed event.
      * (I hope!)
      */
-    private void updateGrammarObjectsFromFile(VirtualFile grammarFile, boolean generateTokensFile) {
-        updateGrammarObjectsFromFile_(grammarFile);
+    private void updateGrammarObjectsFromFile(Project project, VirtualFile grammarFile, boolean generateTokensFile) {
+        updateGrammarObjectsFromFile_(project, grammarFile);
 
         // if grammarFileName is a separate lexer, we need to look for
         // its matching parser, if any, that is loaded in an editor
@@ -369,40 +370,45 @@ public class ANTLRv4PluginController {
 
             // try to load lexer again and associate with this parser grammar.
             // must update parser too as tokens have changed
-            updateGrammarObjectsFromFile_(s.grammarFile);
+            updateGrammarObjectsFromFile_(project, s.grammarFile);
         }
     }
 
-    private String updateGrammarObjectsFromFile_(VirtualFile grammarFile) {
-        String grammarFileName = grammarFile.getPath();
-        PreviewState previewState = getPreviewState(grammarFile);
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        AtomicReference<Grammar[]> atomicReference = new AtomicReference<>(null);
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
-            try {
-                Grammar[] grammars = ParsingUtils.loadGrammars(grammarFile, project);
-                atomicReference.set(grammars);
-            } finally {
-                countDownLatch.countDown();
+    private void updateGrammarObjectsFromFile_(Project project, VirtualFile grammarFile) {
+        Task.Backgroundable task = new Task.Backgroundable(project, "Update grammar object from file") {
+            @Override
+            public void run(@NotNull ProgressIndicator progressIndicator) {
+                String grammarFileName = grammarFile.getPath();
+                PreviewState previewState = getPreviewState(grammarFile);
+                CountDownLatch countDownLatch = new CountDownLatch(1);
+                AtomicReference<Grammar[]> atomicReference = new AtomicReference<>(null);
+                ApplicationManager.getApplication().executeOnPooledThread(() -> {
+                    try {
+                        Grammar[] grammars = ParsingUtils.loadGrammars(grammarFile, project);
+                        atomicReference.set(grammars);
+                    } finally {
+                        countDownLatch.countDown();
+                    }
+                });
+                try {
+                    countDownLatch.await(5L, TimeUnit.MINUTES);
+                } catch (InterruptedException ignored) {
+                }
+                Grammar[] grammars = atomicReference.get();
+                if (grammars != null) {
+                    synchronized (previewState) { // build atomically
+                        previewState.lg = (LexerGrammar) grammars[0];
+                        previewState.g = grammars[1];
+                    }
+                } else {
+                    synchronized (previewState) { // build atomically
+                        previewState.lg = null;
+                        previewState.g = null;
+                    }
+                }
             }
-        });
-        try {
-            countDownLatch.await(5L, TimeUnit.MINUTES);
-        } catch (InterruptedException ignored) {
-        }
-        Grammar[] grammars = atomicReference.get();
-        if (grammars != null) {
-            synchronized (previewState) { // build atomically
-                previewState.lg = (LexerGrammar) grammars[0];
-                previewState.g = grammars[1];
-            }
-        } else {
-            synchronized (previewState) { // build atomically
-                previewState.lg = null;
-                previewState.g = null;
-            }
-        }
-        return grammarFileName;
+        };
+        task.queue();
     }
 
     // TODO there could be multiple grammars importing/tokenVocab'ing this lexer grammar
@@ -430,31 +436,27 @@ public class ANTLRv4PluginController {
 
     private boolean sameFile(String pathOne, String pathTwo) {
         // use new File() to support both / and \ in paths
-        return new File(pathOne).equals(new File(pathTwo));
+        if (StringUtils.isBlank(pathOne) && StringUtils.isBlank(pathTwo)) {
+            return true;
+        }
+        return FileUtil.comparePaths(pathOne, pathTwo) == 0;
+//        return new File(pathOne).equals(new File(pathTwo));
     }
 
     public void parseText(final VirtualFile grammarFile, String inputText) {
         final PreviewState previewState = getPreviewState(grammarFile);
-
         // No need to parse empty text during unit tests, yet...
         if (inputText.isEmpty() && ApplicationManager.getApplication().isUnitTestMode()) return;
-
         // Parse text in a background thread to avoid freezing the UI if the grammar is badly written
         // and takes forever to interpret the input.
         parsingProgressIndicator = BackgroundTaskUtil.executeAndTryWait(
                 (indicator) -> {
-//					System.out.println("PARSE START "+Thread.currentThread().getName());
                     long start = System.nanoTime();
 
                     previewState.parsingResult = ParsingUtils.parseText(
                             previewState.g, previewState.lg, previewState.startRuleName,
                             grammarFile, inputText, project
                     );
-
-//					long parseTime_ns = System.nanoTime() - start;
-//					double parseTimeMS = parseTime_ns/(1000.0*1000.0);
-//					System.out.println("PARSE STOP "+Thread.currentThread().getName()+" "+parseTimeMS+"ms");
-//                    return () -> previewPanel.onParsingCompleted(previewState, System.nanoTime() - start);
                     return () -> {
                         if (this.project != null && !this.project.isDisposed()) {
                             this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).onParsingCompleted(previewState, System.nanoTime() - start);
@@ -494,7 +496,6 @@ public class ANTLRv4PluginController {
 
     public static void showLaterConsoleWindow(final Project project) {
         ApplicationManager.getApplication().invokeLater(
-//                () -> ANTLRv4PluginController.getInstance(project).getConsoleWindow().show(null)
                 () -> {
                     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);
                     if (toolWindow != null) {
@@ -527,14 +528,15 @@ public class ANTLRv4PluginController {
         }
         // not seen, must create state
         PreviewState stateForCurrentGrammar = new PreviewState(project, grammarFile);
-        grammarToPreviewState.put(grammarFileName, stateForCurrentGrammar);
-
+        if (grammarToPreviewState != null) {
+            grammarToPreviewState.put(grammarFileName, stateForCurrentGrammar);
+        }
         return stateForCurrentGrammar;
     }
 
-    public Editor getEditor(VirtualFile vfile) {
+    public Editor getEditor(VirtualFile file) {
         final FileDocumentManager fdm = FileDocumentManager.getInstance();
-        final Document doc = fdm.getDocument(vfile);
+        final Document doc = fdm.getDocument(file);
         if (doc == null) return null;
 
         EditorFactory factory = EditorFactory.getInstance();
@@ -573,9 +575,9 @@ public class ANTLRv4PluginController {
     // when you are sure the user is in control and is viewing the
     // right file (i.e., don't use these during project loading etc...)
     public static VirtualFile getCurrentEditorFile(Project project) {
-        FileEditorManager fmgr = FileEditorManager.getInstance(project);
+        FileEditorManager mgr = FileEditorManager.getInstance(project);
         // "If more than one file is selected (split), the file with most recent focused editor is returned first." from IDE doc on method
-        VirtualFile[] files = fmgr.getSelectedFiles();
+        VirtualFile[] files = mgr.getSelectedFiles();
         if (files.length == 0) {
             return null;
         }
@@ -595,33 +597,29 @@ public class ANTLRv4PluginController {
         return null;
     }
 
-    private class GrammarEditorMouseAdapter extends EditorMouseAdapter {
+    private class GrammarEditorMouseAdapter implements EditorMouseListener {
         @Override
         public void mouseClicked(EditorMouseEvent e) {
             Document doc = e.getEditor().getDocument();
-            VirtualFile vfile = FileDocumentManager.getInstance().getFile(doc);
-            if (vfile != null && vfile.getName().endsWith(".g4")) {
-                mouseEnteredGrammarEditorEvent(vfile, e);
+            VirtualFile file = FileDocumentManager.getInstance().getFile(doc);
+            if (file != null && file.getName().endsWith(".g4")) {
+                mouseEnteredGrammarEditorEvent(file, e);
             }
         }
     }
 
-    private class MyVirtualFileAdapter extends VirtualFileAdapter {
+    private class MyVirtualFileAdapter implements VirtualFileListener {
         @Override
         public void contentsChanged(VirtualFileEvent event) {
             final VirtualFile file = event.getFile();
             if (!file.getName().endsWith(".g4")) return;
             if (!projectIsClosed && !ApplicationManager.getApplication().isUnitTestMode()) {
-                grammarFileSavedEvent(file);
+                grammarFileSavedEvent(ANTLRv4PluginController.this.project, file);
             }
         }
     }
 
     public class MyFileEditorManagerAdapter implements FileEditorManagerListener {
-
-
-
-
         @Override
         public void selectionChanged(@NotNull FileEditorManagerEvent event) {
             if (!projectIsClosed) {
@@ -641,19 +639,22 @@ public class ANTLRv4PluginController {
                 }
 
                 if (modified) {
-                    PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
-                    FileDocumentManager docMgr = FileDocumentManager.getInstance();
-                    if(event.getOldFile()!=null) {
-                        Document doc = docMgr.getDocument(event.getOldFile());
-                        if (doc != null) {
-                            if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc)) {
-                                psiMgr.commitDocument(doc);
-                                docMgr.saveDocument(doc);
+                    ApplicationManager.getApplication().invokeLater(() -> {
+                        PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
+                        FileDocumentManager docMgr = FileDocumentManager.getInstance();
+                        if (event.getOldFile() != null) {
+                            Document doc = docMgr.getDocument(event.getOldFile());
+                            if (doc != null) {
+                                if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc)) {
+                                    psiMgr.commitDocument(doc);
+                                    docMgr.saveDocument(doc);
+                                }
                             }
                         }
-                    }
+                    });
+
                 }
-                currentEditorFileChangedEvent(event.getOldFile(), event.getNewFile(), modified);
+                currentEditorFileChangedEvent(ANTLRv4PluginController.this.project, event.getOldFile(), event.getNewFile(), modified);
             }
         }
 

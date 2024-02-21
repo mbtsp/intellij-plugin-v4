@@ -1,6 +1,5 @@
 package com.antlr.plugin.parsing;
 
-import com.antlr.plugin.ANTLRv4PluginController;
 import com.antlr.plugin.PluginIgnoreMissingTokensFileErrorManager;
 import com.antlr.plugin.configdialogs.ANTLRv4GrammarProperties;
 import com.antlr.plugin.parser.ANTLRv4Lexer;
@@ -9,6 +8,7 @@ import com.antlr.plugin.preview.PreviewState;
 import com.antlr.plugin.util.ConsoleUtils;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -44,6 +44,7 @@ import static com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore.getGr
 
 
 public class ParsingUtils {
+    private static final Logger LOG = Logger.getInstance(ParsingUtils.class);
     public static Grammar BAD_PARSER_GRAMMAR;
     public static LexerGrammar BAD_LEXER_GRAMMAR;
 
@@ -54,7 +55,7 @@ public class ParsingUtils {
             ParsingUtils.BAD_LEXER_GRAMMAR = new LexerGrammar("lexer grammar BADLEXER; A : 'bad' ;");
             ParsingUtils.BAD_LEXER_GRAMMAR.name = "BAD_LEXER_GRAMMAR";
         } catch (org.antlr.runtime.RecognitionException re) {
-            ANTLRv4PluginController.LOG.error("can't init bad grammar markers");
+            LOG.error("can't init bad grammar markers");
         }
     }
 
@@ -202,7 +203,7 @@ public class ParsingUtils {
                                           String inputText,
                                           Project project) {
         if (g == null || lg == null) {
-            ANTLRv4PluginController.LOG.info("parseText can't parse: missing lexer or parser no Grammar object for " +
+            LOG.info("parseText can't parse: missing lexer or parser no Grammar object for " +
                     (grammarFile != null ? grammarFile.getName() : "<unknown file>"));
             return null;
         }
@@ -227,7 +228,7 @@ public class ParsingUtils {
                                            int startIndex) {
         String grammarFileName = g.fileName;
         if (!new File(grammarFileName).exists()) {
-            ANTLRv4PluginController.LOG.info("parseText grammar doesn't exist " + grammarFileName);
+            LOG.info("parseText grammar doesn't exist " + grammarFileName);
             return null;
         }
 
@@ -271,7 +272,7 @@ public class ParsingUtils {
      * Get lexer and parser grammars
      */
     public static Grammar[] loadGrammars(VirtualFile grammarFile, Project project) {
-        ANTLRv4PluginController.LOG.info("loadGrammars " + grammarFile.getPath() + " " + project.getName());
+        LOG.info("loadGrammars " + grammarFile.getPath() + " " + project.getName());
         Tool antlr = createANTLRToolForLoadingGrammars(getGrammarProperties(project, grammarFile));
         LoadGrammarsToolListener listener = (LoadGrammarsToolListener) antlr.getListeners().get(0);
 
@@ -303,11 +304,11 @@ public class ParsingUtils {
         // Use ANTLR v3's ANTLRParser not ANTLRv4Parser from this plugin
         switch (g.getType()) {
             case ANTLRParser.PARSER -> {
-                ANTLRv4PluginController.LOG.info("loadGrammars parser " + g.name);
+                LOG.info("loadGrammars parser " + g.name);
                 return new Grammar[]{lg, g};
             }
             case ANTLRParser.LEXER -> {
-                ANTLRv4PluginController.LOG.info("loadGrammars lexer " + g.name);
+                LOG.info("loadGrammars lexer " + g.name);
                 lg = (LexerGrammar) g;
                 return new Grammar[]{lg, null};
             }
@@ -316,11 +317,11 @@ public class ParsingUtils {
                 if (lg == null) {
                     lg = BAD_LEXER_GRAMMAR;
                 }
-                ANTLRv4PluginController.LOG.info("loadGrammars combined: " + lg.name + ", " + g.name);
+                LOG.info("loadGrammars combined: " + lg.name + ", " + g.name);
                 return new Grammar[]{lg, g};
             }
         }
-        ANTLRv4PluginController.LOG.info("loadGrammars invalid grammar type " + g.getTypeString() + " for " + g.name);
+        LOG.info("loadGrammars invalid grammar type " + g.getTypeString() + " for " + g.name);
         return null;
     }
 
@@ -350,15 +351,15 @@ public class ParsingUtils {
         AtomicReference<GrammarRootAST> atomicReference = new AtomicReference<>(null);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         AtomicReference<Document> documentAtomicReference = new AtomicReference<>();
-        ApplicationManager.getApplication().runReadAction(()->{
-            try{
+        ApplicationManager.getApplication().runReadAction(() -> {
+            try {
                 Document document = FileDocumentManager.getInstance().getDocument(grammarFile);
                 documentAtomicReference.set(document);
-            }catch (Exception e){
+            } catch (Exception e) {
                 documentAtomicReference.set(null);
             }
         });
-        if(documentAtomicReference.get()==null){
+        if (documentAtomicReference.get() == null) {
             return atomicReference.get();
         }
 
@@ -411,15 +412,15 @@ public class ParsingUtils {
                     reportBadGrammar(lexerGrammarFile, project);
                 }
             } catch (ClassCastException cce) {
-                ANTLRv4PluginController.LOG.error("File " + lexerGrammarFile + " isn't a lexer grammar", cce);
+                LOG.error("File " + lexerGrammarFile + " isn't a lexer grammar", cce);
             } catch (Exception e) {
                 String msg = null;
-                if (listener.grammarErrorMessages.size() != 0) {
+                if (!listener.grammarErrorMessages.isEmpty()) {
                     msg = ": " + listener.grammarErrorMessages;
                 }
-                ANTLRv4PluginController.LOG.error("File " + lexerGrammarFile + " couldn't be parsed as a lexer grammar" + msg, e);
+                LOG.error("File " + lexerGrammarFile + " couldn't be parsed as a lexer grammar" + msg, e);
             }
-            if (listener.grammarErrorMessages.size() != 0) {
+            if (!listener.grammarErrorMessages.isEmpty()) {
                 lg = null;
                 String msg = Utils.join(listener.grammarErrorMessages.iterator(), "\n");
                 ConsoleUtils.consolePrint(project, msg + "\n", ConsoleViewContentType.ERROR_OUTPUT);
