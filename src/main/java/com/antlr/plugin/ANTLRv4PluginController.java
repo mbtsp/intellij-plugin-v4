@@ -18,7 +18,6 @@ import com.intellij.openapi.editor.event.EditorMouseEvent;
 import com.intellij.openapi.editor.event.EditorMouseListener;
 import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.fileEditor.*;
-import com.intellij.openapi.fileEditor.ex.FileEditorWithProvider;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.progress.Task;
@@ -26,6 +25,7 @@ import com.intellij.openapi.progress.util.BackgroundTaskUtil;
 import com.intellij.openapi.progress.util.ProgressWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.Pair;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -44,7 +44,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -173,12 +172,12 @@ public class ANTLRv4PluginController {
                 FileEditorManagerListener.FILE_EDITOR_MANAGER,
                 myFileEditorManagerAdapter
         );
-        msgBus.subscribe(FileOpenedSyncListener.TOPIC, new FileOpenedSyncListener() {
-            @Override
-            public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull List<FileEditorWithProvider> editorsWithProviders) {
-                currentEditorFileChangedEvent(project, null, file, false);
-            }
-        });
+//        msgBus.subscribe(FileOpenedSyncListener.TOPIC, new FileOpenedSyncListener() {
+//            @Override
+//            public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull List<FileEditorWithProvider> editorsWithProviders) {
+//                currentEditorFileChangedEvent(project, null, file, false);
+//            }
+//        });
 
         EditorFactory factory = EditorFactory.getInstance();
         factory.addEditorFactoryListener(
@@ -622,6 +621,11 @@ public class ANTLRv4PluginController {
     }
 
     public class MyFileEditorManagerAdapter implements FileEditorManagerListener {
+        @Override
+        public void fileOpenedSync(@NotNull FileEditorManager source, @NotNull VirtualFile file, @NotNull Pair<FileEditor[], FileEditorProvider[]> editors) {
+            currentEditorFileChangedEvent(project, null, file, false);
+        }
+
         @Override
         public void selectionChanged(@NotNull FileEditorManagerEvent event) {
             if (!projectIsClosed) {
