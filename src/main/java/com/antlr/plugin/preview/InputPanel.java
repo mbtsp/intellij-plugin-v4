@@ -1,5 +1,11 @@
 package com.antlr.plugin.preview;
 
+import com.antlr.plugin.ANTLRv4PluginController;
+import com.antlr.plugin.Icons;
+import com.antlr.plugin.actions.MyActionUtils;
+import com.antlr.plugin.parsing.ParsingUtils;
+import com.antlr.plugin.parsing.PreviewParser;
+import com.antlr.plugin.profiler.ProfilerPanel;
 import com.intellij.codeInsight.hint.HintManager;
 import com.intellij.codeInsight.hint.HintManagerImpl;
 import com.intellij.codeInsight.hint.HintUtil;
@@ -25,12 +31,6 @@ import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.LightweightHint;
 import org.antlr.intellij.adaptor.parser.SyntaxError;
-import com.antlr.plugin.ANTLRv4PluginController;
-import com.antlr.plugin.Icons;
-import com.antlr.plugin.actions.MyActionUtils;
-import com.antlr.plugin.parsing.ParsingUtils;
-import com.antlr.plugin.parsing.PreviewParser;
-import com.antlr.plugin.profiler.ProfilerPanel;
 import org.antlr.runtime.CommonToken;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.*;
@@ -300,7 +300,7 @@ public class InputPanel {
     }
 
     public void releaseEditor(PreviewState previewState) {
-        uninstallListeners(previewState.getInputEditor());
+//        uninstallListeners(previewState.getInputEditor());
 
         // release the editor
         previewState.releaseEditor();
@@ -323,8 +323,12 @@ public class InputPanel {
 
     public void uninstallListeners(Editor editor) {
         if (editor == null) return;
-        editor.removeEditorMouseListener(editorMouseListener);
-        editor.removeEditorMouseMotionListener(editorMouseListener);
+        if (!editor.isDisposed()) {
+            editor.removeEditorMouseListener(editorMouseListener);
+        }
+        if (!editor.isDisposed()) {
+            editor.removeEditorMouseMotionListener(editorMouseListener);
+        }
         for (CaretListener listener : caretListeners) {
             editor.getCaretModel().removeCaretListener(listener);
         }

@@ -1,4 +1,4 @@
-package com.antlr.plugin.editor;
+package org.antlr.intellij.plugin.editor;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionGroup;
@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.util.List;
+import java.util.function.Supplier;
 
 @SuppressWarnings("all")
 public class MockToolWindow implements ToolWindow {
@@ -105,7 +106,17 @@ public class MockToolWindow implements ToolWindow {
         return null;
     }
 
+    @Override
+    public @NotNull Supplier<@NlsContexts.TabTitle String> getStripeTitleProvider() {
+        return null;
+    }
+
     public void setStripeTitle(@NlsContexts.TabTitle @NotNull String title) {}
+
+    @Override
+    public void setStripeTitleProvider(@NotNull Supplier<@NlsContexts.TabTitle @NotNull String> supplier) {
+
+    }
 
     public boolean isAvailable() {
         return false;

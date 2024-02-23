@@ -355,6 +355,9 @@ public class ANTLRv4PluginController {
      * (I hope!)
      */
     private void updateGrammarObjectsFromFile(Project project, VirtualFile grammarFile, boolean generateTokensFile) {
+        if (project.isDisposed()) {
+            return;
+        }
         updateGrammarObjectsFromFile_(project, grammarFile);
 
         // if grammarFileName is a separate lexer, we need to look for
@@ -378,7 +381,6 @@ public class ANTLRv4PluginController {
         Task.Backgroundable task = new Task.Backgroundable(project, "Update grammar object from file") {
             @Override
             public void run(@NotNull ProgressIndicator progressIndicator) {
-                String grammarFileName = grammarFile.getPath();
                 PreviewState previewState = getPreviewState(grammarFile);
                 CountDownLatch countDownLatch = new CountDownLatch(1);
                 AtomicReference<Grammar[]> atomicReference = new AtomicReference<>(null);

@@ -1,5 +1,9 @@
 package com.antlr.plugin.psi;
 
+import com.antlr.plugin.ANTLRv4TokenTypes;
+import com.antlr.plugin.parser.ANTLRv4Lexer;
+import com.antlr.plugin.resolve.ImportResolver;
+import com.antlr.plugin.resolve.TokenVocabResolver;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
@@ -7,10 +11,6 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.IncorrectOperationException;
-import com.antlr.plugin.ANTLRv4TokenTypes;
-import com.antlr.plugin.parser.ANTLRv4Lexer;
-import com.antlr.plugin.resolve.ImportResolver;
-import com.antlr.plugin.resolve.TokenVocabResolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,5 +90,10 @@ public class GrammarElementRef extends PsiReferenceBase<GrammarElementRefNode> {
                 newElementName,
                 ANTLRv4TokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.TOKEN_REF)));
         return myElement;
+    }
+
+    @Override
+    public PsiElement bindToElement(@NotNull PsiElement element) throws IncorrectOperationException {
+        return getElement();
     }
 }

@@ -272,6 +272,9 @@ public class ParsingUtils {
      * Get lexer and parser grammars
      */
     public static Grammar[] loadGrammars(VirtualFile grammarFile, Project project) {
+        if (project.isDisposed()) {
+            return null;
+        }
         LOG.info("loadGrammars " + grammarFile.getPath() + " " + project.getName());
         Tool antlr = createANTLRToolForLoadingGrammars(getGrammarProperties(project, grammarFile));
         LoadGrammarsToolListener listener = (LoadGrammarsToolListener) antlr.getListeners().get(0);

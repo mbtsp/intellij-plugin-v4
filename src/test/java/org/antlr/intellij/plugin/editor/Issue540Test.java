@@ -81,7 +81,7 @@ public class Issue540Test extends BasePlatformTestCase {
             doc.setText(doc.getText() + "\n" + line);
             PsiDocumentManager.getInstance(getProject()).commitDocument(doc);
             FileDocumentManager.getInstance().saveDocument(doc);
-            if (controller != null) controller.grammarFileSavedEvent(file);
+            if (controller != null) controller.grammarFileSavedEvent(null,file);
         });
     }
 
