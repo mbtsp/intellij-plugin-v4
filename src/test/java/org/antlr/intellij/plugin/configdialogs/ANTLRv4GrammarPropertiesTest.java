@@ -11,11 +11,11 @@ public class ANTLRv4GrammarPropertiesTest {
     private static final String PROJECT_VALUE = "projectValue";
     private static final String DEFAULT_VALUE = "";
 
-    private ANTLRv4GrammarPropertiesStore propertiesStore;
+    private ANTLRv4ToolGrammarPropertiesStore propertiesStore;
 
     @Before
     public void setUp() {
-        propertiesStore = new ANTLRv4GrammarPropertiesStore();
+        propertiesStore = new ANTLRv4ToolGrammarPropertiesStore();
     }
 
     @Test

@@ -1,12 +1,12 @@
 package com.antlr.plugin.configdialogs;
 
+import com.antlr.plugin.parsing.CaseChangingStrategy;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.TextFieldWithBrowseButton;
-import com.antlr.plugin.parsing.CaseChangingStrategy;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -16,8 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Objects;
 
-import static com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore.getGrammarProperties;
-import static com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore.getOrCreateGrammarProperties;
+import static com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesStore.getGrammarProperties;
+import static com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesStore.getOrCreateGrammarProperties;
 
 
 /**
@@ -73,21 +73,25 @@ public class ConfigANTLRPerGrammar extends DialogWrapper {
 
     public void loadValues(Project project, String qualFileName) {
         ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, qualFileName);
+        if (grammarProperties != null) {
+            autoGenerateParsersCheckBox.setSelected(grammarProperties.shouldAutoGenerateParser());
+            outputDirField.setText(grammarProperties.getOutputDir());
+            libDirField.setText(grammarProperties.getLibDir());
+            fileEncodingField.setText(grammarProperties.getEncoding());
+            packageField.setText(grammarProperties.getPackage());
+            languageField.setText(grammarProperties.getLanguage());
+            caseTransformation.setSelectedItem(grammarProperties.getCaseChangingStrategy());
+            generateParseTreeListenerCheckBox.setSelected(grammarProperties.shouldGenerateParseTreeListener());
+            generateParseTreeVisitorCheckBox.setSelected(grammarProperties.shouldGenerateParseTreeVisitor());
+        }
 
-        autoGenerateParsersCheckBox.setSelected(grammarProperties.shouldAutoGenerateParser());
-        outputDirField.setText(grammarProperties.getOutputDir());
-        libDirField.setText(grammarProperties.getLibDir());
-        fileEncodingField.setText(grammarProperties.getEncoding());
-        packageField.setText(grammarProperties.getPackage());
-        languageField.setText(grammarProperties.getLanguage());
-        caseTransformation.setSelectedItem(grammarProperties.getCaseChangingStrategy());
-        generateParseTreeListenerCheckBox.setSelected(grammarProperties.shouldGenerateParseTreeListener());
-        generateParseTreeVisitorCheckBox.setSelected(grammarProperties.shouldGenerateParseTreeVisitor());
     }
 
     public void saveValues(Project project, String qualFileName) {
         ANTLRv4GrammarProperties grammarProperties = getOrCreateGrammarProperties(project, qualFileName);
-
+        if (grammarProperties == null) {
+            return;
+        }
         grammarProperties.autoGen = autoGenerateParsersCheckBox.isSelected();
         grammarProperties.outputDir = getOutputDirText();
         grammarProperties.libDir = getLibDirText();

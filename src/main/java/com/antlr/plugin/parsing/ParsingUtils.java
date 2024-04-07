@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore.getGrammarProperties;
+import static com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesStore.getGrammarProperties;
 
 
 public class ParsingUtils {
@@ -264,7 +264,9 @@ public class ParsingUtils {
         LoadGrammarsToolListener listener = new LoadGrammarsToolListener(antlr);
         antlr.removeListeners();
         antlr.addListener(listener);
-        antlr.libDirectory = grammarProperties.getLibDir();
+        if(grammarProperties!=null){
+            antlr.libDirectory = grammarProperties.getLibDir();
+        }
         return antlr;
     }
 
@@ -408,7 +410,10 @@ public class ParsingUtils {
 
         if (lexerGrammarFile != null && lexerGrammarFile.exists()) {
             try {
-                lg = (LexerGrammar) loadGrammar(lexerGrammarFile, antlr);
+                Grammar grammar = loadGrammar(lexerGrammarFile, antlr);
+                if(grammar instanceof LexerGrammar lexerGrammar){
+                    lg=lexerGrammar;
+                }
                 if (lg != null) {
                     antlr.process(lg, false);
                 } else {
@@ -440,9 +445,9 @@ public class ParsingUtils {
             lexerGrammarFileName = parserFileName.substring(0, i) + "Lexer.g4";
         } else { // if not, try using the grammar name, XLexer.g4
             File f = new File(parserFileName);
-            String fname = f.getName();
-            int dot = fname.lastIndexOf(".g4");
-            String parserName = fname.substring(0, dot);
+            String name = f.getName();
+            int dot = name.lastIndexOf(".g4");
+            String parserName = name.substring(0, dot);
             File parentDir = f.getParentFile();
             lexerGrammarFileName = new File(parentDir, parserName + "Lexer.g4").getAbsolutePath();
         }

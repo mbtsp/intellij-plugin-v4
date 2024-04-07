@@ -45,6 +45,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -77,8 +78,7 @@ public class ANTLRv4PluginController {
 //    public ConsoleView console;
 //    private ToolWindow consoleWindow;
 
-    public Map<String, PreviewState> grammarToPreviewState =
-            Collections.synchronizedMap(new HashMap<>());
+    public Map<String, PreviewState> grammarToPreviewState = new ConcurrentHashMap<>();
 //    public ToolWindow previewWindow;    // same for all grammar editor
 //    public PreviewPanel previewPanel;    // same for all grammar editor
 
@@ -135,12 +135,12 @@ public class ANTLRv4PluginController {
         projectIsClosed = true;
         uninstallListeners();
         if (grammarToPreviewState != null) {
-            for (PreviewState it : grammarToPreviewState.values()) {
+            for(Map.Entry<String,PreviewState> entry : grammarToPreviewState.entrySet()) {
                 if (this.project != null && !this.project.isDisposed()) {
-                    this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).releaseEditor(it);
+                    this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).releaseEditor(entry.getValue());
                 }
-
             }
+
         }
         // We can't dispose of the preview state map during unit tests
         if (ApplicationManager.getApplication().isUnitTestMode()) return;
@@ -244,7 +244,7 @@ public class ANTLRv4PluginController {
         if (this.project != null && !this.project.isDisposed()) {
             this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).grammarFileSaved(grammarFile);
         } else {
-            LOG.error("grammarFileSavedEvent called before preview panel created");
+            LOG.info("grammarFileSavedEvent called before preview panel created");
         }
 
     }
@@ -414,20 +414,23 @@ public class ANTLRv4PluginController {
 
     // TODO there could be multiple grammars importing/tokenVocab'ing this lexer grammar
     public PreviewState getAssociatedParserIfLexer(String grammarFileName) {
-        for (PreviewState s : grammarToPreviewState.values()) {
-            if (s != null && s.lg != null &&
-                    (sameFile(grammarFileName, s.lg.fileName) || s.lg == ParsingUtils.BAD_LEXER_GRAMMAR)) {
-                // s has a lexer with same filename, see if there is a parser grammar
-                // (not a combined grammar)
-                if (s.g != null && s.g.getType() == ANTLRParser.PARSER) {
-                    return s;
-                }
-            }
-
-            if (s != null && s.g != null && s.g.importedGrammars != null) {
-                for (Grammar importedGrammar : s.g.importedGrammars) {
-                    if (grammarFileName.equals(importedGrammar.fileName)) {
+        if(grammarToPreviewState!=null){
+            for(Map.Entry<String,PreviewState> entry: grammarToPreviewState.entrySet()){
+                PreviewState s = entry.getValue();
+                if (s != null && s.lg != null &&
+                        (sameFile(grammarFileName, s.lg.fileName) || s.lg == ParsingUtils.BAD_LEXER_GRAMMAR)) {
+                    // s has a lexer with same filename, see if there is a parser grammar
+                    // (not a combined grammar)
+                    if (s.g != null && s.g.getType() == ANTLRParser.PARSER) {
                         return s;
+                    }
+                }
+
+                if (s != null && s.g != null && s.g.importedGrammars != null) {
+                    for (Grammar importedGrammar : s.g.importedGrammars) {
+                        if (grammarFileName.equals(importedGrammar.fileName)) {
+                            return s;
+                        }
                     }
                 }
             }
@@ -437,9 +440,6 @@ public class ANTLRv4PluginController {
 
     private boolean sameFile(String pathOne, String pathTwo) {
         // use new File() to support both / and \ in paths
-        if (StringUtils.isBlank(pathOne) && StringUtils.isBlank(pathTwo)) {
-            return true;
-        }
         return FileUtil.comparePaths(pathOne, pathTwo) == 0;
 //        return new File(pathOne).equals(new File(pathTwo));
     }

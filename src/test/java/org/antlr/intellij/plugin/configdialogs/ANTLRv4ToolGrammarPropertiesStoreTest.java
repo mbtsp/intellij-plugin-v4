@@ -3,14 +3,14 @@ package com.antlr.plugin.configdialogs;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ANTLRv4GrammarPropertiesStoreTest {
+public class ANTLRv4ToolGrammarPropertiesStoreTest {
 
     private static final String MY_GRAMMAR_PATH = "/home/grammars/test/MyGrammar.java";
 
     @Test
     public void shouldReturnPropertiesForExactFile() {
         // given:
-        ANTLRv4GrammarPropertiesStore propertiesStore = new ANTLRv4GrammarPropertiesStore();
+        ANTLRv4ToolGrammarPropertiesStore propertiesStore = new ANTLRv4ToolGrammarPropertiesStore();
         propertiesStore.add(createGrammarProperties("/home/grammars/test/NotMyGrammar.java"));
         ANTLRv4GrammarProperties myGrammarProperties = createGrammarProperties(MY_GRAMMAR_PATH);
         propertiesStore.add(myGrammarProperties);
@@ -25,19 +25,19 @@ public class ANTLRv4GrammarPropertiesStoreTest {
     @Test
     public void shouldReturnDefaultPropertiesIfNoneDefined() {
         // given:
-        ANTLRv4GrammarPropertiesStore propertiesStore = new ANTLRv4GrammarPropertiesStore();
+        ANTLRv4ToolGrammarPropertiesStore propertiesStore = new ANTLRv4ToolGrammarPropertiesStore();
 
         // when:
         ANTLRv4GrammarProperties grammarProperties = propertiesStore.getGrammarProperties(MY_GRAMMAR_PATH);
 
         // then:
-        Assert.assertSame(grammarProperties, ANTLRv4GrammarPropertiesStore.DEFAULT_GRAMMAR_PROPERTIES);
+        Assert.assertSame(grammarProperties, ANTLRv4ToolGrammarPropertiesStore.DEFAULT_GRAMMAR_PROPERTIES);
     }
 
     @Test
     public void shouldMatchPropertiesByWildcard() {
         // given:
-        ANTLRv4GrammarPropertiesStore propertiesStore = new ANTLRv4GrammarPropertiesStore();
+        ANTLRv4ToolGrammarPropertiesStore propertiesStore = new ANTLRv4ToolGrammarPropertiesStore();
         propertiesStore.add(createGrammarProperties("*/main/*.java"));
         ANTLRv4GrammarProperties testGrammarProperties = createGrammarProperties("/home/*/test/*.java");
         propertiesStore.add(testGrammarProperties);
@@ -52,7 +52,7 @@ public class ANTLRv4GrammarPropertiesStoreTest {
     @Test
     public void shouldPreferExactMatchOverWildcard() {
         // given:
-        ANTLRv4GrammarPropertiesStore propertiesStore = new ANTLRv4GrammarPropertiesStore();
+        ANTLRv4ToolGrammarPropertiesStore propertiesStore = new ANTLRv4ToolGrammarPropertiesStore();
         propertiesStore.add(createGrammarProperties("/home/grammars/test/NotMyGrammar.java"));
         propertiesStore.add(createGrammarProperties("/home/*/test/*.java"));
         ANTLRv4GrammarProperties myGrammarProperties = createGrammarProperties(MY_GRAMMAR_PATH);

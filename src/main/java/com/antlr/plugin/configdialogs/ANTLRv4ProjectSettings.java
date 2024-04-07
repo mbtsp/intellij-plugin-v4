@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-import static com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore.getGrammarProperties;
+import static com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesStore.getGrammarProperties;
 
 
 /**
@@ -61,6 +61,9 @@ public class ANTLRv4ProjectSettings implements SearchableConfigurable, Disposabl
     @Override
     public boolean isModified() {
         ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, ANTLRv4GrammarProperties.PROJECT_SETTINGS_PREFIX);
+        if (grammarProperties == null) {
+            return false;
+        }
         return configurationForm.isModified(grammarProperties);
     }
 

@@ -1,5 +1,6 @@
 package com.antlr.plugin.actions;
 
+import com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesStore;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -16,8 +17,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiDocumentManager;
-import com.antlr.plugin.ANTLRv4PluginController;
-import com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore;
 import com.antlr.plugin.parsing.RunANTLROnGrammarFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,7 +73,7 @@ public class GenerateParserAction extends AnAction implements DumbAware {
                         canBeCancelled,
                         forceGeneration);
 
-        boolean autogen = ANTLRv4GrammarPropertiesStore.getGrammarProperties(project, grammarFile).shouldAutoGenerateParser();
+        boolean autogen = ANTLRv4ToolGrammarPropertiesStore.getGrammarProperties(project, grammarFile).shouldAutoGenerateParser();
         if (!unsaved || !autogen) {
             // if everything already saved (not stale) then run ANTLR
             // if had to be saved and autogen NOT on, then run ANTLR

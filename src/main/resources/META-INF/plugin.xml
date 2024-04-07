@@ -167,7 +167,7 @@ For really big files and slow grammars, there is an appreciable delay when displ
                              displayName="ANTLR V4 Default Project Settings"
                              instance="com.antlr.plugin.configdialogs.ANTLRv4ProjectSettings"/>
         <projectService id="antlr.new.antlr.grammar.propertioes.component"
-                serviceImplementation="com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesComponent"/>
+                serviceImplementation="com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesComponent"/>
         <lang.refactoringSupport  id="antlr.new.refactoring.support" language="ANTLRv4-Tool"
                                  implementationClass="com.antlr.plugin.refactor.ANTLRv4RefactoringSupport"/>
         <toolWindow factoryClass="com.antlr.plugin.toolwindow.PreViewToolWindow" id="Antlr(new) Preview"

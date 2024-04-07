@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * can be used during code generation, in the Preview window etc.
  * <p>
  * Settings can be modified via a user interface in {@link ConfigANTLRPerGrammar}
- * and are saved in {@code .idea/misc.xml} thanks to {@link ANTLRv4GrammarPropertiesComponent}.
+ * and are saved in {@code .idea/misc.xml} thanks to {@link ANTLRv4ToolGrammarPropertiesComponent}.
  * <p>
  * Settings for the current project are stored in .idea/misc.xml, under PerGrammarGenerationSettings tags.
  * <p>

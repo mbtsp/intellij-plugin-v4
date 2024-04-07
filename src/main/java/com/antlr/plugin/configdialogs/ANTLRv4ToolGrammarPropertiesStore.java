@@ -1,11 +1,11 @@
 package com.antlr.plugin.configdialogs;
 
+import com.antlr.plugin.parsing.CaseChangingStrategy;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.fileTypes.WildcardFileNameMatcher;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.xmlb.annotations.Property;
-import com.antlr.plugin.parsing.CaseChangingStrategy;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -15,9 +15,9 @@ import java.util.Objects;
 /**
  * Stores settings related to code generation per grammar file.
  */
-public class ANTLRv4GrammarPropertiesStore {
+public class ANTLRv4ToolGrammarPropertiesStore {
 
-    private static final Logger logger = Logger.getInstance(ANTLRv4GrammarPropertiesStore.class.getName());
+    private static final Logger logger = Logger.getInstance(ANTLRv4ToolGrammarPropertiesStore.class.getName());
 
     static final ANTLRv4GrammarProperties DEFAULT_GRAMMAR_PROPERTIES = initDefaultGrammarProperties();
 
@@ -35,7 +35,7 @@ public class ANTLRv4GrammarPropertiesStore {
             ANTLRv4GrammarProperties projectSettings = findSettingsForFile("*");
 
             if (projectSettings == null) {
-                return ANTLRv4GrammarPropertiesStore.DEFAULT_GRAMMAR_PROPERTIES;
+                return ANTLRv4ToolGrammarPropertiesStore.DEFAULT_GRAMMAR_PROPERTIES;
             }
 
             return projectSettings;
@@ -97,7 +97,11 @@ public class ANTLRv4GrammarPropertiesStore {
      * Defaults to settings defined in the project if they exist, or to empty settings.
      */
     public static ANTLRv4GrammarProperties getGrammarProperties(Project project, String grammarFile) {
-        ANTLRv4GrammarPropertiesStore store = ANTLRv4GrammarPropertiesComponent.getInstance(project).getState();
+        ANTLRv4ToolGrammarPropertiesComponent antlRv4ToolGrammarPropertiesComponent =ANTLRv4ToolGrammarPropertiesComponent.getInstance(project);
+        if(antlRv4ToolGrammarPropertiesComponent==null){
+            return null;
+        }
+        ANTLRv4ToolGrammarPropertiesStore store = antlRv4ToolGrammarPropertiesComponent.getState();
         return store.getGrammarProperties(grammarFile);
     }
 
@@ -105,8 +109,13 @@ public class ANTLRv4GrammarPropertiesStore {
      * Get the properties for this grammar, or create a new properties object derived from the project settings if
      * they exist, or from the default empty settings otherwise.
      */
+    @Nullable
     public static ANTLRv4GrammarProperties getOrCreateGrammarProperties(Project project, String grammarFile) {
-        ANTLRv4GrammarPropertiesStore store = ANTLRv4GrammarPropertiesComponent.getInstance(project).getState();
+        ANTLRv4ToolGrammarPropertiesComponent antlRv4ToolGrammarPropertiesComponent = ANTLRv4ToolGrammarPropertiesComponent.getInstance(project);
+        if (antlRv4ToolGrammarPropertiesComponent == null) {
+            return null;
+        }
+        ANTLRv4ToolGrammarPropertiesStore store = antlRv4ToolGrammarPropertiesComponent.getState();
         return store.getOrCreateGrammarProperties(grammarFile);
     }
 

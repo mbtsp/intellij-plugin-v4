@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
-import static com.antlr.plugin.configdialogs.ANTLRv4GrammarPropertiesStore.getGrammarProperties;
+import static com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesStore.getGrammarProperties;
 import static com.antlr.plugin.psi.MyPsiUtils.findChildrenOfType;
 import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -76,7 +76,10 @@ public class RunANTLROnGrammarFile extends Task.Modal {
     public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, grammarFile);
-        boolean autogen = grammarProperties.shouldAutoGenerateParser();
+        boolean autogen=false;
+        if(grammarProperties!=null) {
+            autogen = grammarProperties.shouldAutoGenerateParser();
+        }
         if (forceGeneration || (autogen && isGrammarStale(grammarProperties))) {
             ReadAction.run(() -> antlr(grammarFile));
         } else {
@@ -188,7 +191,7 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         for (String option : argMap.keySet()) {
             args.add(option);
             String value = argMap.get(option);
-            if (value.length() != 0) {
+            if (!value.isEmpty()) {
                 args.add(value);
             }
         }
@@ -199,8 +202,10 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         Map<String, String> args = new HashMap<>();
         ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, vfile);
         String sourcePath = getParentDir(vfile);
-
-        String package_ = grammarProperties.getPackage();
+        String package_ = null;
+        if(grammarProperties!=null) {
+            package_ = grammarProperties.getPackage();
+        }
         if (isBlank(package_) && !hasPackageDeclarationInHeader(project, vfile)) {
             package_ = ProjectRootManager.getInstance(project).getFileIndex().getPackageNameByDirectory(vfile.getParent());
         }
@@ -208,34 +213,38 @@ public class RunANTLROnGrammarFile extends Task.Modal {
             args.put("-package", package_);
         }
 
-        String language = grammarProperties.getLanguage();
+        String language = grammarProperties != null ? grammarProperties.getLanguage() : null;
         if (isNotBlank(language)) {
             args.put("-Dlanguage=" + language, "");
         }
 
         // create gen dir at root of project by default, but add in package if any
         VirtualFile contentRoot = getContentRoot(project, vfile);
-        String outputDirName = grammarProperties.resolveOutputDirName(project, contentRoot, package_);
+        String outputDirName = grammarProperties != null ? grammarProperties.resolveOutputDirName(project, contentRoot, package_) : null;
         args.put("-o", outputDirName);
 
-        String libDir = grammarProperties.resolveLibDir(project, sourcePath);
-        File f = new File(libDir);
-        if (!f.isAbsolute()) { // if not absolute file spec, it's relative to project root
-            libDir = contentRoot.getPath() + File.separator + libDir;
+        String libDir = grammarProperties != null ? grammarProperties.resolveLibDir(project, sourcePath) : null;
+        File f;
+        if (libDir != null) {
+            f = new File(libDir);
+            if (!f.isAbsolute() && contentRoot!=null) { // if not absolute file spec, it's relative to project root
+                libDir = contentRoot.getPath() + File.separator + libDir;
+            }
         }
+
         args.put("-lib", libDir);
 
-        String encoding = grammarProperties.getEncoding();
+        String encoding = grammarProperties != null ? grammarProperties.getEncoding() : null;
         if (isNotBlank(encoding)) {
             args.put("-encoding", encoding);
         }
 
-        if (grammarProperties.shouldGenerateParseTreeListener()) {
+        if (grammarProperties!=null && grammarProperties.shouldGenerateParseTreeListener()) {
             args.put("-listener", "");
         } else {
             args.put("-no-listener", "");
         }
-        if (grammarProperties.shouldGenerateParseTreeVisitor()) {
+        if (grammarProperties!=null && grammarProperties.shouldGenerateParseTreeVisitor()) {
             args.put("-visitor", "");
         } else {
             args.put("-no-visitor", "");

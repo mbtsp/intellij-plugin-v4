@@ -293,30 +293,30 @@ public class ProfilerPanel {
         CommonToken startToken = (CommonToken) tokens.get(region.a);
         CommonToken stopToken = (CommonToken) tokens.get(region.b);
         JBColor effectColor = JBColor.darkGray;
-        DecisionInfo decisionInfo = previewState.parsingResult.parser.getParseInfo().getDecisionInfo()[decision];
-        if (!decisionInfo.predicateEvals.isEmpty()) {
-            effectColor = new JBColor(PREDEVAL_COLOR, AMBIGUITY_COLOR);
+        if(previewState.parsingResult!=null){
+            DecisionInfo decisionInfo = previewState.parsingResult.parser.getParseInfo().getDecisionInfo()[decision];
+            if (!decisionInfo.predicateEvals.isEmpty()) {
+                effectColor = new JBColor(PREDEVAL_COLOR, AMBIGUITY_COLOR);
+            }
+            if (!decisionInfo.contextSensitivities.isEmpty()) {
+                effectColor = new JBColor(FULLCTX_COLOR, AMBIGUITY_COLOR);
+            }
+            if (!decisionInfo.ambiguities.isEmpty()) {
+                effectColor = new JBColor(AMBIGUITY_COLOR, AMBIGUITY_COLOR);
+            }
+            TextAttributes attr =
+                    new TextAttributes(JBColor.BLACK, JBColor.WHITE, effectColor,
+                            EffectType.ROUNDED_BOX, Font.PLAIN);
+            MarkupModel markupModel = grammarEditor.getMarkupModel();
+            final RangeHighlighter rangeHighlighter = markupModel.addRangeHighlighter(
+                    startToken.getStartIndex(),
+                    stopToken.getStopIndex() + 1,
+                    HighlighterLayer.SELECTION, // layer
+                    attr,
+                    HighlighterTargetArea.EXACT_RANGE
+            );
+            rangeHighlighter.putUserData(DECISION_INFO_KEY, decisionInfo);
         }
-        if (!decisionInfo.contextSensitivities.isEmpty()) {
-            effectColor = new JBColor(FULLCTX_COLOR, AMBIGUITY_COLOR);
-        }
-        if (!decisionInfo.ambiguities.isEmpty()) {
-            effectColor = new JBColor(AMBIGUITY_COLOR, AMBIGUITY_COLOR);
-        }
-
-        TextAttributes attr =
-                new TextAttributes(JBColor.BLACK, JBColor.WHITE, effectColor,
-                        EffectType.ROUNDED_BOX, Font.PLAIN);
-        MarkupModel markupModel = grammarEditor.getMarkupModel();
-        final RangeHighlighter rangeHighlighter = markupModel.addRangeHighlighter(
-                startToken.getStartIndex(),
-                stopToken.getStopIndex() + 1,
-                HighlighterLayer.SELECTION, // layer
-                attr,
-                HighlighterTargetArea.EXACT_RANGE
-        );
-        rangeHighlighter.putUserData(DECISION_INFO_KEY, decisionInfo);
-
         ScrollingModel scrollingModel = grammarEditor.getScrollingModel();
         CaretModel caretModel = grammarEditor.getCaretModel();
         caretModel.moveToOffset(startToken.getStartIndex());
@@ -472,11 +472,14 @@ public class ProfilerPanel {
                             selectedRow = 0;
                         }
                         int decision = profilerDataTable.convertRowIndexToModel(selectedRow);
-                        int numberOfDecisions = previewState.g.atn.getNumberOfDecisions();
-                        if (decision <= numberOfDecisions) {
-                            selectDecisionInGrammar(previewState, decision);
-                            highlightInputPhrases(previewState, decision);
+                        if (previewState.g != null) {
+                            int numberOfDecisions = previewState.g.atn.getNumberOfDecisions();
+                            if (decision <= numberOfDecisions) {
+                                selectDecisionInGrammar(previewState, decision);
+                                highlightInputPhrases(previewState, decision);
+                            }
                         }
+
                     }
                 }
         );
