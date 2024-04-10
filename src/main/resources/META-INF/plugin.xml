@@ -1,8 +1,8 @@
 <idea-plugin>
     <id>com.my.antlr.tool</id>
-    <name>ANTLR v4-Tool</name>
+    <name>ANTLR V4-Tool</name>
     <version>will be replaced by gradle</version>
-    <vendor email="zoulejiu@gmail.com" url="https://github.com/mbtsp/intellij-plugin-v4">ANTLR Project</vendor>
+    <vendor email="zoulejiu@gmail.com" url="https://github.com/mbtsp/intellij-plugin-v4">LeJiu</vendor>
 
     <description><![CDATA[
   <p>
@@ -170,9 +170,9 @@ For really big files and slow grammars, there is an appreciable delay when displ
                 serviceImplementation="com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesComponent"/>
         <lang.refactoringSupport  id="antlr.new.refactoring.support" language="ANTLRv4-Tool"
                                  implementationClass="com.antlr.plugin.refactor.ANTLRv4RefactoringSupport"/>
-        <toolWindow factoryClass="com.antlr.plugin.toolwindow.PreViewToolWindow" id="Antlr(new) Preview"
+        <toolWindow factoryClass="com.antlr.plugin.toolwindow.PreViewToolWindow" id="antlr.tool.pre.view"
                     anchor="bottom"/>
-        <toolWindow factoryClass="com.antlr.plugin.toolwindow.ConsoleToolWindow" id="Antlr(new) Console"
+        <toolWindow factoryClass="com.antlr.plugin.toolwindow.ConsoleToolWindow" id="antlr.tool.console"
                     anchor="bottom"/>
         <notificationGroup displayType="BALLOON" id="antlr.new.notify.group"/>
         <errorHandler id="antlr.new.error.report" implementation="com.antlr.report.AnltrErrorReportSubmitter"/>

@@ -69,8 +69,8 @@ public class ANTLRv4PluginController {
     public static final Key<GrammarEditorMouseAdapter> EDITOR_MOUSE_LISTENER_KEY = Key.create("EDITOR_MOUSE_LISTENER_KEY");
     public static final Logger LOG = Logger.getInstance("ANTLRv4PluginController");
 
-    public static final String PREVIEW_WINDOW_ID = "Antlr(new) Preview";
-    public static final String CONSOLE_WINDOW_ID = "Antlr(new) Console";
+    public static final String PREVIEW_WINDOW_ID = "antlr.tool.pre.view";
+    public static final String CONSOLE_WINDOW_ID = "antlr.tool.console";
 
     public boolean projectIsClosed = false;
 
