@@ -1,5 +1,13 @@
 package com.antlr.plugin.parsing;
 
+import com.antlr.plugin.ANTLRv4PluginController;
+import com.antlr.plugin.ANTLRv4TokenTypes;
+import com.antlr.plugin.configdialogs.ANTLRv4GrammarProperties;
+import com.antlr.plugin.parser.ANTLRv4Parser;
+import com.antlr.plugin.preview.PreviewState;
+import com.antlr.plugin.psi.AtAction;
+import com.antlr.plugin.psi.GrammarSpecNode;
+import com.antlr.plugin.util.ConsoleUtils;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -17,14 +25,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiManager;
 import org.antlr.intellij.adaptor.lexer.RuleIElementType;
-import com.antlr.plugin.ANTLRv4PluginController;
-import com.antlr.plugin.ANTLRv4TokenTypes;
-import com.antlr.plugin.configdialogs.ANTLRv4GrammarProperties;
-import com.antlr.plugin.parser.ANTLRv4Parser;
-import com.antlr.plugin.preview.PreviewState;
-import com.antlr.plugin.psi.AtAction;
-import com.antlr.plugin.psi.GrammarSpecNode;
-import com.antlr.plugin.util.ConsoleUtils;
 import org.antlr.v4.Tool;
 import org.antlr.v4.codegen.CodeGenerator;
 import org.antlr.v4.runtime.misc.Utils;
@@ -76,8 +76,8 @@ public class RunANTLROnGrammarFile extends Task.Modal {
     public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
         ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, grammarFile);
-        boolean autogen=false;
-        if(grammarProperties!=null) {
+        boolean autogen = false;
+        if (grammarProperties != null) {
             autogen = grammarProperties.shouldAutoGenerateParser();
         }
         if (forceGeneration || (autogen && isGrammarStale(grammarProperties))) {
@@ -203,7 +203,7 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, vfile);
         String sourcePath = getParentDir(vfile);
         String package_ = null;
-        if(grammarProperties!=null) {
+        if (grammarProperties != null) {
             package_ = grammarProperties.getPackage();
         }
         if (isBlank(package_) && !hasPackageDeclarationInHeader(project, vfile)) {
@@ -227,7 +227,7 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         File f;
         if (libDir != null) {
             f = new File(libDir);
-            if (!f.isAbsolute() && contentRoot!=null) { // if not absolute file spec, it's relative to project root
+            if (!f.isAbsolute() && contentRoot != null) { // if not absolute file spec, it's relative to project root
                 libDir = contentRoot.getPath() + File.separator + libDir;
             }
         }
@@ -239,12 +239,12 @@ public class RunANTLROnGrammarFile extends Task.Modal {
             args.put("-encoding", encoding);
         }
 
-        if (grammarProperties!=null && grammarProperties.shouldGenerateParseTreeListener()) {
+        if (grammarProperties != null && grammarProperties.shouldGenerateParseTreeListener()) {
             args.put("-listener", "");
         } else {
             args.put("-no-listener", "");
         }
-        if (grammarProperties!=null && grammarProperties.shouldGenerateParseTreeVisitor()) {
+        if (grammarProperties != null && grammarProperties.shouldGenerateParseTreeVisitor()) {
             args.put("-visitor", "");
         } else {
             args.put("-no-visitor", "");
@@ -275,6 +275,9 @@ public class RunANTLROnGrammarFile extends Task.Modal {
     }
 
     private static String getParentDir(VirtualFile vfile) {
+        if (vfile == null || vfile.getParent() == null) {
+            return null;
+        }
         return vfile.getParent().getPath();
     }
 
