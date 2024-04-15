@@ -7,16 +7,13 @@ fun md5(msg: String): String {
     if (msg.isBlank()) {
         return "-1"
     }
-    if (msg.length > 100) {
-        return msg.substring(0, 100).md5()
-    }
     return msg.md5()
 }
 
 fun title(message: String): String {
     return message
         .takeIf { it.isNotEmpty() && it != EXCEPTION_CLASS_CHANGED_MESSAGE }
-        ?.let { ": ${it.singleLine().compressWhitespace().ellipsis(100)}" }
+        ?.let { ": ${it.singleLine().compressWhitespace().ellipsis(50)}" }
         ?: ""
 }
 

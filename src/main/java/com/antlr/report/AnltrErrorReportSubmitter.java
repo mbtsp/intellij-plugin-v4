@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Properties;
 
+import static com.ssh.report.StringKt.md5;
+
 public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
     @Override
     public @NotNull String getReportActionText() {
@@ -70,7 +72,7 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
 
     private void buildErrorMsg(Project project, IdeaLoggingEvent event, Consumer<? super SubmittedReportInfo> consumer) {
         StringBuilder stringBuilder = new StringBuilder();
-        String id = StringKt.title(event.getThrowableText());
+        String id = md5(StringKt.title(event.getThrowableText()));
         stringBuilder.append(":warning:_`[Auto Generated Report]-=").append(id).append("=-`_").append("\n");
         stringBuilder.append("## Environments").append('\n');
         stringBuilder.append("> **Plugin version: ").append(ApplicationInfo.VERSION).append("**").append("\n\n");
