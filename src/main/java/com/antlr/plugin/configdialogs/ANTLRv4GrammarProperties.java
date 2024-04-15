@@ -149,7 +149,7 @@ public class ANTLRv4GrammarProperties implements Cloneable {
     public String resolveLibDir(Project project, String defaultValue) {
         String libDir = getLibDir();
 
-        if (libDir == null || libDir.equals("")) {
+        if (libDir == null || libDir.isEmpty()) {
             libDir = defaultValue;
         }
 
