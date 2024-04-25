@@ -1,11 +1,11 @@
-package com.antlr.plugin.folding;
+package com.antlr.intellij.plugin.folding;
 
+import com.antlr.intellij.plugin.TestUtils;
 import com.intellij.codeInsight.folding.CodeFoldingManager;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.FoldRegion;
 import com.intellij.testFramework.EditorTestUtil;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
-import com.antlr.plugin.TestUtils;
 
 import java.lang.reflect.Method;
 

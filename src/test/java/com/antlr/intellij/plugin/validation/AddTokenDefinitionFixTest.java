@@ -1,5 +1,6 @@
-package com.antlr.plugin.validation;
+package com.antlr.intellij.plugin.validation;
 
+import com.antlr.plugin.validation.AddTokenDefinitionFix;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.junit.Assert;

@@ -89,12 +89,12 @@ public class AddTokenDefinitionFix extends BaseIntentionAction {
         return templateBuilder.buildInlineTemplate();
     }
 
-    static TextRange getRange(PsiElement elementAt, int tokenExprTextOffset) {
+    public static TextRange getRange(PsiElement elementAt, int tokenExprTextOffset) {
         return new TextRange(tokenExprTextOffset, elementAt.getTextLength() - 1);
     }
 
     @NotNull
-    static String buildTokenDefinitionExpressionText(String tokenName) {
+    public static String buildTokenDefinitionExpressionText(String tokenName) {
         return tokenName.toUpperCase().chars().mapToObj(c -> (char) c).map(AddTokenDefinitionFix::getCharacterFragment).collect(Collectors.joining(" "));
     }
 

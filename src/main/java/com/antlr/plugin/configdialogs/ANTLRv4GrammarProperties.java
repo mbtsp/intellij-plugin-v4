@@ -48,7 +48,7 @@ public class ANTLRv4GrammarProperties implements Cloneable {
     static final String PROJECT_SETTINGS_PREFIX = "*";
 
     @Property
-    String fileName;
+    public String fileName;
 
     @Property
     boolean autoGen;
@@ -66,7 +66,7 @@ public class ANTLRv4GrammarProperties implements Cloneable {
     String pkg;
 
     @Property
-    String language;
+    public String language;
 
     @Property
     boolean generateListener = true;

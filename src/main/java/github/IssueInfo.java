@@ -28,11 +28,11 @@ public class IssueInfo {
         @SerializedName("html_url")
         private String htmlUrl;
         @SerializedName("id")
-        private Integer id;
+        private Long id;
         @SerializedName("node_id")
         private String nodeId;
         @SerializedName("number")
-        private Integer number;
+        private Long number;
         @SerializedName("title")
         private String title;
         @SerializedName("user")
@@ -122,13 +122,6 @@ public class IssueInfo {
             this.htmlUrl = htmlUrl;
         }
 
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
 
         public String getNodeId() {
             return nodeId;
@@ -138,11 +131,19 @@ public class IssueInfo {
             this.nodeId = nodeId;
         }
 
-        public Integer getNumber() {
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public Long getNumber() {
             return number;
         }
 
-        public void setNumber(Integer number) {
+        public void setNumber(Long number) {
             this.number = number;
         }
 
@@ -310,7 +311,7 @@ public class IssueInfo {
             @SerializedName("login")
             private String login;
             @SerializedName("id")
-            private Integer id;
+            private Long id;
             @SerializedName("node_id")
             private String nodeId;
             @SerializedName("avatar_url")
@@ -352,11 +353,11 @@ public class IssueInfo {
                 this.login = login;
             }
 
-            public Integer getId() {
+            public Long getId() {
                 return id;
             }
 
-            public void setId(Integer id) {
+            public void setId(Long id) {
                 this.id = id;
             }
 

@@ -1,18 +1,4 @@
-package org.antlr.intellij.plugin;
-
-import com.antlr.plugin.ANTLRv4ExternalAnnotator;
-import com.google.common.collect.Iterables;
-import com.intellij.lang.annotation.Annotation;
-import com.intellij.lang.annotation.HighlightSeverity;
-import com.intellij.psi.PsiFile;
-import com.antlr.plugin.validation.CreateRuleFix;
-import com.antlr.plugin.validation.AddTokenDefinitionFix;
-import com.antlr.plugin.validation.GrammarIssue;
-import org.antlr.v4.tool.ANTLRMessage;
-import org.antlr.v4.tool.ErrorType;
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.Mockito;
+package com.antlr.intellij.plugin;
 
 public class ANTLRv4ExternalAnnotatorTest {
 

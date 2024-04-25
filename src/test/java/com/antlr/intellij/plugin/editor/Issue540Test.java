@@ -1,5 +1,6 @@
-package com.antlr.plugin.editor;
+package com.antlr.intellij.plugin.editor;
 
+import com.antlr.intellij.plugin.TestUtils;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.editor.Document;
@@ -11,7 +12,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.testFramework.VfsTestUtil;
 import com.intellij.testFramework.fixtures.BasePlatformTestCase;
 import com.antlr.plugin.ANTLRv4PluginController;
-import com.antlr.plugin.TestUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 

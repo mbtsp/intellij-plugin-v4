@@ -293,7 +293,7 @@ public class ProfilerPanel {
         CommonToken startToken = (CommonToken) tokens.get(region.a);
         CommonToken stopToken = (CommonToken) tokens.get(region.b);
         JBColor effectColor = JBColor.darkGray;
-        if(previewState.parsingResult!=null){
+        if (previewState.parsingResult != null) {
             DecisionInfo decisionInfo = previewState.parsingResult.parser.getParseInfo().getDecisionInfo()[decision];
             if (!decisionInfo.predicateEvals.isEmpty()) {
                 effectColor = new JBColor(PREDEVAL_COLOR, AMBIGUITY_COLOR);

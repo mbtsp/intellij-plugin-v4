@@ -1,4 +1,4 @@
-package org.antlr.intellij.plugin.psi;
+package com.antlr.intellij.plugin.psi;
 
 import com.antlr.plugin.psi.*;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
@@ -7,8 +7,6 @@ import com.intellij.psi.PsiReference;
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixtureTestCase;
 import com.intellij.usageView.UsageInfo;
 import com.antlr.plugin.ANTLRv4FileRoot;
-import com.antlr.plugin.ANTLRv4PluginController;
-import com.antlr.plugin.TestUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;

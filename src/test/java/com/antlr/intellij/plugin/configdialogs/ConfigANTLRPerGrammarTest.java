@@ -1,5 +1,7 @@
-package com.antlr.plugin.configdialogs;
+package com.antlr.intellij.plugin.configdialogs;
 
+import com.antlr.plugin.configdialogs.ANTLRv4GrammarProperties;
+import com.antlr.plugin.configdialogs.ConfigANTLRPerGrammar;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

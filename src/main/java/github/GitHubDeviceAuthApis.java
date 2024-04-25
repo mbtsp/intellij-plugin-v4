@@ -31,7 +31,7 @@ public class GitHubDeviceAuthApis {
     public IssueInfo.ItemsDTO findIssue(String id) throws Exception {
         String url = "https://api.github.com/search/issues";
         Map<String, String> params = new HashMap<>();
-        params.put("q", "repo:mbtsp/Databae-Tool is:issue in:body " + id);
+        params.put("q", "repo:mbtsp/intellij-plugin-v4 is:issue in:body " + id);
         params.put("page", "1");
         params.put("per_page", "per_page");
         HttpClient httpClient = new HttpClient(heads);

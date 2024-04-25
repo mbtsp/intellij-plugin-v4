@@ -19,7 +19,7 @@ public class ANTLRv4ToolGrammarPropertiesStore {
 
     private static final Logger logger = Logger.getInstance(ANTLRv4ToolGrammarPropertiesStore.class.getName());
 
-    static final ANTLRv4GrammarProperties DEFAULT_GRAMMAR_PROPERTIES = initDefaultGrammarProperties();
+    public static final ANTLRv4GrammarProperties DEFAULT_GRAMMAR_PROPERTIES = initDefaultGrammarProperties();
 
     @Property
     private final List<ANTLRv4GrammarProperties> perGrammarGenerationSettings = new ArrayList<>();
