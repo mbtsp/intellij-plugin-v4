@@ -4,6 +4,7 @@ import com.antlr.ApplicationInfo;
 import com.antlr.plugin.parsing.ParsingUtils;
 import com.antlr.plugin.parsing.RunANTLROnGrammarFile;
 import com.antlr.plugin.preview.PreviewState;
+import com.antlr.plugin.toolwindow.ConsoleToolWindow;
 import com.antlr.plugin.toolwindow.PreViewToolWindow;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManagerCore;
@@ -39,10 +40,8 @@ import com.intellij.util.messages.MessageBusConnection;
 import org.antlr.v4.parse.ANTLRParser;
 import org.antlr.v4.tool.Grammar;
 import org.antlr.v4.tool.LexerGrammar;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,18 +68,12 @@ public class ANTLRv4PluginController {
     public static final Key<GrammarEditorMouseAdapter> EDITOR_MOUSE_LISTENER_KEY = Key.create("EDITOR_MOUSE_LISTENER_KEY");
     public static final Logger LOG = Logger.getInstance("ANTLRv4PluginController");
 
-    public static final String PREVIEW_WINDOW_ID = "antlr.tool.pre.view";
-    public static final String CONSOLE_WINDOW_ID = "antlr.tool.console";
 
     public boolean projectIsClosed = false;
 
     public Project project;
-//    public ConsoleView console;
-//    private ToolWindow consoleWindow;
 
     public Map<String, PreviewState> grammarToPreviewState = new ConcurrentHashMap<>();
-//    public ToolWindow previewWindow;    // same for all grammar editor
-//    public PreviewPanel previewPanel;    // same for all grammar editor
 
     public MyVirtualFileAdapter myVirtualFileAdapter = new MyVirtualFileAdapter();
     public MyFileEditorManagerAdapter myFileEditorManagerAdapter = new MyFileEditorManagerAdapter();
@@ -110,7 +103,7 @@ public class ANTLRv4PluginController {
     }
 
     public void showPre(Runnable runnable) {
-        ToolWindow toolWindow = ToolWindowManager.getInstance(this.project).getToolWindow(PREVIEW_WINDOW_ID);
+        ToolWindow toolWindow = ToolWindowManager.getInstance(this.project).getToolWindow(PreViewToolWindow.WINDOW_ID);
         if (toolWindow != null) {
             toolWindow.show(runnable);
         }
@@ -135,7 +128,7 @@ public class ANTLRv4PluginController {
         projectIsClosed = true;
         uninstallListeners();
         if (grammarToPreviewState != null) {
-            for(Map.Entry<String,PreviewState> entry : grammarToPreviewState.entrySet()) {
+            for (Map.Entry<String, PreviewState> entry : grammarToPreviewState.entrySet()) {
                 if (this.project != null && !this.project.isDisposed()) {
                     this.project.getMessageBus().syncPublisher(PreViewToolWindow.TOPIC).releaseEditor(entry.getValue());
                 }
@@ -414,8 +407,8 @@ public class ANTLRv4PluginController {
 
     // TODO there could be multiple grammars importing/tokenVocab'ing this lexer grammar
     public PreviewState getAssociatedParserIfLexer(String grammarFileName) {
-        if(grammarToPreviewState!=null){
-            for(Map.Entry<String,PreviewState> entry: grammarToPreviewState.entrySet()){
+        if (grammarToPreviewState != null) {
+            for (Map.Entry<String, PreviewState> entry : grammarToPreviewState.entrySet()) {
                 PreviewState s = entry.getValue();
                 if (s != null && s.lg != null &&
                         (sameFile(grammarFileName, s.lg.fileName) || s.lg == ParsingUtils.BAD_LEXER_GRAMMAR)) {
@@ -496,22 +489,21 @@ public class ANTLRv4PluginController {
 
 
     public static void showLaterConsoleWindow(final Project project) {
-        ApplicationManager.getApplication().invokeLater(
-                () -> {
-                    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);
-                    if (toolWindow != null) {
-                        toolWindow.show();
-                    }
-                }
-        );
+        showLaterConsoleWindow(project, null);
     }
 
     public static void showLaterConsoleWindow(final Project project, Runnable runnable) {
         ApplicationManager.getApplication().invokeLater(
                 () -> {
-                    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(CONSOLE_WINDOW_ID);
+                    ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ConsoleToolWindow.WINDOW_ID);
                     if (toolWindow != null) {
-                        toolWindow.show(runnable);
+                        if(!toolWindow.isVisible()){
+                            toolWindow.show(runnable);
+                        }else{
+                            if (runnable != null) {
+                                runnable.run();
+                            }
+                        }
                     }
                 }
         );

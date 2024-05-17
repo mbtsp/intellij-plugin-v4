@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class PreViewToolWindow implements ToolWindowFactory, DumbAware {
     private PreviewPanel previewPanel;
-
+    public static final String WINDOW_ID="Antlr Tool Preview";
     public static final Topic<PreViewListener> TOPIC = new Topic<>(PreViewListener.class);
 
     @Override

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class ConsoleToolWindow implements ToolWindowFactory {
     private ConsoleView console;
     public static final Topic<ConsoleListener> TOPIC = new Topic<>(ConsoleListener.class);
-
+    public static final String WINDOW_ID="Antlr tool Console";
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {

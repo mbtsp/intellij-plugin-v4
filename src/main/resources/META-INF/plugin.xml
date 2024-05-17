@@ -170,9 +170,9 @@ For really big files and slow grammars, there is an appreciable delay when displ
                 serviceImplementation="com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesComponent"/>
         <lang.refactoringSupport  id="antlr.new.refactoring.support" language="ANTLRv4-Tool"
                                  implementationClass="com.antlr.plugin.refactor.ANTLRv4RefactoringSupport"/>
-        <toolWindow factoryClass="com.antlr.plugin.toolwindow.PreViewToolWindow" id="antlr.tool.pre.view"
+        <toolWindow factoryClass="com.antlr.plugin.toolwindow.PreViewToolWindow" id="Antlr Tool Preview"
                     anchor="bottom"/>
-        <toolWindow factoryClass="com.antlr.plugin.toolwindow.ConsoleToolWindow" id="antlr.tool.console"
+        <toolWindow factoryClass="com.antlr.plugin.toolwindow.ConsoleToolWindow" id="Antlr tool Console"
                     anchor="bottom"/>
         <notificationGroup displayType="BALLOON" id="antlr.new.notify.group"/>
         <errorHandler id="antlr.new.error.report" implementation="com.antlr.report.AnltrErrorReportSubmitter"/>

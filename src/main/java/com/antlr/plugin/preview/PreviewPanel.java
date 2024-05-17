@@ -43,7 +43,7 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.antlr.plugin.ANTLRv4PluginController.PREVIEW_WINDOW_ID;
+import static com.antlr.plugin.toolwindow.PreViewToolWindow.WINDOW_ID;
 import static com.intellij.icons.AllIcons.Actions.Find;
 import static com.intellij.icons.AllIcons.General.AutoscrollFromSource;
 
@@ -162,7 +162,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
             }
         };
         DefaultActionGroup actionGroup = getActionGroup(refreshAction, scrollFromSourceBtn);
-        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(PREVIEW_WINDOW_ID, actionGroup, false);
+        ActionToolbar toolbar = ActionManager.getInstance().createActionToolbar(WINDOW_ID, actionGroup, false);
         toolbar.setTargetComponent(this.inputPanel.getComponent());
         return toolbar;
     }
