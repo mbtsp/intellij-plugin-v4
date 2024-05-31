@@ -2,6 +2,7 @@ package com.antlr.report;
 
 import com.antlr.ApplicationInfo;
 import com.antlr.notify.NotifyClientKt;
+import com.antlr.plugin.PluginClient;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.DataManager;
@@ -17,6 +18,7 @@ import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
 import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
+import com.intellij.openapi.extensions.PluginDescriptor;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -34,6 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
@@ -70,6 +73,27 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
         return true;
     }
 
+    private String collectPlugins() {
+        List<PluginDescriptor> pluginDescriptors = PluginClient.INSTANCE.collectPlugin();
+        if (pluginDescriptors.isEmpty()) {
+            return null;
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (PluginDescriptor pluginDescriptor : pluginDescriptors) {
+            if (!pluginDescriptor.isEnabled()) {
+                continue;
+            }
+            stringBuilder
+                    .append(pluginDescriptor.getName())
+                    .append("(").append(pluginDescriptor.getPluginId()).append(")")
+                    .append(" ").append(pluginDescriptor.getVersion()).append(",");
+        }
+        if (stringBuilder.toString().endsWith(",")) {
+            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+        }
+        return stringBuilder.toString();
+    }
+
     private void buildErrorMsg(Project project, IdeaLoggingEvent event, Consumer<? super SubmittedReportInfo> consumer) {
         StringBuilder stringBuilder = new StringBuilder();
         String id = md5(StringKt.title(event.getThrowableText()));
@@ -91,6 +115,7 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
         stringBuilder.append("VM: ").append(vmVersion).append(" by ").append(vmVendor).append("\n");
         stringBuilder.append("Operating system: ").append(SystemInfo.getOsNameAndVersion()).append("\n");
         stringBuilder.append("Last action id: ").append(IdeaLogger.ourLastActionId).append("\n");
+        stringBuilder.append("plugins: ").append(collectPlugins()).append("\n");
         stringBuilder.append("\n");
         stringBuilder.append("## Stack Trace").append("\n");
         stringBuilder.append("```").append("\n");

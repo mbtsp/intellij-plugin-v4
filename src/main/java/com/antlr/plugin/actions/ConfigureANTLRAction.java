@@ -1,5 +1,6 @@
 package com.antlr.plugin.actions;
 
+import com.antlr.plugin.configdialogs.ConfigANTLRPerGrammar;
 import com.intellij.openapi.actionSystem.ActionUpdateThread;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -7,7 +8,6 @@ import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.antlr.plugin.configdialogs.ConfigANTLRPerGrammar;
 import org.antlr.v4.Tool;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +29,9 @@ public class ConfigureANTLRAction extends AnAction implements DumbAware {
         if (e.getProject() == null) {
             LOG.error("actionPerformed no project for " + e);
             return; // whoa!
+        }
+        if (true) {
+            throw new RuntimeException("测试");
         }
         VirtualFile grammarFile = MyActionUtils.getGrammarFileFromEvent(e);
         if (grammarFile == null) return;

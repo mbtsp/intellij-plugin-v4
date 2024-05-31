@@ -19,11 +19,11 @@ public class Issue {
     @SerializedName("html_url")
     private String htmlUrl;
     @SerializedName("id")
-    private Integer id;
+    private String id;
     @SerializedName("node_id")
     private String nodeId;
     @SerializedName("number")
-    private Integer number;
+    private String number;
     @SerializedName("title")
     private String title;
     @SerializedName("labels")
@@ -39,7 +39,7 @@ public class Issue {
     @SerializedName("milestone")
     private Object milestone;
     @SerializedName("comments")
-    private Integer comments;
+    private String comments;
     @SerializedName("created_at")
     private String createdAt;
     @SerializedName("updated_at")
@@ -64,7 +64,7 @@ public class Issue {
 
     public static class LabelsDTO {
         @SerializedName("id")
-        private Long id;
+        private String id;
         @SerializedName("node_id")
         private String nodeId;
         @SerializedName("url")
@@ -78,11 +78,11 @@ public class Issue {
         @SerializedName("description")
         private String description;
 
-        public Long getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(Long id) {
+        public void setId(String id) {
             this.id = id;
         }
 
@@ -183,11 +183,11 @@ public class Issue {
         this.htmlUrl = htmlUrl;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -199,11 +199,11 @@ public class Issue {
         this.nodeId = nodeId;
     }
 
-    public Integer getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
@@ -263,11 +263,11 @@ public class Issue {
         this.milestone = milestone;
     }
 
-    public Integer getComments() {
+    public String getComments() {
         return comments;
     }
 
-    public void setComments(Integer comments) {
+    public void setComments(String comments) {
         this.comments = comments;
     }
 

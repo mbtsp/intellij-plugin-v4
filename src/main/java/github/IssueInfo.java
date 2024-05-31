@@ -8,7 +8,7 @@ import java.util.List;
 public class IssueInfo {
 
     @SerializedName("total_count")
-    private Integer totalCount;
+    private String totalCount;
     @SerializedName("incomplete_results")
     private Boolean incompleteResults;
     @SerializedName("items")
@@ -28,11 +28,11 @@ public class IssueInfo {
         @SerializedName("html_url")
         private String htmlUrl;
         @SerializedName("id")
-        private Long id;
+        private String id;
         @SerializedName("node_id")
         private String nodeId;
         @SerializedName("number")
-        private Long number;
+        private String number;
         @SerializedName("title")
         private String title;
         @SerializedName("user")
@@ -50,7 +50,7 @@ public class IssueInfo {
         @SerializedName("milestone")
         private Object milestone;
         @SerializedName("comments")
-        private Integer comments;
+        private String comments;
         @SerializedName("created_at")
         private String createdAt;
         @SerializedName("updated_at")
@@ -131,19 +131,19 @@ public class IssueInfo {
             this.nodeId = nodeId;
         }
 
-        public Long getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(Long id) {
+        public void setId(String id) {
             this.id = id;
         }
 
-        public Long getNumber() {
+        public String getNumber() {
             return number;
         }
 
-        public void setNumber(Long number) {
+        public void setNumber(String number) {
             this.number = number;
         }
 
@@ -211,11 +211,11 @@ public class IssueInfo {
             this.milestone = milestone;
         }
 
-        public Integer getComments() {
+        public String getComments() {
             return comments;
         }
 
-        public void setComments(Integer comments) {
+        public void setComments(String comments) {
             this.comments = comments;
         }
 
@@ -311,7 +311,7 @@ public class IssueInfo {
             @SerializedName("login")
             private String login;
             @SerializedName("id")
-            private Long id;
+            private String id;
             @SerializedName("node_id")
             private String nodeId;
             @SerializedName("avatar_url")
@@ -353,11 +353,11 @@ public class IssueInfo {
                 this.login = login;
             }
 
-            public Long getId() {
+            public String getId() {
                 return id;
             }
 
-            public void setId(Long id) {
+            public void setId(String id) {
                 this.id = id;
             }
 
@@ -495,23 +495,23 @@ public class IssueInfo {
             @SerializedName("url")
             private String url;
             @SerializedName("total_count")
-            private Integer totalCount;
+            private String totalCount;
             @SerializedName("+1")
-            private Integer _$1327;// FIXME check this code
+            private String _$1327;// FIXME check this code
             @SerializedName("-1")
-            private Integer $1;
+            private String $1;
             @SerializedName("laugh")
-            private Integer laugh;
+            private String laugh;
             @SerializedName("hooray")
-            private Integer hooray;
+            private String hooray;
             @SerializedName("confused")
-            private Integer confused;
+            private String confused;
             @SerializedName("heart")
-            private Integer heart;
+            private String heart;
             @SerializedName("rocket")
-            private Integer rocket;
+            private String rocket;
             @SerializedName("eyes")
-            private Integer eyes;
+            private String eyes;
 
             public String getUrl() {
                 return url;
@@ -521,75 +521,75 @@ public class IssueInfo {
                 this.url = url;
             }
 
-            public Integer getTotalCount() {
+            public String getTotalCount() {
                 return totalCount;
             }
 
-            public void setTotalCount(Integer totalCount) {
+            public void setTotalCount(String totalCount) {
                 this.totalCount = totalCount;
             }
 
-            public Integer get_$1327() {
+            public String get_$1327() {
                 return _$1327;
             }
 
-            public void set_$1327(Integer _$1327) {
+            public void set_$1327(String _$1327) {
                 this._$1327 = _$1327;
             }
 
-            public Integer get$1() {
+            public String get$1() {
                 return $1;
             }
 
-            public void set$1(Integer $1) {
+            public void set$1(String $1) {
                 this.$1 = $1;
             }
 
-            public Integer getLaugh() {
+            public String getLaugh() {
                 return laugh;
             }
 
-            public void setLaugh(Integer laugh) {
+            public void setLaugh(String laugh) {
                 this.laugh = laugh;
             }
 
-            public Integer getHooray() {
+            public String getHooray() {
                 return hooray;
             }
 
-            public void setHooray(Integer hooray) {
+            public void setHooray(String hooray) {
                 this.hooray = hooray;
             }
 
-            public Integer getConfused() {
+            public String getConfused() {
                 return confused;
             }
 
-            public void setConfused(Integer confused) {
+            public void setConfused(String confused) {
                 this.confused = confused;
             }
 
-            public Integer getHeart() {
+            public String getHeart() {
                 return heart;
             }
 
-            public void setHeart(Integer heart) {
+            public void setHeart(String heart) {
                 this.heart = heart;
             }
 
-            public Integer getRocket() {
+            public String getRocket() {
                 return rocket;
             }
 
-            public void setRocket(Integer rocket) {
+            public void setRocket(String rocket) {
                 this.rocket = rocket;
             }
 
-            public Integer getEyes() {
+            public String getEyes() {
                 return eyes;
             }
 
-            public void setEyes(Integer eyes) {
+            public void setEyes(String eyes) {
                 this.eyes = eyes;
             }
         }
@@ -597,7 +597,7 @@ public class IssueInfo {
 
         public static class LabelsDTO {
             @SerializedName("id")
-            private Long id;
+            private String id;
             @SerializedName("node_id")
             private String nodeId;
             @SerializedName("url")
@@ -611,11 +611,11 @@ public class IssueInfo {
             @SerializedName("description")
             private String description;
 
-            public Long getId() {
+            public String getId() {
                 return id;
             }
 
-            public void setId(Long id) {
+            public void setId(String id) {
                 this.id = id;
             }
 
@@ -669,11 +669,11 @@ public class IssueInfo {
         }
     }
 
-    public Integer getTotalCount() {
+    public String getTotalCount() {
         return totalCount;
     }
 
-    public void setTotalCount(Integer totalCount) {
+    public void setTotalCount(String totalCount) {
         this.totalCount = totalCount;
     }
 

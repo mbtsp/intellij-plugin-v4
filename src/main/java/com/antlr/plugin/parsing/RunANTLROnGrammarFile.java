@@ -206,7 +206,9 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         if (grammarProperties != null) {
             package_ = grammarProperties.getPackage();
         }
-        if (isBlank(package_) && !hasPackageDeclarationInHeader(project, vfile)) {
+        if (isBlank(package_) && !hasPackageDeclarationInHeader(project, vfile) && vfile.getParent() != null) {
+//            final String packageName = PackageIndex.getInstance(myProject).getPackageNameByDirectory(containingDirectory);
+            
             package_ = ProjectRootManager.getInstance(project).getFileIndex().getPackageNameByDirectory(vfile.getParent());
         }
         if (isNotBlank(package_)) {
