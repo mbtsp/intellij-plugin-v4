@@ -1,5 +1,7 @@
 package github;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +40,7 @@ public class GitHubDeviceAuthApis {
         HttpClientResponse<IssueInfo> httpClientResponse = httpClient.get(url, params, IssueInfo.class);
         if (httpClientResponse.isStatus()) {
             IssueInfo issueInfo = httpClientResponse.getBody();
-            if (issueInfo != null && issueInfo.getTotalCount() != null && issueInfo.getTotalCount() != 0) {
+            if (issueInfo != null && StringUtils.isNotBlank(issueInfo.getTotalCount())) {
                 List<IssueInfo.ItemsDTO> itemsDTOS = issueInfo.getItems();
                 if (itemsDTOS != null && !itemsDTOS.isEmpty()) {
                     return itemsDTOS.get(0);
