@@ -637,7 +637,7 @@ public class ANTLRv4PluginController {
                 }
 
                 if (modified) {
-                    ApplicationManager.getApplication().invokeLater(() -> {
+                    ApplicationManager.getApplication().runWriteAction(() -> {
                         PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
                         FileDocumentManager docMgr = FileDocumentManager.getInstance();
                         if (event.getOldFile() != null) {
