@@ -493,13 +493,16 @@ public class ANTLRv4PluginController {
     }
 
     public static void showLaterConsoleWindow(final Project project, Runnable runnable) {
+        if (project.isDisposed()) {
+            return;
+        }
         ApplicationManager.getApplication().invokeLater(
                 () -> {
                     ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(ConsoleToolWindow.WINDOW_ID);
                     if (toolWindow != null) {
-                        if(!toolWindow.isVisible()){
+                        if (!toolWindow.isVisible()) {
                             toolWindow.show(runnable);
-                        }else{
+                        } else {
                             if (runnable != null) {
                                 runnable.run();
                             }
@@ -637,19 +640,25 @@ public class ANTLRv4PluginController {
                 }
 
                 if (modified) {
-                    ApplicationManager.getApplication().runWriteAction(() -> {
-                        PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
-                        FileDocumentManager docMgr = FileDocumentManager.getInstance();
-                        if (event.getOldFile() != null) {
-                            Document doc = docMgr.getDocument(event.getOldFile());
-                            if (doc != null) {
-                                if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc)) {
-                                    psiMgr.commitDocument(doc);
-                                    docMgr.saveDocument(doc);
+                    new Task.Backgroundable(project, "Commit document") {
+                        @Override
+                        public void run(@NotNull ProgressIndicator progressIndicator) {
+                            ApplicationManager.getApplication().invokeLater(() -> {
+                                PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
+                                FileDocumentManager docMgr = FileDocumentManager.getInstance();
+                                if (event.getOldFile() != null) {
+                                    Document doc = docMgr.getDocument(event.getOldFile());
+                                    if (doc != null) {
+                                        if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc)) {
+                                            psiMgr.commitDocument(doc);
+                                            docMgr.saveDocument(doc);
+                                        }
+                                    }
                                 }
-                            }
+                            });
                         }
-                    });
+                    }.queue();
+
 
                 }
                 currentEditorFileChangedEvent(ANTLRv4PluginController.this.project, event.getOldFile(), event.getNewFile(), modified);
