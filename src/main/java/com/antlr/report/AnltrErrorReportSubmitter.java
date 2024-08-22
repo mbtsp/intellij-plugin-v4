@@ -2,7 +2,6 @@ package com.antlr.report;
 
 import com.antlr.ApplicationInfo;
 import com.antlr.notify.NotifyClientKt;
-import com.antlr.plugin.PluginClient;
 import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.DataManager;

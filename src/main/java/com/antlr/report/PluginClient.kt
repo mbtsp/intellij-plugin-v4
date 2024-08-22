@@ -1,4 +1,4 @@
-package com.antlr.plugin
+package com.antlr.report
 
 import com.intellij.ide.plugins.IdeaPluginDescriptor
 import com.intellij.ide.plugins.PluginManager

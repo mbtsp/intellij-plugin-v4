@@ -1,4 +1,4 @@
-package com.antlr.plugin;
+package com.antlr.util;
 
 import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.util.IconLoader;
