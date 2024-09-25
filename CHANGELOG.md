@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [2024.2.0]
+### Fixed
+- [Fix some bugs](https://github.com/mbtsp/intellij-plugin-v4/milestone/8?closed=1)
+- Adapted to 2024.3
+
+
 ## [2024.1.9]
 ### Fixed
 - [Fix some bugs](https://github.com/mbtsp/intellij-plugin-v4/milestone/7?closed=1)
