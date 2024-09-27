@@ -30,9 +30,6 @@ public class ConfigureANTLRAction extends AnAction implements DumbAware {
             LOG.error("actionPerformed no project for " + e);
             return; // whoa!
         }
-        if (true) {
-            throw new RuntimeException("测试");
-        }
         VirtualFile grammarFile = MyActionUtils.getGrammarFileFromEvent(e);
         if (grammarFile == null) return;
         LOG.info("actionPerformed " + grammarFile);
