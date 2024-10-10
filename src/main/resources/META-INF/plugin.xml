@@ -139,11 +139,11 @@ For really big files and slow grammars, there is an appreciable delay when displ
         <indexPatternBuilder id="antlr.new.index.pattern.builder" implementation="com.antlr.language.psi.AntlrIndexPatternBuilder"/>
         <lang.braceMatcher id="antlr.new.lang,brace.matcher" language="Antlr-Tool"
                            implementationClass="com.antlr.language.editor.AntlrBraceMatcher"/>
-        <colorSettingsPage id="antlr.new.color.setting.page" implementation="com.antlr.plugin.configdialogs.ANTLRv4ColorsPage"/>
+        <colorSettingsPage id="antlr.new.color.setting.page" implementation="com.antlr.setting.configdialogs.AntlrColorsPage"/>
         <additionalTextAttributes scheme="Default" file="colorSchemes/ANTLRv4Default.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/ANTLRv4Darcula.xml"/>
         <lang.parserDefinition id="antlr.new.lang.parser.definition" language="Antlr-Tool"
-                               implementationClass="com.antlr.plugin.ANTLRv4ParserDefinition"/>
+                               implementationClass="com.antlr.language.AntlrParserDefinition"/>
         <lang.ast.factory id="antlr.new.lang.ast.factory" language="Antlr-Tool" implementationClass="com.antlr.plugin.ANTLRv4ASTFactory"/>
         <lang.psiStructureViewFactory id="antlr.new.lang.psi.structure.view.factory" language="Antlr-Tool"
                                       implementationClass="com.antlr.plugin.structview.ANTLRv4StructureViewFactory"/>

@@ -4,7 +4,7 @@ import com.intellij.extapi.psi.PsiFileBase
 import com.intellij.openapi.fileTypes.FileType
 import com.intellij.psi.FileViewProvider
 
-class AntlrFileRoot(viewProvider: FileViewProvider) : PsiFileBase(viewProvider,AntlrFileLanguage.INSTANCE) {
+class AntlrFileRoot(viewProvider: FileViewProvider) : PsiFileBase(viewProvider,AntlrLanguage.INSTANCE) {
     override fun getFileType(): FileType {
         return AntlrFileType.INSTANCE
     }

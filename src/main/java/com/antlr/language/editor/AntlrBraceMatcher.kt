@@ -1,7 +1,7 @@
 package com.antlr.language.editor
 
 import com.antlr.language.ANTLRv4Lexer.*
-import com.antlr.language.ANTLRv4TokenTypes.getTokenElementType
+import com.antlr.language.AntlrTokenTypes.getTokenElementType
 import com.intellij.lang.BracePair
 import com.intellij.lang.PairedBraceMatcher
 import com.intellij.psi.PsiFile

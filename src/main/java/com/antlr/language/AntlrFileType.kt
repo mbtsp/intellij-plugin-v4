@@ -7,7 +7,7 @@ import com.intellij.openapi.util.NlsSafe
 import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
-class AntlrFileType : LanguageFileType(AntlrFileLanguage.INSTANCE) {
+class AntlrFileType : LanguageFileType(AntlrLanguage.INSTANCE) {
     companion object {
         val INSTANCE = AntlrFileType()
     }

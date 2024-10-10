@@ -1,6 +1,6 @@
 package com.antlr.language
 
-import com.antlr.language.AntlrFileLanguage.Companion.INSTANCE
+import com.antlr.language.AntlrLanguage.Companion.INSTANCE
 import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.TokenSet
 import org.antlr.intellij.adaptor.lexer.PSIElementTypeFactory
@@ -8,7 +8,7 @@ import org.antlr.intellij.adaptor.lexer.RuleIElementType
 import org.antlr.intellij.adaptor.lexer.TokenIElementType
 import org.intellij.lang.annotations.MagicConstant
 
-object ANTLRv4TokenTypes {
+object AntlrTokenTypes {
     var BAD_TOKEN_TYPE: IElementType = IElementType("BAD_TOKEN", INSTANCE)
     val TOKEN_ELEMENT_TYPES: MutableList<TokenIElementType> =
         PSIElementTypeFactory.getTokenIElementTypes(INSTANCE)

@@ -1,7 +1,7 @@
 package com.antlr.language.adaptor
 
 import com.antlr.language.ANTLRv4Lexer
-import com.antlr.language.AntlrFileLanguage
+import com.antlr.language.AntlrLanguage
 import com.intellij.lang.Language
 import org.antlr.intellij.adaptor.lexer.ANTLRLexerAdaptor
 import org.antlr.intellij.adaptor.lexer.ANTLRLexerState
@@ -15,7 +15,7 @@ class AntlrToolLexerAdaptor(lexer:ANTLRv4Lexer)
  * @param language The language.
  * @param lexer    The underlying ANTLR lexer.
  */
-    : ANTLRLexerAdaptor(AntlrFileLanguage.INSTANCE, lexer){
+    : ANTLRLexerAdaptor(AntlrLanguage.INSTANCE, lexer){
     override fun getInitialState(): ANTLRLexerState? {
         return AntlrLexerState(Lexer.DEFAULT_TOKEN_CHANNEL,null,0)
     }

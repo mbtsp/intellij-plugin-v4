@@ -1,7 +1,7 @@
 package com.antlr.language.psi
 
 import com.antlr.language.ANTLRv4Lexer
-import com.antlr.language.ANTLRv4TokenTypes.getTokenElementType
+import com.antlr.language.AntlrTokenTypes.getTokenElementType
 import com.antlr.language.AntlrFileRoot
 import com.antlr.language.adaptor.AntlrToolLexerAdaptor
 import com.intellij.lexer.Lexer
