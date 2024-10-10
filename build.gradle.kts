@@ -26,6 +26,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
+sourceSets["main"].java.srcDirs("src/main/gen")
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
 kotlin {
     jvmToolchain(17)
@@ -64,10 +65,10 @@ tasks {
     wrapper {
         gradleVersion = properties("gradleVersion").get()
     }
-    generateGrammarSource {
-        include("**/ANTLRv4*.g4")
-        arguments="-package,com.antlr.plugin.parser,-lib,src/main/antlr/com/antlr/plugin/parser,-Xexact-output-dir".split(",")
-    }
+//    generateGrammarSource {
+//        include("**/ANTLRv4*.g4")
+//        arguments="-package,com.antlr.language.parser,-lib,src/main/antlr/com/antlr/language/parser,-Xexact-output-dir".split(",")
+//    }
 
     patchPluginXml {
         version = properties("pluginVersion")
