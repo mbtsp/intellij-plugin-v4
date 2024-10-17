@@ -15,40 +15,13 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.tree.IFileElementType
 
 class AntlrASTFactory : ASTFactory() {
-    /** Create a FileElement for root or a parse tree CompositeElement (not
-     * PSI) for the token. This impl is more or less the default.
-     */
-    override fun createComposite(type: IElementType): CompositeElement? {
-        if (type is IFileElementType) {
-            return FileElement(type, null)
-        }
-        return CompositeElement(type)
-    }
-
-    /** Create PSI nodes out of tokens so even parse tree sees them as such.
-     * Does not see whitespace tokens.
-     */
-    override fun createLeaf(type: IElementType, text: CharSequence): LeafElement? {
-        val t = if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.RULE_REF]) {
-            ParserRuleRefNode(type, text)
-        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.TOKEN_REF]) {
-            LexerRuleRefNode(type, text)
-        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.STRING_LITERAL]) {
-            StringLiteralElement(type, text)
-        } else {
-            LeafPsiElement(type, text)
-        }
-        return t
-    }
-
     companion object {
         private val ruleElementTypeToPsiFactory: MutableMap<IElementType?, PsiElementFactory?> =
             HashMap<IElementType?, PsiElementFactory?>()
-
         init {
             // later auto gen with tokens from some spec in grammar?
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES.get(ANTLRv4Parser.RULE_rules),
+                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_rules],
                 RulesNode.Factory.INSTANCE
             )
             ruleElementTypeToPsiFactory.put(
@@ -85,4 +58,31 @@ class AntlrASTFactory : ASTFactory() {
             return t
         }
     }
+    /** Create a FileElement for root or a parse tree CompositeElement (not
+     * PSI) for the token. This impl is more or less the default.
+     */
+    override fun createComposite(type: IElementType): CompositeElement? {
+        if (type is IFileElementType) {
+            return FileElement(type, null)
+        }
+        return CompositeElement(type)
+    }
+
+    /** Create PSI nodes out of tokens so even parse tree sees them as such.
+     * Does not see whitespace tokens.
+     */
+    override fun createLeaf(type: IElementType, text: CharSequence): LeafElement? {
+        val t = if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.RULE_REF]) {
+            ParserRuleRefNode(type, text)
+        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.TOKEN_REF]) {
+            LexerRuleRefNode(type, text)
+        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.STRING_LITERAL]) {
+            StringLiteralElement(type, text)
+        } else {
+            LeafPsiElement(type, text)
+        }
+        return t
+    }
+
+
 }

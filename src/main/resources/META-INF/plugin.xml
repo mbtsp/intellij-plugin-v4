@@ -144,28 +144,28 @@ For really big files and slow grammars, there is an appreciable delay when displ
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/ANTLRv4Darcula.xml"/>
         <lang.parserDefinition id="antlr.new.lang.parser.definition" language="Antlr-Tool"
                                implementationClass="com.antlr.language.AntlrParserDefinition"/>
-        <lang.ast.factory id="antlr.new.lang.ast.factory" language="Antlr-Tool" implementationClass="com.antlr.plugin.ANTLRv4ASTFactory"/>
+        <lang.ast.factory id="antlr.new.lang.ast.factory" language="Antlr-Tool" implementationClass="com.antlr.language.psi.AntlrASTFactory"/>
         <lang.psiStructureViewFactory id="antlr.new.lang.psi.structure.view.factory" language="Antlr-Tool"
-                                      implementationClass="com.antlr.plugin.structview.ANTLRv4StructureViewFactory"/>
+                                      implementationClass="com.antlr.language.structView.AntlrStructureViewFactory"/>
         <lang.foldingBuilder id="antlr.new.lang.folding.builder" language="Antlr-Tool"
-                             implementationClass="com.antlr.plugin.folding.ANTLRv4FoldingBuilder"/>
-        <iconProvider id="antlr.new.icon.provider"  implementation="com.antlr.plugin.ANTLRv4IconProvider"/>
+                             implementationClass="com.antlr.language.folding.AntlrFoldingBuilder"/>
+        <iconProvider id="antlr.new.icon.provider"  implementation="com.antlr.language.AntlrIconProvider"/>
 
-        <externalAnnotator  id="antlr.new.external.annotator" language="Antlr-Tool" implementationClass="com.antlr.plugin.ANTLRv4ExternalAnnotator"/>
+        <externalAnnotator  id="antlr.new.external.annotator" language="Antlr-Tool" implementationClass="com.antlr.language.AntlrExternalAnnotator"/>
         <lang.findUsagesProvider id="antlr.new.lang.find.useges.provider" language="Antlr-Tool"
-                                 implementationClass="com.antlr.plugin.ANTLRv4FindUsagesProvider"/>
+                                 implementationClass="com.antlr.provider.AntlrFindUsagesProvider"/>
 
         <defaultLiveTemplates file="/liveTemplates/lexer/user.xml"/>
-        <liveTemplateContext id="antlr.new.live.template.antlr.gerner.context" implementation="com.antlr.plugin.templates.ANTLRGenericContext"
+        <liveTemplateContext id="antlr.new.live.template.antlr.gerner.context" implementation="com.antlr.templates.AntlrGenericContext"
                              contextId="ANTLR-Tool"/>
-        <liveTemplateContext id="antlr.new.live.template.outside.rule.context" implementation="com.antlr.plugin.templates.OutsideRuleContext"
+        <liveTemplateContext id="antlr.new.live.template.outside.rule.context" implementation="com.antlr.templates.OutsideRuleContext"
                              contextId="ANTLR_OUTSIDE-Tool"/>
         <projectConfigurable groupId="language"
                              id="antlr.new.intellij.plugin.configdialogs.ANTLRv4ProjectSettings"
                              displayName="ANTLR V4 Default Project Settings"
-                             instance="com.antlr.plugin.configdialogs.ANTLRv4ProjectSettings"/>
+                             instance="com.antlr.setting.configdialogs.ANTLRv4ProjectSettings"/>
         <projectService id="antlr.new.antlr.grammar.propertioes.component"
-                serviceImplementation="com.antlr.plugin.configdialogs.ANTLRv4ToolGrammarPropertiesComponent"/>
+                serviceImplementation="com.antlr.setting.configdialogs.AntlrToolGrammarPropertiesComponent"/>
         <lang.refactoringSupport  id="antlr.new.refactoring.support" language="Antlr-Tool"
                                  implementationClass="com.antlr.plugin.refactor.ANTLRv4RefactoringSupport"/>
 
