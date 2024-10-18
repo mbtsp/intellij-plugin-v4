@@ -134,8 +134,8 @@ class AntlrGrammarProperties : Cloneable {
         return caseChangingStrategy
     }
 
-//    companion object {
-//        const val PROP_LANGUAGE: String = "language"
-//        const val PROJECT_SETTINGS_PREFIX: String = "*"
-//    }
+    companion object {
+        const val PROP_LANGUAGE: String = "language"
+        const val PROJECT_SETTINGS_PREFIX: String = "*"
+    }
 }

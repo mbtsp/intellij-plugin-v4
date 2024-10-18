@@ -45,18 +45,18 @@ public class AntlrSettingPanel {
 
     }
 
-    private void initFileds(Project project, String qualFileName) {
+    private void initFileds(Project project, String quailFileName) {
         FileChooserDescriptor fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor();
         outputDirField.addActionListener(new ComponentWithBrowseButton.BrowseFolderActionListener<>("Select Output Dir", null, outputDirField, project, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT));
         outputDirField.setTextFieldPreferredWidth(50);
 
         libDirField.addActionListener(new ComponentWithBrowseButton.BrowseFolderActionListener<>("Select Lib Dir", null, outputDirField, project, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT));
         libDirField.setTextFieldPreferredWidth(50);
-        initData(project, qualFileName);
+        initData(project, quailFileName);
     }
 
-    private void initData(Project project, String qualFileName) {
-        AntlrGrammarProperties antlrGrammarProperties = AntlrToolGrammarPropertiesStore.Companion.getGrammarProperties(project, qualFileName);
+    public void initData(Project project, String quailFileName) {
+        AntlrGrammarProperties antlrGrammarProperties = AntlrToolGrammarPropertiesStore.Companion.getGrammarProperties(project, quailFileName);
         if (antlrGrammarProperties != null) {
             autoGenerateParsersUponCheckBox.setSelected(antlrGrammarProperties.shouldAutoGenerateParser());
             outputDirField.setText(antlrGrammarProperties.getOutputDir());
@@ -86,7 +86,7 @@ public class AntlrSettingPanel {
         grammarProperties.generateVisitor = generateParseTreeVisitorCheckBox.isSelected();
     }
 
-    boolean isModified(AntlrGrammarProperties originalProperties) {
+    public boolean isModified(AntlrGrammarProperties originalProperties) {
         return !Objects.equals(originalProperties.getOutputDir(), outputDirField.getText())
                 || !Objects.equals(originalProperties.getLibDir(), libDirField.getText())
                 || !Objects.equals(originalProperties.getEncoding(), fileEncodingField.getText())

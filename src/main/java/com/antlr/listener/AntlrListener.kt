@@ -12,4 +12,6 @@ interface AntlrListener {
     fun autoRefreshPreview(virtualFile: VirtualFile)
 
     fun print(msg: String, contentType: ConsoleViewContentType)
+
+    fun activeConsoleView()
 }

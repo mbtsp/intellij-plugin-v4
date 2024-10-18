@@ -41,7 +41,7 @@ import java.util.Properties;
 
 import static com.ssh.report.StringKt.md5;
 
-public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
+public class AntlrErrorReportSubmitter extends ErrorReportSubmitter {
     @Override
     public @NotNull String getReportActionText() {
         return "Report to Developer";

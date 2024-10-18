@@ -1,5 +1,6 @@
 package com.antlr.language.psrsing;
 
+import com.antlr.setting.configdialogs.AntlrGrammarProperties;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -65,7 +66,7 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
     @Override
     public void run(@NotNull ProgressIndicator indicator) {
         indicator.setIndeterminate(true);
-        ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, grammarFile);
+        AntlrGrammarProperties grammarProperties = getGrammarProperties(project, grammarFile);
         boolean autogen = false;
         if (grammarProperties != null) {
             autogen = grammarProperties.shouldAutoGenerateParser();
@@ -91,7 +92,7 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
     }
 
     // TODO: lots of duplication with antlr() function.
-    private boolean isGrammarStale(ANTLRv4GrammarProperties grammarProperties) {
+    private boolean isGrammarStale(AntlrGrammarProperties grammarProperties) {
         String sourcePath = grammarProperties.resolveLibDir(project, getParentDir(grammarFile));
         String fullyQualifiedInputFileName = sourcePath + File.separator + grammarFile.getName();
 
