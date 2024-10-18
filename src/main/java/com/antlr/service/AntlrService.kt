@@ -45,19 +45,26 @@ class AntlrService(private val project: Project) {
 
     val logger = Logger.getInstance(AntlrService::class.java)
     val PACKAGE_DEFINITION_REGEX = Pattern.compile("package\\s+[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+[0-9a-z_];");
-    fun generateCode(virtualFile: VirtualFile, forceGenerateCode: Boolean): String {
+    fun generateCode(virtualFile: VirtualFile, forceGenerateCode: Boolean) {
         val antlrGrammarProperties = AntlrToolGrammarPropertiesStore.getGrammarProperties(project, virtualFile)
         var autoGen = false
         if (antlrGrammarProperties != null) {
             autoGen = antlrGrammarProperties.autoGen
         }
         if (forceGenerateCode || autoGen && isGrammarFile(virtualFile)) {
-            ReadAction.run(object :ThrowableRunnable(){
-
-            })
-
+            ReadAction.run<RuntimeException> {
+                antlr(virtualFile)
+            }
+            return
         }
-
+        val previewState=previewState(virtualFile)
+        if(previewState.g==null && previewState.lg!=null) {
+            val grammar =previewState.lg
+            val language =grammar?.getOptionString(AntlrGrammarProperties.PROP_LANGUAGE)
+            val tool = ParsingUtils.createANTLRToolForLoadingGrammars(AntlrToolGrammarPropertiesStore.getGrammarProperties(project,virtualFile))
+            val gen = CodeGenerator.create(tool,grammar,language)
+            gen.writeVocabFile()
+        }
     }
 
     fun antlr(virtualFile: VirtualFile) {
