@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NonNls
 /** Root of lexer, parser rule defs  */
 abstract class RuleSpecNode(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner {
     protected var name: String? = null // an override to input text ID
-
     override fun getName(): String? {
         if (name != null) return name
         val id = getNameIdentifier()

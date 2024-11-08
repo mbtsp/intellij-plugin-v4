@@ -11,7 +11,11 @@ import com.intellij.psi.util.PsiTreeUtil
  */
 class ChannelSpecNode(node: ASTNode) : RuleSpecNode(node) {
     public override fun getNameIdentifier(): GrammarElementRefNode? {
-        return PsiTreeUtil.getChildOfType<LexerRuleRefNode?>(this, LexerRuleRefNode::class.java)
+        return PsiTreeUtil.getChildOfType(this, LexerRuleRefNode::class.java)
+    }
+
+    override fun getName(): String? {
+        return super.getName()
     }
 
     override val ruleRefType: IElementType

@@ -17,13 +17,13 @@ class AntlrToolLexerAdaptor(lexer:ANTLRv4Lexer)
  */
     : ANTLRLexerAdaptor(AntlrLanguage.INSTANCE, lexer){
     override fun getInitialState(): ANTLRLexerState? {
-        return AntlrLexerState(Lexer.DEFAULT_TOKEN_CHANNEL,null,0)
+        return MyAntlrLexerState(Lexer.DEFAULT_TOKEN_CHANNEL,null,0)
     }
 
     override fun getLexerState(lexer: Lexer): ANTLRLexerState? {
         if(lexer._modeStack.isEmpty){
-            return AntlrLexerState(lexer._mode,null,(lexer as ANTLRv4Lexer).currentRuleType)
+            return MyAntlrLexerState(lexer._mode,null,(lexer as ANTLRv4Lexer).currentRuleType)
         }
-        return AntlrLexerState(lexer._mode,lexer._modeStack,(lexer as ANTLRv4Lexer).currentRuleType)
+        return MyAntlrLexerState(lexer._mode,lexer._modeStack,(lexer as ANTLRv4Lexer).currentRuleType)
     }
 }

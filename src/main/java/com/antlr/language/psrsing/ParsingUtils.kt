@@ -40,8 +40,8 @@ import java.util.concurrent.atomic.AtomicReference
 
 object ParsingUtils {
     private val LOG = Logger.getInstance(ParsingUtils::class.java)
-    var BAD_PARSER_GRAMMAR: Grammar? = null
-    var BAD_LEXER_GRAMMAR: LexerGrammar? = null
+    private var BAD_PARSER_GRAMMAR: Grammar? = null
+    private var BAD_LEXER_GRAMMAR: LexerGrammar? = null
 
     init {
         try {
@@ -55,21 +55,15 @@ object ParsingUtils {
     }
 
     fun nextRealToken(tokens: CommonTokenStream, i: Int): Token? {
-        var i = i
+        var i:Int = i
         val n = tokens.size()
         i++ // search after current i token
         if (i >= n || i < 0) return null
         var t = tokens.get(i)
         while (t.channel != Token.DEFAULT_CHANNEL) {  // Parser must parse tokens on DEFAULT_CHANNEL
             if (t.type == Token.EOF) {
-                val tokenSource = tokens.getTokenSource()
-                if (tokenSource == null) {
-                    return CommonToken(Token.EOF, "EOF")
-                }
-                val tokenFactory = tokenSource.tokenFactory
-                if (tokenFactory == null) {
-                    return CommonToken(Token.EOF, "EOF")
-                }
+                val tokenSource = tokens.tokenSource ?: return CommonToken(Token.EOF, "EOF")
+                val tokenFactory = tokenSource.tokenFactory ?: return CommonToken(Token.EOF, "EOF")
                 return tokenFactory.create(Token.EOF, "EOF")
             }
             i++
@@ -95,7 +89,7 @@ object ParsingUtils {
     }
 
     fun getTokenUnderCursor(previewState: PreviewState?, offset: Int): Token? {
-        if (previewState == null || previewState.parsingResult == null) return null
+        if (previewState?.parsingResult == null) return null
 
         val parser = previewState.parsingResult!!.parser as PreviewParser
         val tokenStream = parser.inputStream as CommonTokenStream
@@ -108,14 +102,14 @@ object ParsingUtils {
             if (a.startIndex > b.stopIndex) return@Comparator 1
             0
         }
-        if (offset < 0 || offset >= tokens.getTokenSource().inputStream.size()) return null
+        if (offset < 0 || offset >= tokens.tokenSource.inputStream.size()) return null
         val key = CommonToken(Token.INVALID_TYPE, "")
         key.startIndex = offset
         key.stopIndex = offset
-        val tokenList = tokens.getTokens()
+        val tokenList = tokens.tokens
         var tokenUnderCursor: Token? = null
-        val i = Collections.binarySearch<Token?>(tokenList, key, cmp)
-        if (i >= 0) tokenUnderCursor = tokenList.get(i)
+        val i = Collections.binarySearch(tokenList, key, cmp)
+        if (i >= 0) tokenUnderCursor = tokenList[i]
         return tokenUnderCursor
     }
 
@@ -124,21 +118,21 @@ object ParsingUtils {
     [78] = {org.antlr.v4.runtime.CommonToken@16709}"[@78,270:273='java',<100>,9:7]"
      */
     fun getSkippedTokenUnderCursor(tokens: CommonTokenStream, offset: Int): Token? {
-        if (offset < 0 || offset >= tokens.getTokenSource().inputStream.size()) return null
+        if (offset < 0 || offset >= tokens.tokenSource.inputStream.size()) return null
         var prevToken: Token? = null
         var tokenUnderCursor: Token? = null
-        for (t in tokens.getTokens()) {
+        for (t in tokens.tokens) {
             val begin = t.startIndex
             val end = t.stopIndex
             if ((prevToken == null || offset > prevToken.stopIndex) && offset < begin) {
                 // found in between
-                val tokenSource = tokens.getTokenSource()
+                val tokenSource = tokens.tokenSource
                 var inputStream: CharStream? = null
                 if (tokenSource != null) {
                     inputStream = tokenSource.inputStream
                 }
                 tokenUnderCursor = CommonToken(
-                    Pair<TokenSource?, CharStream?>(tokenSource, inputStream),
+                    Pair(tokenSource, inputStream),
                     Token.INVALID_TYPE,
                     -1,
                     if (prevToken != null) prevToken.stopIndex + 1 else 0,
@@ -146,7 +140,7 @@ object ParsingUtils {
                 )
                 break
             }
-            if (offset >= begin && offset <= end) {
+            if (offset in begin..end) {
                 tokenUnderCursor = t
                 break
             }
@@ -249,9 +243,7 @@ object ParsingUtils {
         parser.addErrorListener(syntaxErrorListener)
 
         val start = g.getRule(startRuleName)
-        if (start == null) {
-            return null // can't find start rule
-        }
+            ?: return null // can't find start rule
         val t: ParseTree? = parser.parse(start.index)
 
         if (t != null) {
@@ -283,7 +275,7 @@ object ParsingUtils {
         }
         LOG.info("loadGrammars " + grammarFile.path + " " + project.name)
         val antlr = createANTLRToolForLoadingGrammars(getGrammarProperties(project, grammarFile))
-        val listener = antlr.getListeners()[0] as LoadGrammarsToolListener
+        val listener = antlr.listeners[0] as LoadGrammarsToolListener
 
         val g = loadGrammar(grammarFile, antlr)
         if (g == null) {
@@ -303,8 +295,8 @@ object ParsingUtils {
         }
 
         antlr.process(g, false)
-        if (!listener.grammarErrorMessages.isEmpty()) {
-            val msg = Utils.join<String>(listener.grammarErrorMessages.iterator(), "\n")
+        if (listener.grammarErrorMessages.isNotEmpty()) {
+            val msg = Utils.join(listener.grammarErrorMessages.iterator(), "\n")
             project.messageBus.syncPublisher(AntlrListener.TOPIC).print(msg + "\n", ConsoleViewContentType.ERROR_OUTPUT)
             return null // upon error, bail
         }
@@ -314,13 +306,13 @@ object ParsingUtils {
         when (g.type) {
             ANTLRParser.PARSER -> {
                 LOG.info("loadGrammars parser " + g.name)
-                return arrayOf<Grammar?>(lg, g)
+                return arrayOf(lg, g)
             }
 
             ANTLRParser.LEXER -> {
                 LOG.info("loadGrammars lexer " + g.name)
                 lg = g as LexerGrammar
-                return arrayOf<Grammar?>(lg, null)
+                return arrayOf(lg, null)
             }
 
             ANTLRParser.COMBINED -> {
@@ -329,7 +321,7 @@ object ParsingUtils {
                     lg = BAD_LEXER_GRAMMAR
                 }
                 LOG.info("loadGrammars combined: " + lg!!.name + ", " + g.name)
-                return arrayOf<Grammar?>(lg, g)
+                return arrayOf(lg, g)
             }
         }
         LOG.info("loadGrammars invalid grammar type " + g.typeString + " for " + g.name)
@@ -345,10 +337,7 @@ object ParsingUtils {
     private fun loadGrammar(grammarFile: VirtualFile, antlr: Tool): Grammar? {
         // basically here I am mimicking the loadGrammar() method from Tool
         // so that I can check for an empty AST coming back.
-        val grammarRootAST = parseGrammar(antlr, grammarFile)
-        if (grammarRootAST == null) {
-            return null
-        }
+        val grammarRootAST = parseGrammar(antlr, grammarFile) ?: return null
 
         // Create a grammar from the AST so we can figure out what type it is
         val g = antlr.createGrammar(grammarRootAST)
@@ -357,23 +346,23 @@ object ParsingUtils {
         return g
     }
 
-    fun parseGrammar(antlr: Tool, grammarFile: VirtualFile): GrammarRootAST? {
+    private fun parseGrammar(antlr: Tool, grammarFile: VirtualFile): GrammarRootAST? {
         val atomicReference = AtomicReference<GrammarRootAST?>(null)
         val countDownLatch = CountDownLatch(1)
         val documentAtomicReference = AtomicReference<Document?>()
-        ApplicationManager.getApplication().runReadAction(Runnable {
+        ApplicationManager.getApplication().runReadAction {
             try {
                 val document = FileDocumentManager.getInstance().getDocument(grammarFile)
                 documentAtomicReference.set(document)
             } catch (e: Exception) {
                 documentAtomicReference.set(null)
             }
-        })
+        }
         if (documentAtomicReference.get() == null) {
             return atomicReference.get()
         }
 
-        ApplicationManager.getApplication().executeOnPooledThread(Runnable {
+        ApplicationManager.getApplication().executeOnPooledThread {
             try {
                 val grammarText =
                     if (documentAtomicReference.get() != null) documentAtomicReference.get()!!.text else String(
@@ -387,7 +376,7 @@ object ParsingUtils {
             } finally {
                 countDownLatch.countDown()
             }
-        })
+        }
         try {
             countDownLatch.await()
         } catch (_: InterruptedException) {
@@ -402,9 +391,9 @@ object ParsingUtils {
      * XLexer given XParser.g4 filename or
      * XLexer given grammar name X
      */
-    fun loadLexerGrammarFor(g: Grammar, project: Project): LexerGrammar? {
+    private fun loadLexerGrammarFor(g: Grammar, project: Project): LexerGrammar? {
         val antlr = createANTLRToolForLoadingGrammars(getGrammarProperties(project, g.fileName))
-        val listener = antlr.getListeners()[0] as LoadGrammarsToolListener
+        val listener = antlr.listeners[0] as LoadGrammarsToolListener
         var lg: LexerGrammar? = null
         val lexerGrammarFile: VirtualFile?
 
@@ -433,14 +422,14 @@ object ParsingUtils {
                 LOG.error("File $lexerGrammarFile isn't a lexer grammar", cce)
             } catch (e: Exception) {
                 var msg: String? = null
-                if (!listener.grammarErrorMessages.isEmpty()) {
+                if (listener.grammarErrorMessages.isNotEmpty()) {
                     msg = ": " + listener.grammarErrorMessages
                 }
                 LOG.error("File $lexerGrammarFile couldn't be parsed as a lexer grammar$msg", e)
             }
-            if (!listener.grammarErrorMessages.isEmpty()) {
+            if (listener.grammarErrorMessages.isNotEmpty()) {
                 lg = null
-                val msg = Utils.join<String>(listener.grammarErrorMessages.iterator(), "\n")
+                val msg = Utils.join(listener.grammarErrorMessages.iterator(), "\n")
                 project.messageBus.syncPublisher(AntlrListener.TOPIC)
                     .print(msg + "\n", ConsoleViewContentType.ERROR_OUTPUT)
             }
@@ -467,9 +456,8 @@ object ParsingUtils {
 
     fun findOverriddenDecisionRoot(ctx: Tree?): Tree? {
         return Trees.findNodeSuchThat(
-            ctx,
-            Predicate { t: Tree? -> t is PreviewInterpreterRuleContext && t.isDecisionOverrideRoot() }
-        )
+            ctx
+        ) { t: Tree? -> t is PreviewInterpreterRuleContext && t.isDecisionOverrideRoot() }
     }
 
     fun getAllLeaves(t: Tree): MutableList<TerminalNode?> {
@@ -487,7 +475,7 @@ object ParsingUtils {
             }
             return
         }
-        for (i in 0..<n) {
+        for(i in 0 until n) {
             _getAllLeaves(t.getChild(i), leaves)
         }
     }
@@ -496,13 +484,12 @@ object ParsingUtils {
      * Get ancestors where the first element of the list is the parent of t
      */
     fun getAncestors(t: Tree?): MutableList<out Tree?> {
-        var t = t
-        if (t!!.parent == null) return mutableListOf<Tree?>()
+        if (t!!.parent == null) return mutableListOf()
         val ancestors: MutableList<Tree?> = ArrayList<Tree?>()
-        t = t.parent
-        while (t != null) {
-            ancestors.add(t) // insert at start
-            t = t.parent
+        var temp = t.parent
+        while (temp != null) {
+            ancestors.add(temp) // insert at start
+            temp = temp.parent
         }
         return ancestors
     }
