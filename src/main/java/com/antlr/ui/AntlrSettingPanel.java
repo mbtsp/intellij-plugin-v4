@@ -36,7 +36,7 @@ public class AntlrSettingPanel {
         for (CaseChangingStrategy value : CaseChangingStrategy.values()) {
             caseTransformation.addItem(value);
         }
-        initFileds(project, qualFileName);
+        initFields(project, qualFileName);
         if (isSetting) {
             generateParseTreeListenerCheckBox.setVisible(false);
             generateParseTreeVisitorCheckBox.setVisible(false);
@@ -45,7 +45,7 @@ public class AntlrSettingPanel {
 
     }
 
-    private void initFileds(Project project, String quailFileName) {
+    private void initFields(Project project, String quailFileName) {
         FileChooserDescriptor fileChooserDescriptor = FileChooserDescriptorFactory.createSingleFileDescriptor();
         outputDirField.addActionListener(new ComponentWithBrowseButton.BrowseFolderActionListener<>("Select Output Dir", null, outputDirField, project, fileChooserDescriptor, TextComponentAccessor.TEXT_FIELD_WHOLE_TEXT));
         outputDirField.setTextFieldPreferredWidth(50);
