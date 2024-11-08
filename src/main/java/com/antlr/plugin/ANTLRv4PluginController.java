@@ -644,12 +644,13 @@ public class ANTLRv4PluginController {
                         @Override
                         public void run(@NotNull ProgressIndicator progressIndicator) {
                             ApplicationManager.getApplication().invokeLater(() -> {
+                                if (getProject().isDisposed()) return;
                                 PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
                                 FileDocumentManager docMgr = FileDocumentManager.getInstance();
                                 if (event.getOldFile() != null) {
                                     Document doc = docMgr.getDocument(event.getOldFile());
                                     if (doc != null) {
-                                        if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc)) {
+                                        if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc) && !getProject().isDisposed()) {
                                             psiMgr.commitDocument(doc);
                                             docMgr.saveDocument(doc);
                                         }
