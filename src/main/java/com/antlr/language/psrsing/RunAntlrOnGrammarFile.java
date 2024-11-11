@@ -1,6 +1,9 @@
 package com.antlr.language.psrsing;
 
+import com.antlr.preview.PreviewState;
+import com.antlr.service.AntlrService;
 import com.antlr.setting.configdialogs.AntlrGrammarProperties;
+import com.antlr.util.AntlrUtil;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
@@ -52,7 +55,7 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
     private final Project project;
     private final boolean forceGeneration;
 
-    public RunANTLROnGrammarFile(VirtualFile grammarFile,
+    public RunAntlrOnGrammarFile(VirtualFile grammarFile,
                                  @Nullable final Project project,
                                  @NotNull final String title,
                                  final boolean canBeCancelled,
@@ -72,18 +75,15 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
             autogen = grammarProperties.shouldAutoGenerateParser();
         }
         if (forceGeneration || (autogen && isGrammarStale(grammarProperties))) {
-            ReadAction.run(() -> antlr(grammarFile));
+            ReadAction.run(() -> AntlrUtil.INSTANCE.antlr(project,grammarFile));
         } else {
-            ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(project);
-            if (controller == null) {
-                return;
-            }
-            final PreviewState previewState = controller.getPreviewState(grammarFile);
+            AntlrService antlrService = AntlrService.Companion.getInstance(project);
+            final PreviewState previewState = antlrService.previewState(grammarFile);
             // is lexer file? gen .tokens file no matter what as tokens might have changed;
             // a parser that feeds off of that file will need to see the changes.
-            if (previewState.g == null && previewState.lg != null) {
-                Grammar g = previewState.lg;
-                String language = g.getOptionString(ANTLRv4GrammarProperties.PROP_LANGUAGE);
+            if (previewState.getG() == null && previewState.getLg() != null) {
+                Grammar g = previewState.getLg();
+                String language = g.getOptionString(AntlrGrammarProperties.PROP_LANGUAGE);
                 Tool tool = ParsingUtils.createANTLRToolForLoadingGrammars(getGrammarProperties(project, grammarFile));
                 CodeGenerator gen = CodeGenerator.create(tool, g, language);
                 gen.writeVocabFile();
@@ -93,26 +93,26 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
 
     // TODO: lots of duplication with antlr() function.
     private boolean isGrammarStale(AntlrGrammarProperties grammarProperties) {
-        String sourcePath = grammarProperties.resolveLibDir(project, getParentDir(grammarFile));
+        String sourcePath = grammarProperties.resolveLibDir(project, AntlrUtil.INSTANCE.getParentDir(grammarFile));
         String fullyQualifiedInputFileName = sourcePath + File.separator + grammarFile.getName();
 
-        ANTLRv4PluginController controller = ANTLRv4PluginController.getInstance(project);
-        if (controller == null) {
-            return false;
-        }
-        final PreviewState previewState = controller.getPreviewState(grammarFile);
+        AntlrService antlrService = AntlrService.Companion.getInstance(project);
+        final PreviewState previewState = antlrService.previewState(grammarFile);
         Grammar g = previewState.getMainGrammar();
         // Grammar should be updated in the preview state before calling this function
         if (g == null) {
             return false;
         }
 
-        String language = g.getOptionString(ANTLRv4GrammarProperties.PROP_LANGUAGE);
+        String language = g.getOptionString(AntlrGrammarProperties.PROP_LANGUAGE);
         CodeGenerator generator = CodeGenerator.create(null, g, language);
         String recognizerFileName = generator.getRecognizerFileName();
 
-        VirtualFile contentRoot = getContentRoot(project, grammarFile);
-        String package_ = grammarProperties.getPackage();
+        VirtualFile contentRoot = AntlrUtil.INSTANCE.getContentRoot(project, grammarFile);
+        if(contentRoot==null){
+            return false;
+        }
+        String package_ = grammarProperties.getPkg();
         String outputDirName = grammarProperties.resolveOutputDirName(project, contentRoot, package_);
         String fullyQualifiedOutputFileName = outputDirName + File.separator + recognizerFileName;
 
@@ -123,183 +123,12 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
         return stale;
     }
 
-    /**
-     * Run ANTLR tool on file according to preferences in intellij for this file.
-     * Returns set of generated files or empty set if error.
-     */
-    private void antlr(VirtualFile vfile) {
-        if (vfile == null) return;
 
-        LOG.info("antlr(\"" + vfile.getPath() + "\")");
-        List<String> args = getANTLRArgsAsList(project, vfile);
 
-        String sourcePath = getParentDir(vfile);
-        String fullyQualifiedInputFileName = sourcePath + File.separator + vfile.getName();
-        args.add(fullyQualifiedInputFileName); // add grammar file last
-
-        String lexerGrammarFileName = ParsingUtils.getLexerNameFromParserFileName(fullyQualifiedInputFileName);
-        if (new File(lexerGrammarFileName).exists()) {
-            // build the lexer too as the grammar surely uses it if it exists
-            args.add(lexerGrammarFileName);
-        }
-
-        LOG.info("args: " + Utils.join(args.iterator(), " "));
-
-        Tool antlr = new Tool(args.toArray(new String[0]));
-
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-
-        ConsoleUtils.consolePrint(project, timeStamp + ": antlr4 " + Misc.join(args.iterator(), " ") + "\n", ConsoleViewContentType.SYSTEM_OUTPUT);
-        antlr.removeListeners();
-        RunANTLRListener listener = new RunANTLRListener(antlr, project);
-        antlr.addListener(listener);
-
-        try {
-            antlr.processGrammarsOnCommandLine();
-        } catch (Throwable e) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e.printStackTrace(pw);
-            String msg = sw.toString();
-            Notification notification =
-                    new Notification(groupDisplayId,
-                            "can't generate parser for " + vfile.getName(),
-                            e.toString(),
-                            NotificationType.INFORMATION);
-            Notifications.Bus.notify(notification, project);
-            ConsoleUtils.consolePrint(project, timeStamp + ": antlr4 " + msg + "\n", ConsoleViewContentType.SYSTEM_OUTPUT);
-            listener.hasOutput = true; // show console below
-        }
-
-        if (listener.hasOutput) {
-            ANTLRv4PluginController.showLaterConsoleWindow(project);
-        }
-    }
-
-    public static List<String> getANTLRArgsAsList(Project project, VirtualFile vfile) {
-        Map<String, String> argMap = getANTLRArgs(project, vfile);
-        List<String> args = new ArrayList<>();
-        for (String option : argMap.keySet()) {
-            args.add(option);
-            String value = argMap.get(option);
-            if (!value.isEmpty()) {
-                args.add(value);
-            }
-        }
-        return args;
-    }
-
-    private static Map<String, String> getANTLRArgs(Project project, VirtualFile vfile) {
-        Map<String, String> args = new HashMap<>();
-        ANTLRv4GrammarProperties grammarProperties = getGrammarProperties(project, vfile);
-        String sourcePath = getParentDir(vfile);
-        String package_ = null;
-        if (grammarProperties != null) {
-            package_ = grammarProperties.getPackage();
-        }
-        if (isBlank(package_) && !hasPackageDeclarationInHeader(project, vfile) && vfile.getParent() != null) {
-//            final String packageName = PackageIndex.getInstance(myProject).getPackageNameByDirectory(containingDirectory);
-
-            package_ = ProjectRootManager.getInstance(project).getFileIndex().getPackageNameByDirectory(vfile.getParent());
-        }
-        if (isNotBlank(package_)) {
-            args.put("-package", package_);
-        }
-
-        String language = grammarProperties != null ? grammarProperties.getLanguage() : null;
-        if (isNotBlank(language)) {
-            args.put("-Dlanguage=" + language, "");
-        }
-
-        // create gen dir at root of project by default, but add in package if any
-        VirtualFile contentRoot = getContentRoot(project, vfile);
-        String outputDirName = grammarProperties != null ? grammarProperties.resolveOutputDirName(project, contentRoot, package_) : null;
-        args.put("-o", outputDirName);
-
-        String libDir = grammarProperties != null ? grammarProperties.resolveLibDir(project, sourcePath) : null;
-        File f;
-        if (libDir != null) {
-            f = new File(libDir);
-            if (!f.isAbsolute() && contentRoot != null) { // if not absolute file spec, it's relative to project root
-                libDir = contentRoot.getPath() + File.separator + libDir;
-            }
-        }
-
-        args.put("-lib", libDir);
-
-        String encoding = grammarProperties != null ? grammarProperties.getEncoding() : null;
-        if (isNotBlank(encoding)) {
-            args.put("-encoding", encoding);
-        }
-
-        if (grammarProperties != null && grammarProperties.shouldGenerateParseTreeListener()) {
-            args.put("-listener", "");
-        } else {
-            args.put("-no-listener", "");
-        }
-        if (grammarProperties != null && grammarProperties.shouldGenerateParseTreeVisitor()) {
-            args.put("-visitor", "");
-        } else {
-            args.put("-no-visitor", "");
-        }
-
-        return args;
-    }
-
-    private static boolean hasPackageDeclarationInHeader(Project project, VirtualFile grammarFile) {
-        return ApplicationManager.getApplication().runReadAction((Computable<Boolean>) () -> {
-            PsiFile file = PsiManager.getInstance(project).findFile(grammarFile);
-            GrammarSpecNode grammarSpecNode = getChildOfType(file, GrammarSpecNode.class);
-
-            if (grammarSpecNode != null) {
-                RuleIElementType prequelElementType = ANTLRv4TokenTypes.getRuleElementType(ANTLRv4Parser.RULE_prequelConstruct);
-
-                for (PsiElement prequelConstruct : findChildrenOfType(grammarSpecNode, prequelElementType)) {
-                    AtAction atAction = getChildOfType(prequelConstruct, AtAction.class);
-
-                    if (atAction != null && atAction.getIdText().equals("header")) {
-                        return PACKAGE_DEFINITION_REGEX.matcher(atAction.getActionBlockText()).find();
-                    }
-                }
-            }
-
-            return false;
-        });
-    }
-
-    private static String getParentDir(VirtualFile vfile) {
-        if (vfile == null || vfile.getParent() == null) {
-            return null;
-        }
-        return vfile.getParent().getPath();
-    }
-
-    private static VirtualFile getContentRoot(Project project, VirtualFile vfile) {
-        AtomicReference<VirtualFile> virtualFileAtomicReference = new AtomicReference<>(null);
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        ApplicationManager.getApplication().runReadAction(() -> {
-            try {
-                VirtualFile root = ProjectRootManager.getInstance(project).getFileIndex().getContentRootForFile(vfile);
-                if (root != null) {
-                    virtualFileAtomicReference.set(root);
-                } else {
-                    virtualFileAtomicReference.set(vfile.getParent());
-                }
-            } finally {
-                countDownLatch.countDown();
-            }
-        });
-        try {
-            countDownLatch.await(5L, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
-            return null;
-        }
-        return virtualFileAtomicReference.get();
-    }
 
     public String getOutputDirName() {
-        VirtualFile contentRoot = getContentRoot(project, grammarFile);
-        Map<String, String> argMap = getANTLRArgs(project, grammarFile);
+        VirtualFile contentRoot = AntlrUtil.INSTANCE.getContentRoot(project, grammarFile);
+        Map<String, String> argMap = AntlrUtil.INSTANCE.getArgs(project, grammarFile);
         String package_ = argMap.get("-package");
 
         return getGrammarProperties(project, grammarFile)

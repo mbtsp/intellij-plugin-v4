@@ -1,195 +1,203 @@
-package com.antlr.language.validation;
+package com.antlr.language.validation
 
-import com.antlr.language.psrsing.RunAntlrOnGrammarFile;
-import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import org.antlr.runtime.ANTLRReaderStream;
-import org.antlr.runtime.Token;
-import org.antlr.v4.Tool;
-import org.antlr.v4.codegen.CodeGenerator;
-import org.antlr.v4.codegen.Target;
-import org.antlr.v4.parse.ANTLRParser;
-import org.antlr.v4.runtime.misc.IntervalSet;
-import org.antlr.v4.tool.*;
-import org.antlr.v4.tool.ast.GrammarAST;
-import org.antlr.v4.tool.ast.GrammarRootAST;
-import org.antlr.v4.tool.ast.RuleRefAST;
-import org.jetbrains.annotations.Nullable;
-import org.stringtemplate.v4.ST;
+import com.antlr.util.AntlrUtil.getArgsAsList
+import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.diagnostic.Logger
+import com.intellij.psi.PsiFile
+import org.antlr.runtime.ANTLRReaderStream
+import org.antlr.v4.Tool
+import org.antlr.v4.codegen.CodeGenerator
+import org.antlr.v4.codegen.Target
+import org.antlr.v4.parse.ANTLRParser
+import org.antlr.v4.runtime.misc.IntervalSet
+import org.antlr.v4.tool.*
+import org.antlr.v4.tool.ast.GrammarAST
+import org.antlr.v4.tool.ast.RuleRefAST
+import org.stringtemplate.v4.ST
+import java.io.File
+import java.io.StringReader
 
-import java.io.File;
-import java.io.StringReader;
-import java.util.*;
+object GrammarIssuesCollector {
+    private const val LANGUAGE_ARG_PREFIX = "-Dlanguage="
 
-public class GrammarIssuesCollector {
-    private static final String LANGUAGE_ARG_PREFIX = "-Dlanguage=";
+    private val LOG: Logger = Logger.getInstance(
+        GrammarIssuesCollector::class.java.name
+    )
 
-    public static final Logger LOG = Logger.getInstance(GrammarIssuesCollector.class.getName());
+    fun collectGrammarIssues(file: PsiFile): List<GrammarIssue> {
+        val grammarFileName = file.virtualFile.path
+        LOG.info("doAnnotate $grammarFileName")
+        val fileContents = file.text
+        val args = getArgsAsList(file.project, file.virtualFile)
+        val listener = GrammarIssuesCollectorToolListener()
 
-    public static List<GrammarIssue> collectGrammarIssues(PsiFile file) {
-        String grammarFileName = file.getVirtualFile().getPath();
-        LOG.info("doAnnotate " + grammarFileName);
-        String fileContents = file.getText();
-        List<String> args = RunAntlrOnGrammarFile.getANTLRArgsAsList(file.getProject(), file.getVirtualFile());
-        GrammarIssuesCollectorToolListener listener = new GrammarIssuesCollectorToolListener();
-
-        String languageArg = findLanguageArg(args);
+        val languageArg = findLanguageArg(args)
 
         if (languageArg != null) {
-            String language = languageArg.substring(LANGUAGE_ARG_PREFIX.length());
+            val language = languageArg.substring(LANGUAGE_ARG_PREFIX.length)
 
             if (!targetExists(language)) {
-                GrammarIssue issue = new GrammarIssue(null);
-                issue.setAnnotation("Unknown target language '" + language + "', analysis will be done using the default target language 'Java'");
-                listener.issues.add(issue);
+                val issue = GrammarIssue(null)
+                issue.annotation =
+                    "Unknown target language '$language', analysis will be done using the default target language 'Java'"
+                listener.issues.add(issue)
 
-                args.remove(languageArg);
+                args.remove(languageArg)
             }
         }
 
-        final Tool antlr = new Tool(args.toArray(new String[0]));
+        val antlr = Tool(args.toTypedArray<String>())
         if (!args.contains("-lib")) {
-            // getContainingDirectory() must be identified as a read operation on file system
-            ApplicationManager.getApplication().runReadAction(() -> {
-                antlr.libDirectory = file.getContainingDirectory().toString();
-            });
+            // getContainingDirectory() must be identified as a read operation on a file system
+            ApplicationManager.getApplication().runReadAction {
+                antlr.libDirectory = file.containingDirectory.toString()
+            }
         }
 
-        antlr.removeListeners();
-        antlr.addListener(listener);
+        antlr.removeListeners()
+        antlr.addListener(listener)
         try {
-            StringReader sr = new StringReader(fileContents);
-            ANTLRReaderStream in = new ANTLRReaderStream(sr);
-            in.name = file.getName();
-            GrammarRootAST ast = antlr.parse(file.getName(), in);
+            val sr = StringReader(fileContents)
+            val `in` = ANTLRReaderStream(sr)
+            `in`.name = file.name
+            val ast = antlr.parse(file.name, `in`)
             if (ast == null || ast.hasErrors) {
-                for (GrammarIssue issue : listener.issues) {
-                    processIssue(file, issue);
+                for (issue in listener.issues) {
+                    processIssue(file, issue)
                 }
-                return listener.issues;
+                return listener.issues
             }
-            Grammar g = antlr.createGrammar(ast);
-            g.fileName = grammarFileName;
+            val g = antlr.createGrammar(ast)
+            g.fileName = grammarFileName
 
-            String vocabName = g.getOptionString("tokenVocab");
+            val vocabName = g.getOptionString("tokenVocab")
             if (vocabName != null) { // import vocab to avoid spurious warnings
-                LOG.info("token vocab file " + vocabName);
-                g.importTokensFromTokensFile();
+                LOG.info("token vocab file $vocabName")
+                g.importTokensFromTokensFile()
             }
 
-            VirtualFile vfile = file.getVirtualFile();
+            val vfile = file.virtualFile
             if (vfile == null) {
-                LOG.error("doAnnotate no virtual file for " + file);
-                return listener.issues;
+                LOG.error("doAnnotate no virtual file for $file")
+                return listener.issues
             }
-            g.fileName = vfile.getPath();
-            antlr.process(g, false);
+            g.fileName = vfile.path
+            antlr.process(g, false)
 
-            Map<String, GrammarAST> unusedRules = getUnusedParserRules(g);
+            val unusedRules = getUnusedParserRules(g)
             if (unusedRules != null) {
-                for (String r : unusedRules.keySet()) {
-                    Token ruleDefToken = unusedRules.get(r).getToken();
-                    GrammarIssue issue = new GrammarIssue(new GrammarInfoMessage(g.fileName, ruleDefToken, r));
-                    listener.issues.add(issue);
+                for (r in unusedRules.keys) {
+                    val ruleDefToken = unusedRules[r]!!.getToken()
+                    val issue = GrammarIssue(GrammarInfoMessage(g.fileName, ruleDefToken, r))
+                    listener.issues.add(issue)
                 }
             }
 
-            for (GrammarIssue issue : listener.issues) {
-                processIssue(file, issue);
+            for (issue in listener.issues) {
+                processIssue(file, issue)
             }
-        } catch (Exception e) {
-            LOG.error("antlr can't process " + file.getName(), e);
+        } catch (e: Exception) {
+            LOG.error("antlr can't process " + file.name, e)
         }
-        return listener.issues;
+        return listener.issues
     }
 
-    @Nullable
-    private static String findLanguageArg(List<String> args) {
-        for (String arg : args) {
+    private fun findLanguageArg(args: List<String>): String? {
+        for (arg in args) {
             if (arg.startsWith(LANGUAGE_ARG_PREFIX)) {
-                return arg;
+                return arg
             }
         }
 
-        return null;
+        return null
     }
 
-    public static void processIssue(final PsiFile file, GrammarIssue issue) {
-        File grammarFile = new File(file.getVirtualFile().getPath());
-        if (issue.getMsg() == null || issue.getMsg().fileName == null) { // weird, issue doesn't have a file associated with it
-            return;
+    private fun processIssue(file: PsiFile, issue: GrammarIssue) {
+        val grammarFile = File(file.virtualFile.path)
+        if (issue.msg == null || issue.msg.fileName == null) { // weird, the issue doesn't have a file associated with it
+            return
         }
-        File issueFile = new File(issue.getMsg().fileName);
-        if (!grammarFile.getName().equals(issueFile.getName())) {
-            return; // ignore errors from external files
+        val issueFile = File(issue.msg.fileName)
+        if (grammarFile.name != issueFile.name) {
+            return  // ignore errors from external files
         }
-        ST msgST = null;
-        if (issue.getMsg() instanceof GrammarInfoMessage) { // not in ANTLR so must hack it in
-            Token t = issue.getMsg().offendingToken;
-            issue.getOffendingTokens().add(t);
-            msgST = new ST("unused parser rule <arg>");
-            msgST.add("arg", t.getText());
-            msgST.impl.name = "info";
-        } else if (issue.getMsg() instanceof GrammarSemanticsMessage) {
-            Token t = issue.getMsg().offendingToken;
-            issue.getOffendingTokens().add(t);
-        } else if (issue.getMsg() instanceof LeftRecursionCyclesMessage lmsg) {
-            List<String> rulesToHighlight = new ArrayList<>();
-            Collection<? extends Collection<Rule>> cycles =
-                    (Collection<? extends Collection<Rule>>) lmsg.getArgs()[0];
-            for (Collection<Rule> cycle : cycles) {
-                for (Rule r : cycle) {
-                    rulesToHighlight.add(r.name);
-                    GrammarAST nameNode = (GrammarAST) r.ast.getChild(0);
-                    issue.getOffendingTokens().add(nameNode.getToken());
+        var msgST: ST? = null
+        when (issue.msg) {
+            is GrammarInfoMessage -> { // not in ANTLR so must hack it in
+                val t = issue.msg.offendingToken
+                issue.offendingTokens.add(t)
+                msgST = ST("unused parser rule <arg>")
+                msgST.add("arg", t.text)
+                msgST.impl.name = "info"
+            }
+
+            is GrammarSemanticsMessage -> {
+                val t = issue.msg.offendingToken
+                issue.offendingTokens.add(t)
+            }
+
+            is LeftRecursionCyclesMessage -> {
+                val rulesToHighlight: MutableList<String> = ArrayList()
+                val cycles =
+                    issue.msg.args[0] as Collection<MutableCollection<Rule>>
+                for (cycle in cycles) {
+                    for (r in cycle) {
+                        rulesToHighlight.add(r.name)
+                        val nameNode = r.ast.getChild(0) as GrammarAST
+                        issue.offendingTokens.add(nameNode.getToken())
+                    }
                 }
             }
-        } else if (issue.getMsg() instanceof GrammarSyntaxMessage) {
-            Token t = issue.getMsg().offendingToken;
-            issue.getOffendingTokens().add(t);
-        } else if (issue.getMsg() instanceof ToolMessage) {
-            issue.getOffendingTokens().add(issue.getMsg().offendingToken);
+
+            is GrammarSyntaxMessage -> {
+                val t = issue.msg.offendingToken
+                issue.offendingTokens.add(t)
+            }
+
+            is ToolMessage -> {
+                issue.offendingTokens.add(issue.msg.offendingToken)
+            }
         }
 
-        Tool antlr = new Tool();
+        val antlr = Tool()
         if (msgST == null) {
-            msgST = antlr.errMgr.getMessageTemplate(issue.getMsg());
+            msgST = antlr.errMgr.getMessageTemplate(issue.msg)
         }
-        String outputMsg = msgST.render();
+        var outputMsg = msgST!!.render()
         if (antlr.errMgr.formatWantsSingleLineMessage()) {
-            outputMsg = outputMsg.replace('\n', ' ');
+            outputMsg = outputMsg.replace('\n', ' ')
         }
-        issue.setAnnotation(outputMsg);
+        issue.annotation = outputMsg
     }
 
-    private static Map<String, GrammarAST> getUnusedParserRules(Grammar g) {
-        if (g.ast == null || g.isLexer()) return null;
-        List<GrammarAST> ruleNodes = g.ast.getNodesWithTypePreorderDFS(IntervalSet.of(ANTLRParser.RULE_REF));
+    private fun getUnusedParserRules(g: Grammar): Map<String, GrammarAST>? {
+        if (g.ast == null || g.isLexer) return null
+        val ruleNodes = g.ast.getNodesWithTypePreorderDFS(IntervalSet.of(ANTLRParser.RULE_REF))
         // in case of errors, we walk AST ourselves
         // ANTLR's Grammar object might have bailed on rule defs etc...
-        Set<String> ruleRefs = new HashSet<>();
-        Map<String, GrammarAST> ruleDefs = new HashMap<>();
-        for (GrammarAST x : ruleNodes) {
-            if (x.getParent().getType() == ANTLRParser.RULE) {
-                ruleDefs.put(x.getText(), x);
-            } else if (x instanceof RuleRefAST r) {
-                ruleRefs.add(r.getText());
+        val ruleRefs: MutableSet<String> = HashSet()
+        val ruleDefs: MutableMap<String, GrammarAST> = HashMap()
+        for (x in ruleNodes) {
+            if (x.getParent().type == ANTLRParser.RULE) {
+                ruleDefs[x.text] = x
+            } else if (x is RuleRefAST) {
+                ruleRefs.add(x.getText())
             }
         }
-        ruleDefs.keySet().removeAll(ruleRefs);
-        return ruleDefs;
+        ruleDefs.keys.removeAll(ruleRefs)
+        return ruleDefs
     }
 
-    public static boolean targetExists(String language) {
-        String targetName = "org.antlr.v4.codegen.target." + language + "Target";
+    private fun targetExists(language: String): Boolean {
+        val targetName = "org.antlr.v4.codegen.target." + language + "Target"
         try {
-            Class<? extends Target> c = Class.forName(targetName).asSubclass(Target.class);
-            c.getConstructor(CodeGenerator.class);
-            return true;
-        } catch (Exception e) { // ignore errors; we're detecting presence only
+            val c = Class.forName(targetName).asSubclass(
+                Target::class.java
+            )
+            c.getConstructor(CodeGenerator::class.java)
+            return true
+        } catch (e: Exception) { // ignore errors; we're detecting presence only
         }
-        return false;
+        return false
     }
 }

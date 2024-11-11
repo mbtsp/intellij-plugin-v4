@@ -93,44 +93,44 @@ For really big files and slow grammars, there is an appreciable delay when displ
             <add-to-group group-id="EditorPopupMenu" anchor="last"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
         </action>
-        <action id="antlr.new.Configure" class="com.antlr.actions.ConfigureANTLRAction"
-                text="Configure ANTLR...">
-            <add-to-group group-id="ToolsMenu" anchor="before"
-                          relative-to-action="ExternalToolsGroup"/>
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
-        </action>
-        <action id="antlr.new.TestRule" class="com.antlr.actions.TestRuleAction"
-                text="Test ANTLR Rule">
-            <add-to-group group-id="StructureViewPopupMenu" anchor="first"/>
-            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
-        </action>
-        <action id="antlr.new.DefineLexerRulesForLiterals"
-                class="com.antlr.actions.GenerateLexerRulesForLiteralsAction"
-                text="Generate Lexer Rules for Literals"
-                description="Inject lexer rules for undefined literals but leave literal in place">
-            <add-to-group group-id="GenerateGroup" anchor="first"/>
-        </action>
-        <action id="antlr.new.InlineRule" class="com.antlr.plugin.actions.InlineRuleAction"
-                text="Inline and Remove Rule">
-            <keyboard-shortcut keymap="$default" first-keystroke="control alt N"/>
-            <add-to-group group-id="RefactoringMenu" anchor="before" relative-to-action="Move"/>
-        </action>
-        <action id="antlr.new.ExtractRule"
-                class="com.antlr.plugin.actions.ExtractRuleAction"
-                text="Extract Rule...">
-            <keyboard-shortcut keymap="$default" first-keystroke="control alt M"/>
-            <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="antlr.new.InlineRule"/>
-        </action>
-        <action id="antlr.new.UniquifyRuleRefs"
-                class="com.antlr.plugin.actions.UniquifyRuleRefs"
-                text="Make Refs to Rule Unique...">
-            <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="antlr.new.ExtractRule"/>
-        </action>
+<!--        <action id="antlr.new.Configure" class="com.antlr.actions.ConfigureANTLRAction"-->
+<!--                text="Configure ANTLR...">-->
+<!--            <add-to-group group-id="ToolsMenu" anchor="before"-->
+<!--                          relative-to-action="ExternalToolsGroup"/>-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>-->
+<!--        </action>-->
+<!--        <action id="antlr.new.TestRule" class="com.antlr.actions.TestRuleAction"-->
+<!--                text="Test ANTLR Rule">-->
+<!--            <add-to-group group-id="StructureViewPopupMenu" anchor="first"/>-->
+<!--            <add-to-group group-id="EditorPopupMenu" anchor="last"/>-->
+<!--        </action>-->
+<!--        <action id="antlr.new.DefineLexerRulesForLiterals"-->
+<!--                class="com.antlr.actions.GenerateLexerRulesForLiteralsAction"-->
+<!--                text="Generate Lexer Rules for Literals"-->
+<!--                description="Inject lexer rules for undefined literals but leave literal in place">-->
+<!--            <add-to-group group-id="GenerateGroup" anchor="first"/>-->
+<!--        </action>-->
+<!--        <action id="antlr.new.InlineRule" class="com.antlr.plugin.actions.InlineRuleAction"-->
+<!--                text="Inline and Remove Rule">-->
+<!--            <keyboard-shortcut keymap="$default" first-keystroke="control alt N"/>-->
+<!--            <add-to-group group-id="RefactoringMenu" anchor="before" relative-to-action="Move"/>-->
+<!--        </action>-->
+<!--        <action id="antlr.new.ExtractRule"-->
+<!--                class="com.antlr.plugin.actions.ExtractRuleAction"-->
+<!--                text="Extract Rule...">-->
+<!--            <keyboard-shortcut keymap="$default" first-keystroke="control alt M"/>-->
+<!--            <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="antlr.new.InlineRule"/>-->
+<!--        </action>-->
+<!--        <action id="antlr.new.UniquifyRuleRefs"-->
+<!--                class="com.antlr.plugin.actions.UniquifyRuleRefs"-->
+<!--                text="Make Refs to Rule Unique...">-->
+<!--            <add-to-group group-id="RefactoringMenu" anchor="after" relative-to-action="antlr.new.ExtractRule"/>-->
+<!--        </action>-->
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileType id="antlr.new.fileType" name="ANTLR v4 grammar file" language="Antlr-Tool" extensions="g4" fieldName="INSTANCE"
+        <fileType id="antlr.new.fileType" name="Antlr grammar" language="Antlr-Tool" extensions="g4" fieldName="INSTANCE"
                   implementationClass="com.antlr.language.AntlrFileType"/>
         <lang.syntaxHighlighterFactory
                 implementationClass="com.antlr.language.AntlrSyntaxHighlighterFactory"

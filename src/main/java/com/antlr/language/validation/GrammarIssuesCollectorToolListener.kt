@@ -5,7 +5,7 @@ import org.antlr.v4.tool.ANTLRToolListener
 
 class GrammarIssuesCollectorToolListener : ANTLRToolListener {
     @JvmField
-    val issues: MutableList<GrammarIssue?> = ArrayList<GrammarIssue?>()
+    val issues: MutableList<GrammarIssue> = ArrayList()
 
     override fun info(msg: String?) {
     }

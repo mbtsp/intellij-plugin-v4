@@ -21,7 +21,7 @@ open class AntlrItemPresentation(protected val element: PsiElement) : ItemPresen
         if (element is AntlrFileRoot) {
             val node = PsiTreeUtil.findChildOfType<GrammarSpecNode?>(element, GrammarSpecNode::class.java)
             if (node != null) {
-                val id = findChildOfType(node, AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_identifier])
+                val id = findChildOfType(node, AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_identifier))
                 if (id != null) {
                     return id.text
                 }

@@ -16,7 +16,7 @@ import com.intellij.psi.tree.TokenSet
 import org.antlr.intellij.adaptor.lexer.PSIElementTypeFactory
 
 class AntlrParserDefinition : ParserDefinition {
-    fun ANTLRv4ParserDefinition() {
+    init {
         PSIElementTypeFactory.defineLanguageIElementTypes(
             AntlrLanguage.INSTANCE,
             ANTLRv4Lexer.VOCABULARY,

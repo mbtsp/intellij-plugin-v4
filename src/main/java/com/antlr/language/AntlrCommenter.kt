@@ -26,15 +26,15 @@ class AntlrCommenter : CodeDocumentationAwareCommenter {
     }
 
     override fun getLineCommentTokenType(): IElementType? {
-        return AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.LINE_COMMENT]
+        return AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.LINE_COMMENT)
     }
 
     override fun getBlockCommentTokenType(): IElementType? {
-        return AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.BLOCK_COMMENT]
+        return AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.BLOCK_COMMENT)
     }
 
     override fun getDocumentationCommentTokenType(): IElementType? {
-        return AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.DOC_COMMENT]
+        return AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.DOC_COMMENT)
     }
 
     override fun getDocumentationCommentPrefix(): String? {

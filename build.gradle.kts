@@ -53,7 +53,7 @@ dependencies {
     antlr("org.antlr:antlr4:4.13.2") { // use ANTLR version 4
         exclude("com.ibm.icu", "icu4j")
     }
-    implementation ("org.antlr:antlr4-intellij-adaptor:0.2-SNAPSHOT")
+    implementation ("org.antlr:antlr4-intellij-adaptor:0.4-SNAPSHOT")
     testImplementation(group="junit", name= "junit", version= "4.13.2")
     testImplementation (group="org.mockito", name= "mockito-core", version= "5.8.0")
 }

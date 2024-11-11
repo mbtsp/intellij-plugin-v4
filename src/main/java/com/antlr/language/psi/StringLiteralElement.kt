@@ -8,7 +8,7 @@ class StringLiteralElement(type: com.intellij.psi.tree.IElementType, text: CharS
     override fun getReference(): com.intellij.psi.PsiReference? {
         val parent = parent
 
-        if (parent != null && parent.node.elementType === RULE_ELEMENT_TYPES[RULE_optionValue]) {
+        if (parent != null && parent.node.elementType === RULE_ELEMENT_TYPES?.get(RULE_optionValue)) {
             return StringLiteralRef(this)
         }
 

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NonNls
 
 /** Root of lexer, parser rule defs  */
 abstract class RuleSpecNode(node: ASTNode) : ASTWrapperPsiElement(node), PsiNameIdentifierOwner {
+    @get:JvmName("ruleSpecNodeName")
     protected var name: String? = null // an override to input text ID
     override fun getName(): String? {
         if (name != null) return name
@@ -33,11 +34,14 @@ abstract class RuleSpecNode(node: ASTNode) : ASTWrapperPsiElement(node), PsiName
 		          node in its parse tree, build the parse tree and
 		          extract the necessary node from it.
 		 */
+        if(this.ruleRefType==null){
+            return this
+        }
         val id = getNameIdentifier()
         val psiElement = createLeafFromText(
             project,
             context,
-            name, this.ruleRefType
+            name, this.ruleRefType!!
         )
         if (id != null && psiElement != null) {
             id.replace(psiElement)
@@ -46,7 +50,7 @@ abstract class RuleSpecNode(node: ASTNode) : ASTWrapperPsiElement(node), PsiName
         return this
     }
 
-    abstract val ruleRefType: IElementType
+    abstract val ruleRefType: IElementType?
 
     override fun subtreeChanged() {
         super.subtreeChanged()

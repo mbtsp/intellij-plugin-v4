@@ -70,7 +70,7 @@ object TokenVocabResolver {
 
     private fun isOptionValue(el: PsiElement): Boolean {
         val node = el.node
-        return node != null && node.elementType === RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_optionValue]
+        return node != null && node.elementType === RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_optionValue)
     }
 
     /**

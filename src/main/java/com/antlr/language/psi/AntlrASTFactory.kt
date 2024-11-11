@@ -21,31 +21,31 @@ class AntlrASTFactory : ASTFactory() {
         init {
             // later auto gen with tokens from some spec in grammar?
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_rules],
+                AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_rules),
                 RulesNode.Factory.INSTANCE
             )
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_parserRuleSpec],
+                AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_parserRuleSpec),
                 ParserRuleSpecNode.Factory.INSTANCE
             )
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_lexerRule],
+                AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_lexerRule),
                 LexerRuleSpecNode.Factory.INSTANCE
             )
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_grammarSpec],
+                AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_grammarSpec),
                 GrammarSpecNode.Factory.INSTANCE
             )
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_modeSpec],
+                AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_modeSpec),
                 ModeSpecNode.Factory.INSTANCE
             )
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_action],
+                AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_action),
                 AtAction.Factory.INSTANCE
             )
             ruleElementTypeToPsiFactory.put(
-                AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_identifier],
+                AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_identifier),
                 TokenSpecNode.Factory.INSTANCE
             )
         }
@@ -72,11 +72,11 @@ class AntlrASTFactory : ASTFactory() {
      * Does not see whitespace tokens.
      */
     override fun createLeaf(type: IElementType, text: CharSequence): LeafElement? {
-        val t = if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.RULE_REF]) {
+        val t = if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.RULE_REF)) {
             ParserRuleRefNode(type, text)
-        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.TOKEN_REF]) {
+        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.TOKEN_REF)) {
             LexerRuleRefNode(type, text)
-        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.STRING_LITERAL]) {
+        } else if (type === AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.STRING_LITERAL)) {
             StringLiteralElement(type, text)
         } else {
             LeafPsiElement(type, text)

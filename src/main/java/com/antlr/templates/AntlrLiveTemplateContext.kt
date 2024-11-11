@@ -16,19 +16,15 @@ abstract class AntlrLiveTemplateContext(
 
     override fun isInContext(file: PsiFile, offset: Int): Boolean {
         // offset is where cursor or insertion point is I guess
-        var offset = offset
-        if (!PsiUtilBase.getLanguageAtOffset(file, offset).isKindOf(AntlrLanguage.INSTANCE)) {
+        var p0 = offset
+        if (!PsiUtilBase.getLanguageAtOffset(file, p0).isKindOf(AntlrLanguage.INSTANCE)) {
             return false
         }
-        if (offset == file.textLength) { // allow at EOF
-            offset--
+        if (p0 == file.textLength) { // allow at EOF
+            p0--
         }
-        val element = file.findElementAt(offset)
+        val element = file.findElementAt(p0) ?: return false
 
-        if (element == null) {
-            return false
-        }
-
-        return isInContext(file, element, offset)
+        return isInContext(file, element, p0)
     }
 }

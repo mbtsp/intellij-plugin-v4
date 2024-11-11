@@ -9,12 +9,11 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 
 class LexerRuleSpecNode(node: ASTNode) : RuleSpecNode(node) {
-    override val ruleRefType: IElementType
-        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.TOKEN_REF]
-
+    override val ruleRefType: IElementType?
+        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.TOKEN_REF)
     override fun getNameIdentifier(): GrammarElementRefNode? {
         val tr: GrammarElementRefNode? =
-            PsiTreeUtil.getChildOfType<LexerRuleRefNode?>(this, LexerRuleRefNode::class.java)
+            PsiTreeUtil.getChildOfType(this, LexerRuleRefNode::class.java)
         if (tr == null) {
             LOG.error("can't find LexerRuleRefNode child of " + this.text, null as Throwable?)
         }
@@ -22,7 +21,8 @@ class LexerRuleSpecNode(node: ASTNode) : RuleSpecNode(node) {
     }
 
     val isFragment: Boolean
-        get() = node.findChildByType(AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.FRAGMENT]) != null
+        get() = if(AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.FRAGMENT)!=null)  node.findChildByType(
+            AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.FRAGMENT)!!) != null else false
 
     class Factory : PsiElementFactory {
         override fun createElement(node: ASTNode): PsiElement {

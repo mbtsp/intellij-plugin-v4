@@ -1,7 +1,6 @@
 package com.antlr.setting.configdialogs
 
 import com.antlr.language.psrsing.CaseChangingStrategy
-import com.antlr.language.psrsing.RunAntlrOnGrammarFile
 import com.intellij.openapi.components.PathMacroManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
@@ -88,7 +87,7 @@ class AntlrGrammarProperties : Cloneable {
     }
 
     fun resolveOutputDirName(project: Project, contentRoot: VirtualFile, pkg: String?): String {
-        var outputDirName = (if (outputDir.isNullOrEmpty()) RunAntlrOnGrammarFile.OUTPUT_DIR_NAME else outputDir)!!
+        var outputDirName = (if (outputDir.isNullOrEmpty()) "gen" else outputDir)!!
 
         outputDirName = PathMacroManager.getInstance(project).expandPath(outputDirName)
 
@@ -106,7 +105,7 @@ class AntlrGrammarProperties : Cloneable {
     fun resolveLibDir(project: Project, defaultValue: String?): String? {
         var libDir = this.libDir
 
-        if (libDir == null || libDir.isEmpty()) {
+        if (libDir.isNullOrEmpty()) {
             libDir = defaultValue
         }
 

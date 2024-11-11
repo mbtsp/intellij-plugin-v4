@@ -75,14 +75,15 @@ class GrammarElementRef(idNode: GrammarElementRefNode, private val ruleName: Str
 
     @Throws(IncorrectOperationException::class)
     override fun handleElementRename(newElementName: String): PsiElement {
+        val type = AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.TOKEN_REF) ?: return myElement
         val project = element.project
         myElement.replace(
             MyPsiUtils.createLeafFromText(
                 project,
                 myElement.context,
                 newElementName,
-                AntlrTokenTypes.TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.TOKEN_REF)
-            )!!
+                type
+                )!!
         )
         return myElement
     }

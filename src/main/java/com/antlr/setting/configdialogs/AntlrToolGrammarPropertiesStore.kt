@@ -10,7 +10,7 @@ import com.intellij.util.xmlb.annotations.Property
 
 class AntlrToolGrammarPropertiesStore {
     @Property
-    private val perGrammarGenerationSettings: MutableList<AntlrGrammarProperties> = ArrayList<AntlrGrammarProperties>()
+    private val perGrammarGenerationSettings: MutableList<AntlrGrammarProperties> = ArrayList()
 
     fun add(properties: AntlrGrammarProperties?) {
         perGrammarGenerationSettings.add(properties!!)
@@ -20,11 +20,7 @@ class AntlrToolGrammarPropertiesStore {
         val grammarSettings = findSettingsForFile(grammarFile)
 
         if (grammarSettings == null) {
-            val projectSettings = findSettingsForFile("*")
-
-            if (projectSettings == null) {
-                return DEFAULT_GRAMMAR_PROPERTIES
-            }
+            val projectSettings = findSettingsForFile("*") ?: return DEFAULT_GRAMMAR_PROPERTIES
 
             return projectSettings
         }
@@ -90,10 +86,7 @@ class AntlrToolGrammarPropertiesStore {
          */
         @JvmStatic
         fun getGrammarProperties(project: Project, grammarFile: String): AntlrGrammarProperties? {
-            val antlrToolGrammarPropertiesComponent = getInstance(project)
-            if (antlrToolGrammarPropertiesComponent == null) {
-                return null
-            }
+            val antlrToolGrammarPropertiesComponent = getInstance(project) ?: return null
             val store = antlrToolGrammarPropertiesComponent.state
             return store.getGrammarProperties(grammarFile)
         }
@@ -103,10 +96,7 @@ class AntlrToolGrammarPropertiesStore {
          * they exist, or from the default empty settings otherwise.
          */
         fun getOrCreateGrammarProperties(project: Project, grammarFile: String): AntlrGrammarProperties? {
-            val antlrToolGrammarPropertiesComponent = getInstance(project)
-            if (antlrToolGrammarPropertiesComponent == null) {
-                return null
-            }
+            val antlrToolGrammarPropertiesComponent = getInstance(project)?:return null
             val store = antlrToolGrammarPropertiesComponent.state
             return store.getOrCreateGrammarProperties(grammarFile)
         }

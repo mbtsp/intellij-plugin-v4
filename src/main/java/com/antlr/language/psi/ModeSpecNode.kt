@@ -15,9 +15,8 @@ import com.intellij.psi.tree.IElementType
  * can extend `RuleSpecNode`
  */
 class ModeSpecNode(node: ASTNode) : RuleSpecNode(node) {
-    override val ruleRefType: IElementType
-        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.TOKEN_REF]
-
+    override val ruleRefType: IElementType?
+        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.TOKEN_REF)
     override fun getNameIdentifier(): GrammarElementRefNode? {
         val idNode: PsiElement? =
             findFirstChildOfType(this, AntlrTokenTypes.getRuleElementType(ANTLRv4Parser.RULE_identifier))

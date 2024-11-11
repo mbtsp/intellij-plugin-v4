@@ -29,10 +29,10 @@ class MyAntlrLexerState(mode: Int, modeStack: IntegerStack?, currentRuleType: In
     }
 
     override fun equals(obj: Any?): Boolean {
-        if (obj == this) {
+        if (obj !is MyAntlrLexerState) {
             return false
         }
-        if (obj !is MyAntlrLexerState) {
+        if (!super.equals(obj)) {
             return false
         }
         return currentRuleType == obj.currentRuleType

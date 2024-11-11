@@ -18,7 +18,7 @@ import org.antlr.runtime.Token
 import org.antlr.v4.tool.ErrorSeverity
 import java.util.*
 
-class AntlrExternalAnnotator : ExternalAnnotator<PsiFile, MutableList<GrammarIssue>>() {
+class AntlrExternalAnnotator : ExternalAnnotator<PsiFile, List<GrammarIssue>>() {
     /**
      * Called first; return file
      */
@@ -29,10 +29,9 @@ class AntlrExternalAnnotator : ExternalAnnotator<PsiFile, MutableList<GrammarIss
     /**
      * Called 2nd; run antlr on file
      */
-    override fun doAnnotate(file: PsiFile): MutableList<GrammarIssue> {
+    override fun doAnnotate(file: PsiFile): List<GrammarIssue> {
         return ApplicationManager.getApplication()
-            .runReadAction<MutableList<GrammarIssue>>(Computable { GrammarIssuesCollector.collectGrammarIssues(file) }
-            )
+            .runReadAction(Computable { GrammarIssuesCollector.collectGrammarIssues(file) })
     }
 
     /**
@@ -40,7 +39,7 @@ class AntlrExternalAnnotator : ExternalAnnotator<PsiFile, MutableList<GrammarIss
      */
     override fun apply(
         file: PsiFile,
-        issues: MutableList<GrammarIssue>,
+        issues: List<GrammarIssue>,
         holder: AnnotationHolder
     ) {
         for (issue in issues) {
@@ -52,16 +51,17 @@ class AntlrExternalAnnotator : ExternalAnnotator<PsiFile, MutableList<GrammarIss
         }
         if (!ApplicationManager.getApplication().isUnitTestMode) {
             if (!file.project.isDisposed) {
-                file.project.messageBus.syncPublisher<AntlrListener>(AntlrListener.TOPIC)
+                file.project.messageBus.syncPublisher(AntlrListener.TOPIC)
                     .autoRefreshPreview(file.virtualFile)
             }
         }
     }
 
     private fun annotateFileIssue(file: PsiFile, holder: AnnotationHolder, issue: GrammarIssue) {
-        val annotation = holder.createWarningAnnotation(file, issue.annotation)
+        holder.newAnnotation(HighlightSeverity.WARNING, issue.annotation).range(file.textRange).fileLevel().create()
+//        val annotation = holder.createWarningAnnotation(file, issue.annotation)
 //        holder.newAnnotation(HighlightSeverity.WARNING,issue.annotation)
-        annotation.isFileLevelAnnotation = true
+//        annotation.isFileLevelAnnotation = true
     }
 
     private fun annotateIssue(file: PsiFile, holder: AnnotationHolder, issue: GrammarIssue) {

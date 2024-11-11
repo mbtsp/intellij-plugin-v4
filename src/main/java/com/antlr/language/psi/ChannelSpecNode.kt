@@ -14,10 +14,6 @@ class ChannelSpecNode(node: ASTNode) : RuleSpecNode(node) {
         return PsiTreeUtil.getChildOfType(this, LexerRuleRefNode::class.java)
     }
 
-    override fun getName(): String? {
-        return super.getName()
-    }
-
-    override val ruleRefType: IElementType
-        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.TOKEN_REF]
+    override val ruleRefType: IElementType?
+        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.TOKEN_REF)
 }

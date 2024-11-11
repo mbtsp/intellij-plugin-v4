@@ -15,7 +15,10 @@ import com.intellij.psi.util.PsiElementFilter
 import com.intellij.psi.util.PsiTreeUtil
 
 object MyPsiUtils {
-    fun findFirstChildOfType(parent: PsiElement?, type: IElementType): PsiElement? {
+    fun findFirstChildOfType(parent: PsiElement?, type: IElementType?): PsiElement? {
+        if (type == null) {
+            return null
+        }
         return findFirstChildOfType(parent, TokenSet.create(type))
     }
 
@@ -180,7 +183,7 @@ object MyPsiUtils {
                 val optionNode = tokenVocab[0]!!.parent // tokenVocab[0] is id node
                 val ids = collectChildrenOfType(
                     optionNode,
-                    AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_optionValue]
+                    AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_optionValue)
                 )
                 vocabName = ids[0]!!.text
             }

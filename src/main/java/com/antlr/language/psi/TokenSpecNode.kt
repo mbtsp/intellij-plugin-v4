@@ -17,9 +17,8 @@ class TokenSpecNode(node: ASTNode) : RuleSpecNode(node) {
     override fun getNameIdentifier(): GrammarElementRefNode? {
         return PsiTreeUtil.getChildOfType<LexerRuleRefNode?>(this, LexerRuleRefNode::class.java)
     }
-
-    override val ruleRefType: IElementType
-        get() = TOKEN_ELEMENT_TYPES.get(ANTLRv4Lexer.TOKEN_REF)
+    override val ruleRefType: IElementType?
+        get() = TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.TOKEN_REF)
 
     class Factory : PsiElementFactory {
         override fun createElement(node: ASTNode): PsiElement {
@@ -30,9 +29,9 @@ class TokenSpecNode(node: ASTNode) : RuleSpecNode(node) {
                 parent = idList.treeParent
             }
             if (parent != null) {
-                if (parent.elementType === AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_tokensSpec]) {
+                if (parent.elementType === AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_tokensSpec)) {
                     return TokenSpecNode(node)
-                } else if (parent.elementType === AntlrTokenTypes.RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_channelsSpec]) {
+                } else if (parent.elementType === AntlrTokenTypes.RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_channelsSpec)) {
                     return ChannelSpecNode(node)
                 }
             }

@@ -15,8 +15,8 @@ class AntlrGrammarParser : ANTLRParserAdaptor(AntlrLanguage.INSTANCE, ANTLRv4Par
     override fun parse(parser: Parser, root: IElementType?): ParseTree {
         val startRule: Int = if (root is IFileElementType) {
             ANTLRv4Parser.RULE_grammarSpec
-        } else if (root === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.TOKEN_REF]
-            || root === AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.RULE_REF]
+        } else if (root === AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.TOKEN_REF)
+            || root === AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.RULE_REF)
         ) {
             ANTLRv4Parser.RULE_atom
         } else {

@@ -11,15 +11,16 @@ class AntlrFileType : LanguageFileType(AntlrLanguage.INSTANCE) {
     companion object {
         val INSTANCE = AntlrFileType()
     }
+
     override fun getName(): @NonNls String {
-        return "Antlr grammar file"
+        return "Antlr grammar"
     }
 
-    override fun getDescription(): @NlsContexts.Label String {
-        return "Antlr grammar file"
+    override fun getDescription():  String {
+        return "Antlr grammar"
     }
 
-    override fun getDefaultExtension(): @NlsSafe String {
+    override fun getDefaultExtension():  String {
         return "g4"
     }
 
@@ -27,3 +28,4 @@ class AntlrFileType : LanguageFileType(AntlrLanguage.INSTANCE) {
         return Icons.FILE
     }
 }
+

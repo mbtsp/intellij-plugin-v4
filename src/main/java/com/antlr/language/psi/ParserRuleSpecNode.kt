@@ -9,9 +9,8 @@ import com.intellij.psi.tree.IElementType
 import com.intellij.psi.util.PsiTreeUtil
 
 class ParserRuleSpecNode(node: ASTNode) : RuleSpecNode(node) {
-    override val ruleRefType: IElementType
-        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES[ANTLRv4Lexer.RULE_REF]
-
+    override val ruleRefType: IElementType?
+        get() = AntlrTokenTypes.TOKEN_ELEMENT_TYPES?.get(ANTLRv4Lexer.RULE_REF)
     override fun getNameIdentifier(): GrammarElementRefNode? {
         val rr: GrammarElementRefNode? =
             PsiTreeUtil.getChildOfType<ParserRuleRefNode?>(this, ParserRuleRefNode::class.java)

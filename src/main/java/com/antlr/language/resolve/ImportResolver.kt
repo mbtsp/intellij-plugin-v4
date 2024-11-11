@@ -25,7 +25,7 @@ object ImportResolver {
 
     private fun isImportStatement(el: PsiElement): Boolean {
         val node = el.node
-        return node != null && node.elementType === RULE_ELEMENT_TYPES[ANTLRv4Parser.RULE_delegateGrammar]
+        return node != null && node.elementType === RULE_ELEMENT_TYPES?.get(ANTLRv4Parser.RULE_delegateGrammar)
     }
 
     fun resolveInImportedFiles(grammarFile: PsiFile, ruleName: String): PsiElement? {
