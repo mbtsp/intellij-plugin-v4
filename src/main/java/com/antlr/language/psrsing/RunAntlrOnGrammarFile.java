@@ -56,7 +56,7 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
     private final boolean forceGeneration;
 
     public RunAntlrOnGrammarFile(VirtualFile grammarFile,
-                                 @Nullable final Project project,
+                                 @NotNull final Project project,
                                  @NotNull final String title,
                                  final boolean canBeCancelled,
                                  boolean forceGeneration) {

@@ -9,11 +9,11 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 
 public class AntlrSettingDialog extends DialogWrapper {
-    private AntlrSettingPanel antlrSettingPanel;
+    private final AntlrSettingPanel antlrSettingPanel;
     private final VirtualFile virtualFile;
     private final Project project;
 
-    protected AntlrSettingDialog(@Nullable Project project, VirtualFile virtualFile, boolean isSetting) {
+    public AntlrSettingDialog(@Nullable Project project, VirtualFile virtualFile, boolean isSetting) {
         super(project, true);
         this.virtualFile = virtualFile;
         this.project = project;

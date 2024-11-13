@@ -23,7 +23,6 @@ import org.antlr.v4.parse.ANTLRParser
 import org.antlr.v4.runtime.*
 import org.antlr.v4.runtime.atn.PredictionMode
 import org.antlr.v4.runtime.misc.Pair
-import org.antlr.v4.runtime.misc.Predicate
 import org.antlr.v4.runtime.misc.Utils
 import org.antlr.v4.runtime.tree.ParseTree
 import org.antlr.v4.runtime.tree.TerminalNode
@@ -40,7 +39,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 object ParsingUtils {
     private val LOG = Logger.getInstance(ParsingUtils::class.java)
-    private var BAD_PARSER_GRAMMAR: Grammar? = null
+    var BAD_PARSER_GRAMMAR: Grammar? = null
     private var BAD_LEXER_GRAMMAR: LexerGrammar? = null
 
     init {
@@ -55,7 +54,7 @@ object ParsingUtils {
     }
 
     fun nextRealToken(tokens: CommonTokenStream, i: Int): Token? {
-        var i:Int = i
+        var i: Int = i
         val n = tokens.size()
         i++ // search after current i token
         if (i >= n || i < 0) return null
@@ -475,7 +474,7 @@ object ParsingUtils {
             }
             return
         }
-        for(i in 0 until n) {
+        for (i in 0 until n) {
             _getAllLeaves(t.getChild(i), leaves)
         }
     }

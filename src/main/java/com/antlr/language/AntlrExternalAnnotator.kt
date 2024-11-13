@@ -58,6 +58,9 @@ class AntlrExternalAnnotator : ExternalAnnotator<PsiFile, List<GrammarIssue>>() 
     }
 
     private fun annotateFileIssue(file: PsiFile, holder: AnnotationHolder, issue: GrammarIssue) {
+        if (issue.annotation.isNullOrBlank()) {
+            return
+        }
         holder.newAnnotation(HighlightSeverity.WARNING, issue.annotation).range(file.textRange).fileLevel().create()
 //        val annotation = holder.createWarningAnnotation(file, issue.annotation)
 //        holder.newAnnotation(HighlightSeverity.WARNING,issue.annotation)

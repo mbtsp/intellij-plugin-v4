@@ -2,21 +2,29 @@ package com.antlr.util
 
 import com.antlr.language.ANTLRv4Parser
 import com.antlr.language.AntlrTokenTypes
-import com.antlr.language.psi.AtAction
-import com.antlr.language.psi.GrammarSpecNode
+import com.antlr.language.psi.*
 import com.antlr.language.psrsing.ParsingUtils
 import com.antlr.language.psrsing.RunAntlrListener
 import com.antlr.listener.AntlrListener
 import com.antlr.service.AntlrService
 import com.antlr.setting.configdialogs.AntlrGrammarProperties
 import com.antlr.setting.configdialogs.AntlrToolGrammarPropertiesStore
+import com.antlr.ui.ProfilerPanel
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.notification.Notification
 import com.intellij.notification.NotificationType
 import com.intellij.notification.Notifications
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.LangDataKeys
+import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.application.ReadAction
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.editor.Editor
+import com.intellij.openapi.editor.EditorFactory
+import com.intellij.openapi.editor.markup.RangeHighlighter
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.openapi.util.Computable
@@ -30,7 +38,10 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.stream
 import org.antlr.v4.Tool
 import org.antlr.v4.codegen.CodeGenerator
+import org.antlr.v4.runtime.atn.DecisionEventInfo
 import org.stringtemplate.v4.misc.Misc
+import java.awt.Point
+import java.awt.event.MouseEvent
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
@@ -41,10 +52,134 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 import java.util.regex.Pattern
 
+
+fun AnActionEvent.isAntlrFile(): Boolean {
+    val virtualFiles = this.getData(LangDataKeys.VIRTUAL_FILE_ARRAY)
+    if (virtualFiles.isNullOrEmpty()) return false
+    if (virtualFiles[0].name.endsWith(".g4")) return true
+    return false
+}
+
+fun Project.getCurrentEditorFile(): VirtualFile? {
+    val fileManager = FileEditorManager.getInstance(this)
+    val files = fileManager.selectedFiles
+    if (files.isEmpty()) return null
+    return files[0]
+}
+
+fun Project.getCurrentEditorFileG4(): VirtualFile? {
+    val fileManager = FileEditorManager.getInstance(this)
+    val files = fileManager.selectedFiles
+    if (files.isEmpty()) return null
+    for (file in files) {
+        if (file.name.endsWith(".g4")) {
+            return file
+        }
+    }
+    return null
+}
+
+fun AnActionEvent.getGrammarFile(): VirtualFile? {
+    val virtualFiles = this.getData(LangDataKeys.VIRTUAL_FILE_ARRAY)
+    if (virtualFiles.isNullOrEmpty()) return null
+    if (virtualFiles[0].name.endsWith(".g4")) return virtualFiles[0]
+    return null
+}
+
+fun Editor.getRangeHighlightersAtOffset(offset: Int): List<RangeHighlighter> {
+    val highlighters = mutableListOf<RangeHighlighter>()
+    for (highlighter in this.markupModel.allHighlighters) {
+        if (offset >= highlighter.startOffset && offset < highlighter.endOffset) {
+            highlighters.add(highlighter)
+        }
+    }
+    return highlighters
+}
+
+fun getHighlighterWithDecisionEventType(
+    highlighters: List<RangeHighlighter>,
+    decisionEventType: Class<*>
+): DecisionEventInfo? {
+    for (r in highlighters) {
+        val eventInfo: DecisionEventInfo? = r.getUserData(ProfilerPanel.DECISION_EVENT_INFO_KEY)
+        if (eventInfo != null) {
+            if (eventInfo::class.java === decisionEventType) {
+                return eventInfo
+            }
+        }
+    }
+    return null
+}
+
+
+fun AnActionEvent.isGrammar() {
+    val file = this.getGrammarFile()
+    if (file == null) {
+        this.presentation.isEnabled = false
+        return
+    }
+    this.presentation.isEnabledAndVisible = true
+}
+
+fun VirtualFile.getEditor(project: Project): Editor? {
+    val fileManger = FileDocumentManager.getInstance()
+    val doc = fileManger.getDocument(this) ?: return null
+    val factory = EditorFactory.getInstance()
+    val editors = factory.getEditors(doc, project)
+    if (editors.isEmpty()) return null
+    return editors[0]
+}
+
+fun AnActionEvent.getParserRuleSurroundingRef(): ParserRuleRefNode? {
+    val psiNode = this.getSelectedPsiElement() ?: return null
+    val ruleSpecNode = psiNode.getRuleSurroundingRef(ParserRuleSpecNode::class.java) ?: return null
+    return PsiTreeUtil.findChildOfType(ruleSpecNode, ParserRuleRefNode::class.java)
+
+}
+
+fun AnActionEvent.getLexerRuleSurroundingRef(): LexerRuleRefNode? {
+    val psiNode = this.getSelectedPsiElement() ?: return null
+    val ruleSpecNode = psiNode.getRuleSurroundingRef(LexerRuleSpecNode::class.java) ?: return null
+    return PsiTreeUtil.findChildOfType(ruleSpecNode, LexerRuleRefNode::class.java)
+}
+
+fun AnActionEvent.getSelectedPsiElement(): PsiElement? {
+    val editor = this.getData(PlatformDataKeys.EDITOR)
+    if (editor == null) {
+        val psiElement = this.getData(LangDataKeys.PSI_ELEMENT)
+        if (psiElement == null || psiElement !is ParserRuleRefNode) {
+            return null
+        }
+        return psiElement
+    }
+    val file = this.getData(LangDataKeys.PSI_FILE) ?: return null
+    val offset = editor.caretModel.offset
+    return file.findElementAt(offset)
+}
+
+fun PsiElement.getRuleSurroundingRef(type: Class<out RuleSpecNode>): RuleSpecNode? {
+    if (this.javaClass != type) {
+        val psiElement = PsiTreeUtil.findFirstParent(
+            this
+        ) { p0 -> p0.javaClass == type }
+        if (psiElement != null) {
+            return psiElement as RuleSpecNode
+        }
+    }
+    return null
+}
+
+
 object AntlrUtil {
     private const val GROUP_DISPLAY_ID = "ANTLR Tool Parser Generation"
     private val log = Logger.getInstance(AntlrUtil::class.java)
     val PACKAGE_DEFINITION_REGEX: Pattern = Pattern.compile("package\\s+[a-z][a-z0-9_]*(\\.[a-z0-9_]+)+[0-9a-z_];")
+
+    fun getMouseOffset(mouseEvent: MouseEvent, editor: Editor): Int {
+        val point = Point(mouseEvent.getPoint())
+        val pos = editor.xyToLogicalPosition(point)
+        return editor.logicalPositionToOffset(pos)
+    }
 
     fun generateCode(project: Project, virtualFile: VirtualFile, forceGenerateCode: Boolean) {
         val antlrGrammarProperties = AntlrToolGrammarPropertiesStore.getGrammarProperties(project, virtualFile)
@@ -73,8 +208,23 @@ object AntlrUtil {
         }
     }
 
+    fun getEditor(project: Project, file: VirtualFile): Editor? {
+        val fdm = FileDocumentManager.getInstance()
+        val doc = fdm.getDocument(file) ?: return null
 
-    fun isGrammarFile(project: Project, virtualFile: VirtualFile): Boolean {
+        val factory: EditorFactory = EditorFactory.getInstance()
+        val editors: Array<Editor> = factory.getEditors(doc, project)
+        if (editors.isEmpty()) {
+            // no editor found for this file. likely an out-of-sequence issue
+            // where Intellij is opening a project and doesn't fire events
+            // in order we'd expect.
+            return null
+        }
+        return editors[0] // hope just one
+    }
+
+
+    private fun isGrammarFile(project: Project, virtualFile: VirtualFile): Boolean {
         val previewState = AntlrService.getInstance(project).previewState(virtualFile)
         val g = previewState.g ?: return false
         val language = g.getOptionString(AntlrGrammarProperties.PROP_LANGUAGE)
@@ -269,5 +419,34 @@ object AntlrUtil {
             }
         })
         return psiElements.stream().toList()
+    }
+
+    fun currentEditorFileChangedEvent(project: Project?,oldFile:VirtualFile?,newFile:VirtualFile?,modified :Boolean){
+        if(newFile == null) return
+        if(newFile.extension.isNullOrBlank()) return
+        if(!newFile.extension.equals("g4")){
+            return
+        }
+        if(project==null){
+            return
+        }
+        if(oldFile!=null && oldFile.extension?.equals("g4") == true && modified){
+            AntlrService.getInstance(project).updateGrammar(oldFile,true)
+        }
+        val previewState = AntlrService.getInstance(project).previewState(newFile)
+        if(previewState.g==null || previewState.lg==null){
+            AntlrService.getInstance(project).updateGrammar(newFile,false)
+        }
+        if(!project.isDisposed){
+            project.messageBus.syncPublisher(AntlrListener.TOPIC).grammarChange(newFile)
+        }
+    }
+    fun startRuleNameEvent(project: Project,virtualFile: VirtualFile,ruleName:String){
+        val previewState = AntlrService.getInstance(project).previewState(virtualFile)
+        previewState.startRuleName=ruleName
+        if(!project.isDisposed){
+            project.messageBus.syncPublisher(AntlrListener.TOPIC).startRuleName(virtualFile,ruleName)
+            project.messageBus.syncPublisher(AntlrListener.TOPIC).updateParseTreeState(virtualFile)
+        }
     }
 }

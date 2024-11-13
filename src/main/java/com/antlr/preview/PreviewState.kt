@@ -26,7 +26,7 @@ import org.antlr.v4.tool.LexerGrammar
  * elements piecemeal. That could get g and lg for different grammar files,
  * for example.
  */
-class PreviewState(var project: Project?, var grammarFile: VirtualFile?) {
+class PreviewState(var project: Project, var grammarFile: VirtualFile) {
     var g: Grammar? = null
     var lg: LexerGrammar? = null
     var startRuleName: String? = null
