@@ -108,11 +108,14 @@ class AntlrService(private val project: Project) {
                     synchronized(previewState) {
                         previewState.lg = it[0] as LexerGrammar
                         previewState.g = it[1]
+
                     }
+                    updatePreViewState(virtualFile, previewState)
                 }
                 if (grammars == null) {
                     previewState.g = null
                     previewState.lg = null
+                    updatePreViewState(virtualFile, previewState)
                 }
 
 
