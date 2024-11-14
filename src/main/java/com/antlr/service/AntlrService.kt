@@ -7,7 +7,6 @@ import com.antlr.preview.PreviewState
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.progress.ProgressIndicator
-import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.progress.util.BackgroundTaskUtil
 import com.intellij.openapi.progress.util.ProgressWindow
@@ -25,10 +24,8 @@ class AntlrService(private val project: Project) {
     private val grammarFileMods = mutableMapOf<String, Long>()
     private var progressIndicator: ProgressIndicator? = null
 
-    companion object {
-        fun getInstance(project: Project): AntlrService {
-            return AntlrService(project)
-        }
+    fun updatePreViewState(virtualFile: VirtualFile, previewState: PreviewState) {
+        grammarToPreviewState[virtualFile.path] = previewState
     }
 
     fun previewState(virtualFile: VirtualFile): PreviewState {
@@ -97,10 +94,10 @@ class AntlrService(private val project: Project) {
 
     private fun runAntlrTool(virtualFile: VirtualFile) {
         val gen = RunAntlrOnGrammarFile(virtualFile, project, "Antlr Code Generation", true, false)
-        ProgressManager.getInstance().run(gen)
+        gen.queue()
     }
 
-    fun updateGrammar(virtualFile: VirtualFile) {
+    private fun updateGrammar(virtualFile: VirtualFile) {
         if (project.isDisposed) {
             return
         }
@@ -126,12 +123,12 @@ class AntlrService(private val project: Project) {
 
     fun saveGrammar(virtualFile: VirtualFile) {
         val modCount = virtualFile.modificationCount
-        if(grammarFileMods.containsKey(virtualFile.path) && grammarFileMods[virtualFile.path]?.equals(modCount)==true) {
+        if (grammarFileMods.containsKey(virtualFile.path) && grammarFileMods[virtualFile.path]?.equals(modCount) == true) {
             return
         }
         grammarFileMods[virtualFile.path] = modCount
         updateGrammar(virtualFile, true)
-        if(!project.isDisposed) {
+        if (!project.isDisposed) {
             project.messageBus.syncPublisher(AntlrListener.TOPIC).grammarSaved(virtualFile)
         }
     }

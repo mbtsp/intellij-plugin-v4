@@ -193,7 +193,7 @@ object AntlrUtil {
             }
             return
         }
-        val previewState = AntlrService.getInstance(project).previewState(virtualFile)
+        val previewState = project.getService(AntlrService::class.java).previewState(virtualFile)
         if (previewState.g == null && previewState.lg != null) {
             val grammar = previewState.lg
             val language = grammar?.getOptionString(AntlrGrammarProperties.PROP_LANGUAGE)
@@ -225,7 +225,7 @@ object AntlrUtil {
 
 
     private fun isGrammarFile(project: Project, virtualFile: VirtualFile): Boolean {
-        val previewState = AntlrService.getInstance(project).previewState(virtualFile)
+        val previewState = project.getService(AntlrService::class.java).previewState(virtualFile)
         val g = previewState.g ?: return false
         val language = g.getOptionString(AntlrGrammarProperties.PROP_LANGUAGE)
         val generator = CodeGenerator.create(null, g, language)
@@ -421,31 +421,38 @@ object AntlrUtil {
         return psiElements.stream().toList()
     }
 
-    fun currentEditorFileChangedEvent(project: Project?,oldFile:VirtualFile?,newFile:VirtualFile?,modified :Boolean){
-        if(newFile == null) return
-        if(newFile.extension.isNullOrBlank()) return
-        if(!newFile.extension.equals("g4")){
+    fun currentEditorFileChangedEvent(
+        project: Project?,
+        oldFile: VirtualFile?,
+        newFile: VirtualFile?,
+        modified: Boolean
+    ) {
+        if (newFile == null) return
+        if (newFile.extension.isNullOrBlank()) return
+        if (!newFile.extension.equals("g4")) {
             return
         }
-        if(project==null){
+        if (project == null) {
             return
         }
-        if(oldFile!=null && oldFile.extension?.equals("g4") == true && modified){
-            AntlrService.getInstance(project).updateGrammar(oldFile,true)
+        if (oldFile != null && oldFile.extension?.equals("g4") == true && modified) {
+            project.getService(AntlrService::class.java).updateGrammar(oldFile, true)
         }
-        val previewState = AntlrService.getInstance(project).previewState(newFile)
-        if(previewState.g==null || previewState.lg==null){
-            AntlrService.getInstance(project).updateGrammar(newFile,false)
+        val previewState = project.getService(AntlrService::class.java).previewState(newFile)
+        if (previewState.g == null || previewState.lg == null) {
+            project.getService(AntlrService::class.java).updateGrammar(newFile, false)
         }
-        if(!project.isDisposed){
+        if (!project.isDisposed) {
             project.messageBus.syncPublisher(AntlrListener.TOPIC).grammarChange(newFile)
         }
     }
-    fun startRuleNameEvent(project: Project,virtualFile: VirtualFile,ruleName:String){
-        val previewState = AntlrService.getInstance(project).previewState(virtualFile)
-        previewState.startRuleName=ruleName
-        if(!project.isDisposed){
-            project.messageBus.syncPublisher(AntlrListener.TOPIC).startRuleName(virtualFile,ruleName)
+
+    fun startRuleNameEvent(project: Project, virtualFile: VirtualFile, ruleName: String) {
+        val previewState = project.getService(AntlrService::class.java).previewState(virtualFile)
+        previewState.startRuleName = ruleName
+        project.getService(AntlrService::class.java).updatePreViewState(virtualFile,previewState)
+        if (!project.isDisposed) {
+            project.messageBus.syncPublisher(AntlrListener.TOPIC).startRuleName(virtualFile, ruleName)
             project.messageBus.syncPublisher(AntlrListener.TOPIC).updateParseTreeState(virtualFile)
         }
     }

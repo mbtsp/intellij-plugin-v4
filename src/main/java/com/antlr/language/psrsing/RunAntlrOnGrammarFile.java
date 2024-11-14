@@ -4,47 +4,24 @@ import com.antlr.preview.PreviewState;
 import com.antlr.service.AntlrService;
 import com.antlr.setting.configdialogs.AntlrGrammarProperties;
 import com.antlr.util.AntlrUtil;
-import com.intellij.execution.ui.ConsoleViewContentType;
-import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationType;
-import com.intellij.notification.Notifications;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ReadAction;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
-import org.antlr.intellij.adaptor.lexer.RuleIElementType;
 import org.antlr.v4.Tool;
 import org.antlr.v4.codegen.CodeGenerator;
-import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.tool.Grammar;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.stringtemplate.v4.misc.Misc;
 
 import java.io.File;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import static com.antlr.setting.configdialogs.AntlrToolGrammarPropertiesStore.getGrammarProperties;
-import static com.intellij.psi.util.PsiTreeUtil.getChildOfType;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class RunAntlrOnGrammarFile extends Task.Modal{
+public class RunAntlrOnGrammarFile extends Task.Backgroundable {
     public static final Logger LOG = Logger.getInstance("RunANTLROnGrammarFile");
     public static final String OUTPUT_DIR_NAME = "gen";
     public static final String groupDisplayId = "ANTLR 4 Parser Generation";
@@ -75,9 +52,9 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
             autogen = grammarProperties.shouldAutoGenerateParser();
         }
         if (forceGeneration || (autogen && isGrammarStale(grammarProperties))) {
-            ReadAction.run(() -> AntlrUtil.INSTANCE.antlr(project,grammarFile));
+            ReadAction.run(() -> AntlrUtil.INSTANCE.antlr(project, grammarFile));
         } else {
-            AntlrService antlrService = AntlrService.Companion.getInstance(project);
+            AntlrService antlrService = project.getService(AntlrService.class);
             final PreviewState previewState = antlrService.previewState(grammarFile);
             // is lexer file? gen .tokens file no matter what as tokens might have changed;
             // a parser that feeds off of that file will need to see the changes.
@@ -96,7 +73,7 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
         String sourcePath = grammarProperties.resolveLibDir(project, AntlrUtil.INSTANCE.getParentDir(grammarFile));
         String fullyQualifiedInputFileName = sourcePath + File.separator + grammarFile.getName();
 
-        AntlrService antlrService = AntlrService.Companion.getInstance(project);
+        AntlrService antlrService = project.getService(AntlrService.class);
         final PreviewState previewState = antlrService.previewState(grammarFile);
         Grammar g = previewState.getMainGrammar();
         // Grammar should be updated in the preview state before calling this function
@@ -109,7 +86,7 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
         String recognizerFileName = generator.getRecognizerFileName();
 
         VirtualFile contentRoot = AntlrUtil.INSTANCE.getContentRoot(project, grammarFile);
-        if(contentRoot==null){
+        if (contentRoot == null) {
             return false;
         }
         String package_ = grammarProperties.getPkg();
@@ -122,8 +99,6 @@ public class RunAntlrOnGrammarFile extends Task.Modal{
         LOG.info((!stale ? "not" : "") + "stale: " + fullyQualifiedInputFileName + " -> " + fullyQualifiedOutputFileName);
         return stale;
     }
-
-
 
 
     public String getOutputDirName() {

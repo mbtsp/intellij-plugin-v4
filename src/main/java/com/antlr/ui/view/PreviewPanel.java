@@ -323,7 +323,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
         String grammarFileName = grammarFile.getPath();
         LOG.info("grammarFileSaved " + grammarFileName + " " + project.getName());
 
-        PreviewState previewState = AntlrService.Companion.getInstance(project).previewState(grammarFile);
+        PreviewState previewState = project.getService(AntlrService.class).previewState(grammarFile);
         autoSetStartRule(previewState);
         ensureStartRuleExists(grammarFile);
         inputPanel.grammarFileSaved();
@@ -341,7 +341,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
 
     private void ensureStartRuleExists(VirtualFile grammarFile) {
 
-        PreviewState previewState = AntlrService.Companion.getInstance(project).previewState(grammarFile);
+        PreviewState previewState = project.getService(AntlrService.class).previewState(grammarFile);
         // if the start rule no longer exists, reset display/state.
         if (previewState.getG() != null &&
                 previewState.getG() != ParsingUtils.INSTANCE.getBAD_PARSER_GRAMMAR() &&
@@ -367,7 +367,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
     private void switchToGrammar(VirtualFile grammarFile) {
         String grammarFileName = grammarFile.getPath();
         LOG.info("switchToGrammar " + grammarFileName + " " + project.getName());
-        PreviewState previewState = AntlrService.Companion.getInstance(project).previewState(grammarFile);
+        PreviewState previewState = project.getService(AntlrService.class).previewState(grammarFile);
 
         autoSetStartRule(previewState);
         inputPanel.switchToGrammar(previewState, grammarFile);
@@ -421,7 +421,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
         inputPanel.resetStartRuleLabel();
         inputPanel.clearErrorConsole();
         clearParseTree(); // wipe a tree
-        PreviewState previewState = AntlrService.Companion.getInstance(project).previewState(grammarFile);
+        PreviewState previewState = project.getService(AntlrService.class).previewState(grammarFile);
         inputPanel.releaseEditor(previewState);
     }
 
@@ -478,7 +478,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
     }
 
     public void updateParseTreeFromDoc(VirtualFile grammarFile) {
-        AntlrService antlrService = AntlrService.Companion.getInstance(project);
+        AntlrService antlrService = project.getService(AntlrService.class);
         PreviewState previewState = antlrService.previewState(grammarFile);
         LOG.info("updateParseTreeFromDoc " + grammarFile + " rule " + previewState.getStartRuleName());
         if (previewState.getG() == null || previewState.getLg() == null) {
@@ -512,7 +512,7 @@ public class PreviewPanel extends JPanel implements ParsingResultSelectionListen
     }
 
     public void autoRefreshPreview(VirtualFile virtualFile) {
-        AntlrService.Companion.getInstance(project).saveGrammar(virtualFile);
+        project.getService(AntlrService.class).saveGrammar(virtualFile);
     }
 
     public void onParsingCompleted(PreviewState previewState, long duration) {
