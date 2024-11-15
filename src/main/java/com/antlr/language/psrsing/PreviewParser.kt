@@ -57,7 +57,7 @@ open class PreviewParser(g: Grammar, atn: ATN, input: TokenStream) : GrammarPars
 
         val t = super.match(ttype)
         // track which ATN state matches each token
-        inputTokenToStateMap!!.put(t, state)
+        inputTokenToStateMap!![t] = state
         lastSuccessfulMatchState = state
         return t
     }
@@ -67,7 +67,7 @@ open class PreviewParser(g: Grammar, atn: ATN, input: TokenStream) : GrammarPars
     override fun matchWildcard(): Token? {
         lexerWatchdog.checkLexerIsNotStuck()
 
-        inputTokenToStateMap!!.put(_input.LT(1), state)
+        inputTokenToStateMap!![_input.LT(1)] = state
         lastSuccessfulMatchState = state
         return super.matchWildcard()
     }
