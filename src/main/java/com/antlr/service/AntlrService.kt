@@ -43,7 +43,7 @@ class AntlrService(private val project: Project) {
             this.project.messageBus.syncPublisher(AntlrListener.TOPIC).startParsing()
         }
         val previewState = previewState(virtualFile)
-        if (inputText.isNullOrBlank()) {
+        if (inputText == null) {
             return null
         }
         this.progressIndicator = BackgroundTaskUtil.executeAndTryWait(
