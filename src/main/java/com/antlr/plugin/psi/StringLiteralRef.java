@@ -15,7 +15,7 @@ public class StringLiteralRef extends PsiReferenceBase<StringLiteralElement> {
     }
 
     @Override // For compatibility with 2017.x
-    public Object @NotNull [] getVariants() {
+    public Object[] getVariants() {
         return ArrayUtilRt.EMPTY_OBJECT_ARRAY;
     }
 

@@ -1,5 +1,8 @@
 package com.antlr.plugin.structview;
 
+import com.antlr.plugin.ANTLRv4FileRoot;
+import com.antlr.plugin.psi.LexerRuleSpecNode;
+import com.antlr.plugin.psi.ParserRuleSpecNode;
 import com.intellij.icons.AllIcons;
 import com.intellij.ide.structureView.StructureViewModel;
 import com.intellij.ide.structureView.StructureViewModelBase;
@@ -9,9 +12,6 @@ import com.intellij.ide.util.treeView.smartTree.ActionPresentationData;
 import com.intellij.ide.util.treeView.smartTree.Sorter;
 import com.intellij.ide.util.treeView.smartTree.SorterUtil;
 import com.intellij.psi.PsiFile;
-import com.antlr.plugin.ANTLRv4FileRoot;
-import com.antlr.plugin.psi.LexerRuleSpecNode;
-import com.antlr.plugin.psi.ParserRuleSpecNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
@@ -66,7 +66,7 @@ public class ANTLRv4StructureViewModel
 
 
     @NotNull
-    public Sorter @NotNull [] getSorters() {
+    public Sorter[] getSorters() {
         return new Sorter[]{PARSER_LEXER_RULE_SORTER, Sorter.ALPHA_SORTER};
     }
 
@@ -88,15 +88,15 @@ public class ANTLRv4StructureViewModel
     }
 
     /**
-     Intellij: The implementation of StructureViewTreeElement.getChildren()
-     needs to be matched by TextEditorBasedStructureViewModel.getSuitableClasses().
-     The latter method returns an array of PsiElement-derived classes which can
-     be shown as structure view elements, and is used to select the Structure
-     View item matching the cursor position when the structure view is first
-     opened or when the "Autoscroll from source" option is used.
+     * Intellij: The implementation of StructureViewTreeElement.getChildren()
+     * needs to be matched by TextEditorBasedStructureViewModel.getSuitableClasses().
+     * The latter method returns an array of PsiElement-derived classes which can
+     * be shown as structure view elements, and is used to select the Structure
+     * View item matching the cursor position when the structure view is first
+     * opened or when the "Autoscroll from source" option is used.
      */
     @NotNull
-    protected Class<?> @NotNull [] getSuitableClasses() {
+    protected Class<?>[] getSuitableClasses() {
         return new Class[]{ANTLRv4FileRoot.class,
                 LexerRuleSpecNode.class,
                 ParserRuleSpecNode.class};

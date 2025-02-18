@@ -3,10 +3,11 @@ package com.antlr.report;
 import com.antlr.ApplicationInfo;
 import com.antlr.notify.NotifyClientKt;
 import com.antlr.plugin.PluginClient;
-import com.intellij.diagnostic.IdeErrorsDialog;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.DataManager;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
+import com.intellij.ide.plugins.PluginManagerCore;
+import com.intellij.ide.plugins.PluginUtil;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -49,9 +50,9 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
     }
 
     @Override
-    public boolean submit(IdeaLoggingEvent @NotNull [] events, @Nullable String additionalInfo, @NotNull Component parentComponent, @NotNull Consumer<? super SubmittedReportInfo> consumer) {
+    public boolean submit(IdeaLoggingEvent[] events, @Nullable String additionalInfo, @NotNull Component parentComponent, @NotNull Consumer<? super SubmittedReportInfo> consumer) {
         IdeaLoggingEvent ideaLoggingEvent = events[0];
-        IdeaPluginDescriptor ideaPluginDescriptor = IdeErrorsDialog.getPlugin(ideaLoggingEvent);
+        IdeaPluginDescriptor ideaPluginDescriptor = getPlugin(ideaLoggingEvent);
 
         Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(parentComponent));
         if (project == null || project.isDisposed() || project.isDefault()) {
@@ -71,6 +72,17 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
             }
         }.queue();
         return true;
+    }
+
+    @Nullable
+    public static IdeaPluginDescriptor getPlugin(@NotNull IdeaLoggingEvent event) {
+        IdeaPluginDescriptor plugin = null;
+        Throwable t = event.getThrowable();
+        if (t != null) {
+            plugin = PluginManagerCore.getPlugin(PluginUtil.getInstance().findPluginId(t));
+        }
+
+        return plugin;
     }
 
     private String collectPlugins() {

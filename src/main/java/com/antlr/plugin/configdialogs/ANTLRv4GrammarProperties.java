@@ -136,7 +136,7 @@ public class ANTLRv4GrammarProperties implements Cloneable {
         outputDirName = PathMacroManager.getInstance(project).expandPath(outputDirName);
 
         File f = new File(outputDirName);
-        if (!f.isAbsolute()) { // if not absolute file spec, it's relative to project root
+        if (!f.isAbsolute() && contentRoot!=null) { // if not absolute file spec, it's relative to project root
             outputDirName = contentRoot.getPath() + File.separator + outputDirName;
         }
         // add package if any

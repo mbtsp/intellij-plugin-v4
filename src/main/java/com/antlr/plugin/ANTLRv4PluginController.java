@@ -644,18 +644,23 @@ public class ANTLRv4PluginController {
                         @Override
                         public void run(@NotNull ProgressIndicator progressIndicator) {
                             ApplicationManager.getApplication().invokeLater(() -> {
-                                if (getProject().isDisposed()) return;
-                                PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
-                                FileDocumentManager docMgr = FileDocumentManager.getInstance();
-                                if (event.getOldFile() != null) {
-                                    Document doc = docMgr.getDocument(event.getOldFile());
-                                    if (doc != null) {
-                                        if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc) && !getProject().isDisposed()) {
-                                            psiMgr.commitDocument(doc);
-                                            docMgr.saveDocument(doc);
+                                try {
+                                    if (getProject()==null ||getProject().isDisposed()) return;
+                                    PsiDocumentManager psiMgr = PsiDocumentManager.getInstance(project);
+                                    FileDocumentManager docMgr = FileDocumentManager.getInstance();
+                                    if (event.getOldFile() != null && event.getOldFile().exists()) {
+                                        Document doc = docMgr.getDocument(event.getOldFile());
+                                        if (doc != null) {
+                                            if (!psiMgr.isCommitted(doc) || docMgr.isDocumentUnsaved(doc) && !getProject().isDisposed()) {
+                                                psiMgr.commitDocument(doc);
+                                                docMgr.saveDocument(doc);
+                                            }
                                         }
                                     }
+                                }catch (Exception e){
+                                    LOG.info("Commit document error", e);
                                 }
+
                             });
                         }
                     }.queue();

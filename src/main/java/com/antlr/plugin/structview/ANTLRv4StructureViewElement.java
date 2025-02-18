@@ -1,5 +1,7 @@
 package com.antlr.plugin.structview;
 
+import com.antlr.plugin.ANTLRv4FileRoot;
+import com.antlr.plugin.psi.*;
 import com.intellij.ide.structureView.StructureViewTreeElement;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
@@ -7,8 +9,6 @@ import com.intellij.navigation.NavigationItem;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.antlr.plugin.ANTLRv4FileRoot;
-import com.antlr.plugin.psi.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class ANTLRv4StructureViewElement implements StructureViewTreeElement {
 
     @NotNull
     @Override
-    public TreeElement @NotNull [] getChildren() {
+    public TreeElement[] getChildren() {
         List<TreeElement> treeElements = new ArrayList<>();
 
         if (element instanceof ANTLRv4FileRoot) {
