@@ -3,11 +3,11 @@ package com.antlr.report;
 import com.antlr.ApplicationInfo;
 import com.antlr.notify.NotifyClientKt;
 import com.antlr.plugin.PluginClient;
+import com.github.GitHubDeviceAuthApis;
+import com.github.Issue;
+import com.github.IssueInfo;
 import com.intellij.ide.BrowserUtil;
 import com.intellij.ide.DataManager;
-import com.intellij.ide.plugins.IdeaPluginDescriptor;
-import com.intellij.ide.plugins.PluginManagerCore;
-import com.intellij.ide.plugins.PluginUtil;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.actionSystem.AnAction;
@@ -27,9 +27,6 @@ import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.Consumer;
 import com.intellij.xml.util.XmlStringUtil;
 import com.ssh.report.StringKt;
-import github.GitHubDeviceAuthApis;
-import github.Issue;
-import github.IssueInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,8 +49,6 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
     @Override
     public boolean submit(IdeaLoggingEvent[] events, @Nullable String additionalInfo, @NotNull Component parentComponent, @NotNull Consumer<? super SubmittedReportInfo> consumer) {
         IdeaLoggingEvent ideaLoggingEvent = events[0];
-        IdeaPluginDescriptor ideaPluginDescriptor = getPlugin(ideaLoggingEvent);
-
         Project project = CommonDataKeys.PROJECT.getData(DataManager.getInstance().getDataContext(parentComponent));
         if (project == null || project.isDisposed() || project.isDefault()) {
             return true;
@@ -61,9 +56,6 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
         new Task.Backgroundable(project, "Submitting...") {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
-                if (ideaPluginDescriptor == null) {
-                    return;
-                }
                 buildErrorMsg(project, ideaLoggingEvent, consumer);
             }
 
@@ -74,16 +66,6 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
         return true;
     }
 
-    @Nullable
-    public static IdeaPluginDescriptor getPlugin(@NotNull IdeaLoggingEvent event) {
-        IdeaPluginDescriptor plugin = null;
-        Throwable t = event.getThrowable();
-        if (t != null) {
-            plugin = PluginManagerCore.getPlugin(PluginUtil.getInstance().findPluginId(t));
-        }
-
-        return plugin;
-    }
 
     private String collectPlugins() {
         List<PluginDescriptor> pluginDescriptors = PluginClient.INSTANCE.collectPlugin();
@@ -135,14 +117,14 @@ public class AnltrErrorReportSubmitter extends ErrorReportSubmitter {
         stringBuilder.append("````").append("\n");
         GitHubDeviceAuthApis gitHubDeviceAuthApis = new GitHubDeviceAuthApis();
         try {
-            IssueInfo.ItemsDTO itemsDTO = gitHubDeviceAuthApis.findIssue(id);
+            IssueInfo.ItemsDTO itemsDTO = gitHubDeviceAuthApis.findIssue("mbtsp/intellij-plugin-v4", id);
             SubmittedReportInfo submittedReportInfo;
             if (itemsDTO != null) {
                 submittedReportInfo = new SubmittedReportInfo(itemsDTO.getHtmlUrl(), "Issue#" + itemsDTO.getNumber(), SubmittedReportInfo.SubmissionStatus.DUPLICATE);
             } else {
                 String title = "【Plugin submission】";
                 title = title + StringKt.title(event.getThrowableText());
-                Issue issue = gitHubDeviceAuthApis.issue(title, stringBuilder.toString());
+                Issue issue = gitHubDeviceAuthApis.issue("https://api.github.com/repos/mbtsp/intellij-plugin-v4/issues", title, stringBuilder.toString());
                 submittedReportInfo = new SubmittedReportInfo(issue.getHtmlUrl(), "Issue#" + issue.getNumber(), SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
             }
 

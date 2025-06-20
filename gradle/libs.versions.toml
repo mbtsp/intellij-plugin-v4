@@ -12,7 +12,7 @@ report = "1.0-SNAPSHOT"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-report = { group = "com.platform", name = "report", version.ref = "report" }
+report = { group = "com.github", name = "report-issue", version.ref = "report" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
