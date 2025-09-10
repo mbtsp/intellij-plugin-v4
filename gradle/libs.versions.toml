@@ -1,6 +1,9 @@
 [versions]
 # libraries
 junit = "4.13.2"
+report = "1.0-SNAPSHOT"
+mockito ="5.8.0"
+antlr4IntellijAdaptor="0.2-SNAPSHOT"
 
 # plugins
 changelog = "2.2.1"
@@ -8,11 +11,13 @@ intelliJPlatform = "2.2.1"
 kotlin = "2.1.10"
 kover = "0.9.0"
 qodana = "2024.3.2"
-report = "1.0-SNAPSHOT"
+
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 report = { group = "com.github", name = "report-issue", version.ref = "report" }
+mockito ={group="org.mockito",name="mockito-core", version.ref="mockito"}
+antlr4IntellijAdaptor={group="org.antlr",name="antlr4-intellij-adaptor",version.ref="antlr4IntellijAdaptor"}
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
