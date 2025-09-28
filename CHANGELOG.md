@@ -6,7 +6,7 @@
 
 ## [2025.2.2]
 ### Fixed
-- [Fix some bugs](https://github.com/mbtsp/intellij-plugin-v4/milestone/9?closed=1)
+- [Fix some bugs](https://github.com/mbtsp/intellij-plugin-v4/milestone/13?closed=1)
 - Adapted to 2025.3
 
 
