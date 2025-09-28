@@ -7,10 +7,10 @@ antlr4IntellijAdaptor="0.2-SNAPSHOT"
 
 # plugins
 changelog = "2.2.1"
-intelliJPlatform = "2.2.1"
-kotlin = "2.1.10"
-kover = "0.9.0"
-qodana = "2024.3.2"
+intelliJPlatform = "2.7.2"
+kotlin = "2.2.0"
+kover = "0.9.1"
+qodana = "2025.1.1"
 
 
 [libraries]

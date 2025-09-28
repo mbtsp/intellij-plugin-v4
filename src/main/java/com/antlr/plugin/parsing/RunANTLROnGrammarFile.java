@@ -29,6 +29,7 @@ import org.antlr.v4.Tool;
 import org.antlr.v4.codegen.CodeGenerator;
 import org.antlr.v4.runtime.misc.Utils;
 import org.antlr.v4.tool.Grammar;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stringtemplate.v4.misc.Misc;
@@ -191,7 +192,7 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         for (String option : argMap.keySet()) {
             args.add(option);
             String value = argMap.get(option);
-            if (!value.isEmpty()) {
+            if (StringUtils.isNotBlank(value) &&!value.isEmpty()) {
                 args.add(value);
             }
         }
@@ -208,7 +209,7 @@ public class RunANTLROnGrammarFile extends Task.Modal {
         }
         if (isBlank(package_) && !hasPackageDeclarationInHeader(project, vfile) && vfile.getParent() != null) {
 //            final String packageName = PackageIndex.getInstance(myProject).getPackageNameByDirectory(containingDirectory);
-            
+
             package_ = ProjectRootManager.getInstance(project).getFileIndex().getPackageNameByDirectory(vfile.getParent());
         }
         if (isNotBlank(package_)) {
